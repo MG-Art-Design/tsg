@@ -7,11 +7,11 @@
   }
   
   body {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Crimson Pro', serif;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Playfair Display', serif;
   }
 }
 
@@ -78,8 +78,8 @@
   --radius-2xl: calc(var(--radius) * 3);
   --radius-full: 9999px;
   
-  --font-space: 'Space Grotesk', sans-serif;
-  --font-inter: 'Inter', sans-serif;
+  --font-playfair: 'Playfair Display', serif;
+  --font-crimson: 'Crimson Pro', serif;
 }
 
 .glow {
@@ -107,6 +107,6 @@
   background-size: 50px 50px;
 }
 
-.font-space {
-  font-family: 'Space Grotesk', sans-serif;
+.font-playfair {
+  font-family: 'Playfair Display', serif;
 }

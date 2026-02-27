@@ -92,19 +92,19 @@ A dark, sophisticated palette with vibrant neon accents that pop against the sha
 
 ## Font Selection
 
-Typography should feel confident, modern, and slightly aggressive—like the voice of a savvy trader who's seen it all but still loves the game.
+Typography should feel sophisticated, classical, and authoritative—like the voice of an old-money trader who knows the game inside and out. The Times New Roman-esque serif fonts bring gravitas and refinement while maintaining the competitive edge.
 
-- **Primary Font**: "Space Grotesk" - A geometric sans-serif with technical precision and distinctive character, perfect for the app's modern, competitive personality. Used for headlines, numbers, and emphasis.
-- **Secondary Font**: "Inter" - Clean, highly legible for body text and data tables, ensures readability without sacrificing style.
+- **Primary Font**: "Playfair Display" - An elegant high-contrast serif with traditional authority and sophisticated character, perfect for headlines, numbers, and establishing the app's refined, classic personality.
+- **Secondary Font**: "Crimson Pro" - A graceful text serif optimized for readability, ensures comfort in body text and data tables without sacrificing the classical aesthetic.
 
 **Typographic Hierarchy**:
-- H1 (App Title/Section Headers): Space Grotesk Bold / 32px / -0.02em tracking / line-height 1.1
-- H2 (Card Titles): Space Grotesk SemiBold / 24px / -0.01em tracking / line-height 1.2
-- H3 (Subsections): Space Grotesk Medium / 18px / normal tracking / line-height 1.3
-- Body (Standard Text): Inter Regular / 15px / normal tracking / line-height 1.5
-- Small (Metadata/Labels): Inter Medium / 13px / 0.01em tracking / line-height 1.4
-- Numbers/Stats: Space Grotesk Bold / 28px / -0.02em tracking / Tabular nums
-- Captions: Inter Regular / 12px / normal tracking / line-height 1.3
+- H1 (App Title/Section Headers): Playfair Display Bold / 32px / -0.01em tracking / line-height 1.2
+- H2 (Card Titles): Playfair Display SemiBold / 24px / normal tracking / line-height 1.3
+- H3 (Subsections): Playfair Display Medium / 18px / normal tracking / line-height 1.4
+- Body (Standard Text): Crimson Pro Regular / 16px / normal tracking / line-height 1.6
+- Small (Metadata/Labels): Crimson Pro Medium / 14px / normal tracking / line-height 1.5
+- Numbers/Stats: Playfair Display Bold / 28px / -0.01em tracking / Tabular nums
+- Captions: Crimson Pro Regular / 13px / normal tracking / line-height 1.4
 
 ## Animations
 
