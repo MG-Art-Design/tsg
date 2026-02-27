@@ -6,6 +6,7 @@ import { Portfolio, Asset, InsiderTrade } from '@/lib/types'
 import { formatCurrency, formatPercent, generateMockInsiderTrades } from '@/lib/helpers'
 import { motion } from 'framer-motion'
 import { InsiderTrades } from './InsiderTrades'
+import { StrategicInsights } from './StrategicInsights'
 
 interface DashboardProps {
   portfolio: Portfolio | null
@@ -33,6 +34,8 @@ export function Dashboard({ portfolio, marketData }: DashboardProps) {
   return (
     <div className="space-y-6">
       <InsiderTrades trades={insiderTrades} />
+
+      <StrategicInsights trades={insiderTrades} />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <motion.div

@@ -68,6 +68,13 @@ This app requires multiple interconnected features including user profiles, real
 - **Progression**: Load Dashboard → View "Stonk: Omg It's In" section → Filter by category (All/Congress/White House/Trump Family) → Review trade details (trader, asset, action, value, dates) → Use intelligence for portfolio decisions
 - **Success criteria**: Data updates every 12 hours, displays accurate trade information, filters work correctly, distinctive black-gold styling sets section apart visually, maintains monochromatic design consistency
 
+### Strategic Positioning AI ("Stonk: Omg It's In" Analysis)
+- **Functionality**: AI-powered analysis of insider trading patterns that generates strategic market insights with hypothesized future moves and risk assessments
+- **Purpose**: Transforms raw insider trading data into actionable intelligence, helping users understand market signals and position their portfolios strategically
+- **Trigger**: User clicks "Generate Insight" button in Strategic Positioning AI card on Dashboard
+- **Progression**: Click Generate → AI analyzes recent insider trades → Generates insight with title, analysis paragraphs, signals to watch, hypothesized moves, risk level, and confidence score → Display formatted insight with black-gold styling → Option to refresh for new perspective
+- **Success criteria**: Insights are contextually relevant to current insider trades, analysis has personality (sassy but strategic), risk levels and confidence scores make sense, hypothesized moves are actionable, maintains black-gold design theme
+
 ## Edge Case Handling
 
 - **Mid-Quarter Joiners**: New users joining mid-quarter receive prorated virtual capital and compete in a "rookie league" until next quarter starts
@@ -81,6 +88,8 @@ This app requires multiple interconnected features including user profiles, real
 - **Invalid Email Addresses**: Email validation on input; error message shown if address format is incorrect
 - **Insider Trade Data Unavailable**: If 12-hour scrape fails, display last known data with timestamp; show "Data updating..." message in header
 - **Empty Insider Trade Categories**: When filtering shows no results, display friendly empty state with sparkle icon and explanatory message
+- **AI Insight Generation Failures**: If LLM call fails, show error toast with retry option; previous insights remain visible
+- **No Trades Available for Analysis**: Generate Insight button disabled with tooltip explaining data needed; empty state shown in Strategic Positioning AI card
 
 ## Design Direction
 
@@ -141,12 +150,13 @@ Animations should feel electric and responsive—quick snaps for interactions, s
   - Navigation: Tabs for main sections (Dashboard, Portfolio, Leaderboard, Groups, Insights, Profile)
   - Dashboard: Card components for portfolio summary, market movers, recent insights, and "Stonk: Omg It's In" insider trades section
   - InsiderTrades: Distinctive black-gold themed card with category filters (All/Congress/White House/Trump Family), animated trade entries with buy/sell badges, trader details, asset information, and disclosure dates
+  - StrategicInsights: AI-powered analysis card with black-gold theme, brain icon, "Generate Insight" button, loading states with animated sparkle, displays generated insights with title, multi-paragraph analysis, key signals list, hypothesized moves, risk level badge, and confidence percentage
   - Portfolio Manager: Table for holdings with editable percentage inputs, Dialog for trade confirmation
   - Leaderboard: Table with Avatar, ranking badges, sortable columns
   - Insights Feed: Scrollable Card list with timestamp, category badges
   - Profile: Avatar with upload/emoji picker, Input fields for username/bio, Switch components for notification preferences, EmailSettings card for email notification management
   - Market Data: Custom chart components with D3 for price history
-  - Toasts (Sonner): Trade confirmations, insight deliveries, competition updates, email notification scheduling confirmations
+  - Toasts (Sonner): Trade confirmations, insight deliveries, competition updates, email notification scheduling confirmations, AI insight generation success/failures
   - EmailSettings: Card component with email input, frequency selector, content checkboxes (leaderboard/market/insights)
   - EmailNotificationsManager: Background component that monitors preferences and schedules email generation
   
