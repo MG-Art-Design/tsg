@@ -38,8 +38,6 @@ export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick }
 
   return (
     <div className="space-y-6">
-      <InsiderTrades trades={insiderTrades} userTier={userTier} onUpgradeClick={onUpgradeClick} />
-
       <StrategicInsights trades={insiderTrades} userTier={userTier} onUpgradeClick={onUpgradeClick} />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -182,7 +180,11 @@ export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick }
             </CardContent>
           </Card>
         </div>
+      </div>
 
+      <InsiderTrades trades={insiderTrades} userTier={userTier} onUpgradeClick={onUpgradeClick} />
+
+      <div className="space-y-4">
         {userTier !== 'premium' && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
