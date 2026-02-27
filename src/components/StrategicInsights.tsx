@@ -2,13 +2,15 @@ import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { InsiderTrade } from '@/lib/types'
+import { InsiderTrade, SubscriptionTier } from '@/lib/types'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Brain, Sparkle, TrendUp, Warning, Target, Lightbulb } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 
 interface StrategicInsightsProps {
   trades: InsiderTrade[]
+  userTier: SubscriptionTier
+  onUpgradeClick: () => void
 }
 
 interface GeneratedInsight {
@@ -22,9 +24,52 @@ interface GeneratedInsight {
   timestamp: number
 }
 
-export function StrategicInsights({ trades }: StrategicInsightsProps) {
+export function StrategicInsights({ trades, userTier, onUpgradeClick }: StrategicInsightsProps) {
   const [isGenerating, setIsGenerating] = useState(false)
   const [insight, setInsight] = useState<GeneratedInsight | null>(null)
+
+  if (userTier !== 'premium') {
+    return (
+      <Card className="border-2 border-[var(--insider-gold)]/20 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-[var(--insider-bg)]/60 to-transparent backdrop-blur-sm z-10 flex items-center justify-center">
+          <div className="text-center p-6 space-y-4">
+            <div className="flex justify-center">
+              <div className="p-4 bg-[var(--insider-bg)] rounded-full border-2 border-[var(--insider-gold)]">
+                <Brain size={32} weight="fill" className="text-[var(--insider-gold)]" />
+              </div>
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-[var(--insider-gold)] mb-2">Premium Feature</h3>
+              <p className="text-sm text-foreground/80 max-w-sm">
+                Unlock AI-powered strategic insights that analyze insider trading patterns and generate actionable intelligence for your portfolio.
+              </p>
+            </div>
+            <Button
+              onClick={onUpgradeClick}
+              size="lg"
+              className="bg-[var(--insider-gold)] text-[var(--insider-bg)] hover:bg-[var(--insider-gold-glow)] font-semibold shadow-lg"
+            >
+              <Brain size={20} weight="fill" className="mr-2" />
+              Upgrade to Access
+            </Button>
+          </div>
+        </div>
+        <div className="blur-sm pointer-events-none select-none opacity-40">
+          <CardHeader className="pb-4">
+            <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+              <Brain size={22} weight="fill" className="text-[var(--insider-gold)]" />
+              Strategic Positioning AI
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Sample insight content...
+            </p>
+          </CardContent>
+        </div>
+      </Card>
+    )
+  }
 
   const generateStrategicInsight = async () => {
     if (trades.length === 0) {

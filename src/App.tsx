@@ -10,6 +10,7 @@ import { Insights } from '@/components/Insights'
 import { Groups } from '@/components/Groups'
 import { EmailSettings } from '@/components/EmailSettings'
 import { EmailNotificationsManager } from '@/components/EmailNotificationsManager'
+import { SubscriptionManager } from '@/components/SubscriptionManager'
 import { Logo } from '@/components/Logo'
 import { UserProfile, Portfolio, Asset, PortfolioPosition, LeaderboardEntry, Insight } from '@/lib/types'
 import { 
@@ -29,6 +30,13 @@ function App() {
   const [allUsers, setAllUsers] = useKV<Record<string, UserProfile>>('all-users', {})
   const [marketData, setMarketData] = useState<Asset[]>([])
   const [activeTab, setActiveTab] = useState('dashboard')
+
+  const handleUpgradeClick = () => {
+    setActiveTab('profile')
+    toast.info('Navigate to Profile to upgrade', {
+      description: 'Head to your Profile tab to view premium plans and upgrade your subscription.'
+    })
+  }
 
   useEffect(() => {
     const data = generateMockMarketData()
@@ -277,7 +285,7 @@ function App() {
           </TabsList>
 
           <TabsContent value="dashboard">
-            <Dashboard portfolio={portfolio ?? null} marketData={marketData} />
+            <Dashboard portfolio={portfolio ?? null} marketData={marketData} userProfile={profile} onUpgradeClick={handleUpgradeClick} />
           </TabsContent>
 
           <TabsContent value="portfolio">
@@ -312,6 +320,8 @@ function App() {
                   Insights frequency: <span className="capitalize font-medium">{profile.insightFrequency}</span>
                 </div>
               </div>
+
+              <SubscriptionManager profile={profile} onUpdate={handleUserUpdate} />
 
               <EmailSettings profile={profile} onUpdate={handleUserUpdate} />
             </div>

@@ -7,6 +7,7 @@ export interface UserProfile {
   emailNotifications: EmailPreferences
   createdAt: number
   groupIds: string[]
+  subscription: SubscriptionStatus
 }
 
 export interface EmailPreferences {
@@ -145,4 +146,32 @@ export interface InsiderTrade {
   disclosureDate: number
   tradeDate: number
   source: string
+}
+
+export type SubscriptionTier = 'free' | 'premium'
+
+export interface SubscriptionStatus {
+  tier: SubscriptionTier
+  startDate?: number
+  endDate?: number
+  autoRenew: boolean
+  paymentMethod?: PaymentMethod
+}
+
+export interface PaymentMethod {
+  type: 'card' | 'paypal' | 'crypto'
+  last4?: string
+  expiryMonth?: number
+  expiryYear?: number
+  brand?: string
+}
+
+export interface SubscriptionFeatures {
+  strategicInsights: boolean
+  groupChat: boolean
+  emailNotifications: boolean
+  maxGroups: number
+  historicalData: boolean
+  advancedAnalytics: boolean
+  prioritySupport: boolean
 }

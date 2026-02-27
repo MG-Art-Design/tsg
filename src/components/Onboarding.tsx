@@ -49,6 +49,10 @@ export function Onboarding({ onComplete }: OnboardingProps) {
       },
       createdAt: Date.now(),
       groupIds: [],
+      subscription: {
+        tier: 'free',
+        autoRenew: false
+      }
     }
 
     onComplete(profile)

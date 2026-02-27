@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { TrendUp, TrendDown, Lightning, Trophy, ChartLine } from '@phosphor-icons/react'
-import { Portfolio, Asset, InsiderTrade } from '@/lib/types'
+import { Portfolio, Asset, InsiderTrade, UserProfile } from '@/lib/types'
 import { formatCurrency, formatPercent, generateMockInsiderTrades } from '@/lib/helpers'
 import { motion } from 'framer-motion'
 import { InsiderTrades } from './InsiderTrades'
@@ -11,9 +11,11 @@ import { StrategicInsights } from './StrategicInsights'
 interface DashboardProps {
   portfolio: Portfolio | null
   marketData: Asset[]
+  userProfile: UserProfile
+  onUpgradeClick: () => void
 }
 
-export function Dashboard({ portfolio, marketData }: DashboardProps) {
+export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick }: DashboardProps) {
   const topGainers = [...marketData].sort((a, b) => b.priceChangePercent24h - a.priceChangePercent24h).slice(0, 3)
   const topLosers = [...marketData].sort((a, b) => a.priceChangePercent24h - b.priceChangePercent24h).slice(0, 3)
   
@@ -35,7 +37,7 @@ export function Dashboard({ portfolio, marketData }: DashboardProps) {
     <div className="space-y-6">
       <InsiderTrades trades={insiderTrades} />
 
-      <StrategicInsights trades={insiderTrades} />
+      <StrategicInsights trades={insiderTrades} userTier={userProfile.subscription.tier} onUpgradeClick={onUpgradeClick} />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <motion.div

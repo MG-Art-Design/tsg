@@ -156,6 +156,54 @@ export function formatMessageTime(timestamp: number): string {
   })
 }
 
+import { SubscriptionTier, SubscriptionFeatures } from './types'
+
+export const SUBSCRIPTION_PRICING = {
+  free: { monthly: 0, annual: 0 },
+  premium: { monthly: 9.99, annual: 99 }
+}
+
+export function getSubscriptionFeatures(tier: SubscriptionTier): SubscriptionFeatures {
+  if (tier === 'premium') {
+    return {
+      strategicInsights: true,
+      groupChat: true,
+      emailNotifications: true,
+      maxGroups: -1,
+      historicalData: true,
+      advancedAnalytics: true,
+      prioritySupport: true
+    }
+  }
+
+  return {
+    strategicInsights: false,
+    groupChat: false,
+    emailNotifications: false,
+    maxGroups: 1,
+    historicalData: false,
+    advancedAnalytics: false,
+    prioritySupport: false
+  }
+}
+
+export function isSubscriptionActive(endDate?: number): boolean {
+  if (!endDate) return false
+  return Date.now() < endDate
+}
+
+export function getSubscriptionDaysRemaining(endDate?: number): number {
+  if (!endDate) return 0
+  const remaining = endDate - Date.now()
+  return Math.max(0, Math.ceil(remaining / (1000 * 60 * 60 * 24)))
+}
+
+export function calculateSubscriptionEndDate(months: number = 1): number {
+  const now = new Date()
+  now.setMonth(now.getMonth() + months)
+  return now.getTime()
+}
+
 export function generateMockInsiderTrades(): InsiderTrade[] {
   const congressMembers = [
     { name: 'Nancy Pelosi', title: 'Former Speaker of the House' },
