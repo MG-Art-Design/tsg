@@ -33,11 +33,13 @@ export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick }
     return () => clearInterval(interval)
   }, [])
 
+  const userTier = userProfile.subscription?.tier || 'free'
+
   return (
     <div className="space-y-6">
       <InsiderTrades trades={insiderTrades} />
 
-      <StrategicInsights trades={insiderTrades} userTier={userProfile.subscription.tier} onUpgradeClick={onUpgradeClick} />
+      <StrategicInsights trades={insiderTrades} userTier={userTier} onUpgradeClick={onUpgradeClick} />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <motion.div

@@ -31,6 +31,18 @@ function App() {
   const [marketData, setMarketData] = useState<Asset[]>([])
   const [activeTab, setActiveTab] = useState('dashboard')
 
+  useEffect(() => {
+    if (profile && !profile.subscription) {
+      setProfile((current) => current ? {
+        ...current,
+        subscription: {
+          tier: 'free',
+          autoRenew: false
+        }
+      } : null)
+    }
+  }, [profile?.id])
+
   const handleUpgradeClick = () => {
     setActiveTab('profile')
     toast.info('Navigate to Profile to upgrade', {
