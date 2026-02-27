@@ -31,6 +31,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
       bio: bio.trim(),
       insightFrequency,
       createdAt: Date.now(),
+      groupIds: [],
     }
 
     onComplete(profile)

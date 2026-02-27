@@ -7,6 +7,7 @@ import { Dashboard } from '@/components/Dashboard'
 import { PortfolioManager } from '@/components/PortfolioManager'
 import { Leaderboard } from '@/components/Leaderboard'
 import { Insights } from '@/components/Insights'
+import { Groups } from '@/components/Groups'
 import { UserProfile, Portfolio, Asset, PortfolioPosition, LeaderboardEntry, Insight } from '@/lib/types'
 import { 
   generateMockMarketData, 
@@ -14,13 +15,15 @@ import {
   INITIAL_PORTFOLIO_VALUE,
   calculatePortfolioValue
 } from '@/lib/helpers'
-import { ChartLine, Lightning, Trophy, Notebook, User } from '@phosphor-icons/react'
+import { ChartLine, Lightning, Trophy, Notebook, User, Users } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 
 function App() {
   const [profile, setProfile] = useKV<UserProfile | null>('user-profile', null)
   const [portfolio, setPortfolio] = useKV<Portfolio | null>('user-portfolio', null)
   const [insights, setInsights] = useKV<Insight[]>('user-insights', [])
+  const [allPortfolios, setAllPortfolios] = useKV<Record<string, Portfolio>>('all-portfolios', {})
+  const [allUsers, setAllUsers] = useKV<Record<string, UserProfile>>('all-users', {})
   const [marketData, setMarketData] = useState<Asset[]>([])
   const [activeTab, setActiveTab] = useState('dashboard')
 
@@ -161,6 +164,11 @@ function App() {
     setPortfolio(newPortfolio)
     setActiveTab('dashboard')
 
+    setAllPortfolios(current => ({
+      ...(current || {}),
+      [profile!.id]: newPortfolio
+    }))
+
     const newInsight: Insight = {
       id: Date.now().toString(),
       userId: profile!.id,
@@ -172,6 +180,32 @@ function App() {
 
     setInsights((current) => [newInsight, ...(current || [])])
   }
+
+  const handleUserUpdate = (updatedUser: UserProfile) => {
+    setProfile(updatedUser)
+    setAllUsers(current => ({
+      ...(current || {}),
+      [updatedUser.id]: updatedUser
+    }))
+  }
+
+  useEffect(() => {
+    if (profile) {
+      setAllUsers(current => ({
+        ...(current || {}),
+        [profile.id]: profile
+      }))
+    }
+  }, [profile?.id])
+
+  useEffect(() => {
+    if (portfolio && profile) {
+      setAllPortfolios(current => ({
+        ...(current || {}),
+        [profile.id]: portfolio
+      }))
+    }
+  }, [portfolio?.lastUpdated, profile?.id])
 
   const mockLeaderboard: LeaderboardEntry[] = portfolio ? [
     {
@@ -214,7 +248,7 @@ function App() {
 
       <main className="container mx-auto px-4 py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-5 mb-6">
+          <TabsList className="grid w-full grid-cols-6 mb-6">
             <TabsTrigger value="dashboard" className="flex items-center gap-2">
               <ChartLine size={18} />
               <span className="hidden sm:inline">Dashboard</span>
@@ -226,6 +260,10 @@ function App() {
             <TabsTrigger value="leaderboard" className="flex items-center gap-2">
               <Trophy size={18} weight="fill" />
               <span className="hidden sm:inline">Leaderboard</span>
+            </TabsTrigger>
+            <TabsTrigger value="groups" className="flex items-center gap-2">
+              <Users size={18} weight="fill" />
+              <span className="hidden sm:inline">Groups</span>
             </TabsTrigger>
             <TabsTrigger value="insights" className="flex items-center gap-2">
               <Notebook size={18} />
@@ -250,7 +288,11 @@ function App() {
           </TabsContent>
 
           <TabsContent value="leaderboard">
-            <Leaderboard entries={mockLeaderboard} currentUserId={profile.id} />
+            <Leaderboard entries={mockLeaderboard} currentUserId={profile.id} currentUser={profile} />
+          </TabsContent>
+
+          <TabsContent value="groups">
+            <Groups currentUser={profile} onUserUpdate={handleUserUpdate} />
           </TabsContent>
 
           <TabsContent value="insights">

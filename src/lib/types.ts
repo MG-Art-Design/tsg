@@ -5,6 +5,7 @@ export interface UserProfile {
   bio: string
   insightFrequency: 'daily' | 'weekly' | 'monthly'
   createdAt: number
+  groupIds: string[]
 }
 
 export interface Asset {
@@ -75,4 +76,29 @@ export interface QuarterData {
   startDate: number
   endDate: number
   isActive: boolean
+}
+
+export interface Group {
+  id: string
+  name: string
+  description: string
+  createdBy: string
+  createdAt: number
+  memberIds: string[]
+  inviteCode: string
+}
+
+export interface GroupInvite {
+  id: string
+  groupId: string
+  groupName: string
+  invitedBy: string
+  invitedByUsername: string
+  invitedByAvatar: string
+  invitedAt: number
+  status: 'pending' | 'accepted' | 'declined'
+}
+
+export interface GroupLeaderboardEntry extends LeaderboardEntry {
+  groupId: string
 }
