@@ -43,7 +43,7 @@ export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick }
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <Card className="border-primary/20 bg-gradient-to-br from-card to-muted/30">
+          <Card className="border-2 border-[oklch(0.70_0.14_75)] bg-gradient-to-br from-card to-muted/30">
             <CardHeader className="pb-2">
               <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground flex items-center gap-1.5 sm:gap-2">
                 <ChartLine size={16} className="sm:w-[18px] sm:h-[18px]" />
@@ -69,7 +69,7 @@ export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick }
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.1 }}
         >
-          <Card className="border-accent/20 bg-gradient-to-br from-card to-muted/30">
+          <Card className="border-2 border-[oklch(0.70_0.14_75)] bg-gradient-to-br from-card to-muted/30">
             <CardHeader className="pb-2">
               <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground flex items-center gap-1.5 sm:gap-2">
                 <Lightning size={16} weight="fill" className="sm:w-[18px] sm:h-[18px]" />
@@ -92,7 +92,7 @@ export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick }
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.2 }}
         >
-          <Card className="border-secondary/20 bg-gradient-to-br from-card to-muted/30">
+          <Card className="border-2 border-[oklch(0.70_0.14_75)] bg-gradient-to-br from-card to-muted/30">
             <CardHeader className="pb-2">
               <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground flex items-center gap-1.5 sm:gap-2">
                 <Trophy size={16} weight="fill" className="sm:w-[18px] sm:h-[18px]" />
@@ -113,7 +113,7 @@ export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick }
 
       <div className="space-y-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <Card className="border-success/20">
+          <Card className="border-2 border-[oklch(0.70_0.14_75)]">
             <CardHeader>
               <CardTitle className="text-base sm:text-lg flex items-center gap-2">
                 <TrendUp size={18} weight="bold" className="text-success sm:w-5 sm:h-5" />
@@ -127,7 +127,7 @@ export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick }
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3, delay: 0.3 + i * 0.1 }}
-                  className="flex items-center justify-between p-3 rounded-lg bg-success/5 border border-success/10"
+                  className="flex items-center justify-between p-3 rounded-lg bg-success/5 border border-[oklch(0.70_0.14_75)]/30"
                 >
                   <div>
                     <div className="font-semibold">{asset.symbol}</div>
@@ -145,7 +145,7 @@ export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick }
             </CardContent>
           </Card>
 
-          <Card className="border-destructive/20">
+          <Card className="border-2 border-[oklch(0.70_0.14_75)]">
             <CardHeader>
               <CardTitle className="text-base sm:text-lg flex items-center gap-2">
                 <TrendDown size={18} weight="bold" className="text-destructive sm:w-5 sm:h-5" />
@@ -159,7 +159,7 @@ export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick }
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3, delay: 0.3 + i * 0.1 }}
-                  className="flex items-center justify-between p-3 rounded-lg bg-destructive/5 border border-destructive/10"
+                  className="flex items-center justify-between p-3 rounded-lg bg-destructive/5 border border-[oklch(0.70_0.14_75)]/30"
                 >
                   <div>
                     <div className="font-semibold">{asset.symbol}</div>
@@ -182,7 +182,7 @@ export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick }
       <InsiderTrades trades={insiderTrades} userTier={userTier} onUpgradeClick={onUpgradeClick} />
 
       {portfolio && portfolio.positions.length > 0 && (
-        <Card className="border-primary/20">
+        <Card className="border-2 border-[oklch(0.70_0.14_75)]">
           <CardHeader>
             <CardTitle className="text-base sm:text-lg">Your Top Holdings</CardTitle>
           </CardHeader>
@@ -194,7 +194,7 @@ export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick }
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: 0.5 + i * 0.1 }}
-                  className="flex items-center justify-between p-3 rounded-lg bg-muted/30 border border-border"
+                  className="flex items-center justify-between p-3 rounded-lg bg-muted/30 border border-[oklch(0.70_0.14_75)]/30"
                 >
                   <div className="flex items-center gap-3">
                     <Badge variant={position.type === 'crypto' ? 'default' : 'secondary'}>

@@ -97,7 +97,7 @@ export function PortfolioManager({ currentPortfolio, marketData, onSave }: Portf
 
   return (
     <div className="space-y-4">
-      <Card className="border-primary/20">
+      <Card className="border-2 border-[oklch(0.70_0.14_75)]">
         <CardHeader>
           <CardTitle className="text-2xl flex items-center gap-2">
             <Lightning size={28} weight="fill" className="text-primary" />
@@ -110,7 +110,7 @@ export function PortfolioManager({ currentPortfolio, marketData, onSave }: Portf
       </Card>
 
       {Object.keys(allocations).length > 0 && (
-        <Card className="border-accent/20 bg-accent/5">
+        <Card className="border-2 border-[oklch(0.70_0.14_75)] bg-accent/5">
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle className="text-lg">Current Allocation</CardTitle>
@@ -130,7 +130,7 @@ export function PortfolioManager({ currentPortfolio, marketData, onSave }: Portf
               if (!asset) return null
               
               return (
-                <div key={symbol} className="flex items-center gap-3 p-3 rounded-lg bg-card border border-border">
+                <div key={symbol} className="flex items-center gap-3 p-3 rounded-lg bg-card border-2 border-[oklch(0.70_0.14_75)]/30">
                   <Badge variant={asset.type === 'crypto' ? 'default' : 'secondary'}>
                     {asset.type === 'crypto' ? '₿' : '$'}
                   </Badge>
@@ -172,7 +172,7 @@ export function PortfolioManager({ currentPortfolio, marketData, onSave }: Portf
         </Card>
       )}
 
-      <Card>
+      <Card className="border-2 border-[oklch(0.70_0.14_75)]">
         <CardHeader>
           <div className="relative">
             <MagnifyingGlass size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />

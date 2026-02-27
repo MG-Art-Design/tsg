@@ -69,7 +69,7 @@ export function Leaderboard({ entries, currentUserId, currentUser, onAddFriendsC
 
   return (
     <div className="space-y-4">
-      <Card className="border-primary/20">
+      <Card className="border-2 border-[oklch(0.70_0.14_75)]">
         <CardHeader>
           <CardTitle className="text-xl sm:text-2xl flex items-center gap-2">
             <Trophy size={24} weight="fill" className="text-accent sm:w-7 sm:h-7" />
@@ -83,7 +83,7 @@ export function Leaderboard({ entries, currentUserId, currentUser, onAddFriendsC
 
       <div className="space-y-3">
         {filteredEntries.length === 0 ? (
-          <Card className="border-border">
+          <Card className="border-2 border-[oklch(0.70_0.14_75)]">
             <CardContent className="py-12 text-center">
               <UserPlus size={48} className="text-muted-foreground mx-auto mb-4" />
               <p className="text-lg font-semibold mb-2">No friends yet</p>

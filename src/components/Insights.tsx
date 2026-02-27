@@ -57,7 +57,7 @@ export function Insights({ insights }: InsightsProps) {
 
   return (
     <div className="space-y-4">
-      <Card className="border-primary/20">
+      <Card className="border-2 border-[oklch(0.70_0.14_75)]">
         <CardHeader>
           <CardTitle className="text-xl sm:text-2xl flex items-center gap-2">
             <Lightning size={24} weight="fill" className="text-accent sm:w-7 sm:h-7" />
@@ -70,7 +70,7 @@ export function Insights({ insights }: InsightsProps) {
       </Card>
 
       {sortedInsights.length === 0 ? (
-        <Card className="border-border">
+        <Card className="border-2 border-[oklch(0.70_0.14_75)]">
           <CardContent className="py-12 text-center">
             <Lightning size={48} className="text-muted-foreground mx-auto mb-4" />
             <p className="text-muted-foreground">
@@ -91,7 +91,7 @@ export function Insights({ insights }: InsightsProps) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: i * 0.05 }}
               >
-                <Card className={`${config.borderColor} ${!insight.read ? 'ring-2 ring-primary/30' : ''}`}>
+                <Card className={`border-2 border-[oklch(0.70_0.14_75)]/50 ${!insight.read ? 'ring-2 ring-primary/30' : ''}`}>
                   <CardContent className="p-4">
                     <div className="flex items-start gap-4">
                       <div className={`flex-shrink-0 w-10 h-10 rounded-full ${config.bgColor} flex items-center justify-center`}>
