@@ -50,9 +50,9 @@ export function Logo({ size = 'md', animated = true, className = '' }: LogoProps
       >
         <defs>
           <linearGradient id="monoGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="oklch(0.72 0.06 210)" />
-            <stop offset="50%" stopColor="oklch(0.80 0.08 195)" />
-            <stop offset="100%" stopColor="oklch(0.72 0.06 210)" />
+            <stop offset="0%" stopColor="oklch(0.65 0.12 75)" />
+            <stop offset="50%" stopColor="oklch(0.70 0.14 75)" />
+            <stop offset="100%" stopColor="oklch(0.65 0.12 75)" />
           </linearGradient>
         </defs>
 
