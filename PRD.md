@@ -61,6 +61,13 @@ This app requires multiple interconnected features including user profiles, real
 - **Progression**: Enable in settings → Set email & frequency → Select content types (leaderboard/market/insights) → Receive scheduled updates → Email contains formatted HTML with portfolio performance, rankings, and AI insights
 - **Success criteria**: Emails sent at correct intervals, content respects user preferences, HTML formatting displays correctly, emails include current rankings and accurate portfolio data
 
+### Insider Trading Intelligence Feed ("Stonk: Omg It's In")
+- **Functionality**: Displays publicly disclosed insider trades from Congress members, White House officials, and Trump family/partners, updated every 12 hours with filtering by category
+- **Purpose**: Provides competitive intelligence on high-profile trades to inform user investment strategies and add intrigue to the competition
+- **Trigger**: Automatically displayed on Dashboard; data refreshes every 12 hours
+- **Progression**: Load Dashboard → View "Stonk: Omg It's In" section → Filter by category (All/Congress/White House/Trump Family) → Review trade details (trader, asset, action, value, dates) → Use intelligence for portfolio decisions
+- **Success criteria**: Data updates every 12 hours, displays accurate trade information, filters work correctly, distinctive black-gold styling sets section apart visually, maintains monochromatic design consistency
+
 ## Edge Case Handling
 
 - **Mid-Quarter Joiners**: New users joining mid-quarter receive prorated virtual capital and compete in a "rookie league" until next quarter starts
@@ -72,6 +79,8 @@ This app requires multiple interconnected features including user profiles, real
 - **Email Delivery Failures**: Emails queued locally and marked for retry; users see notification status in profile settings
 - **Disabled Email Notifications**: Users without email enabled still receive in-app insights; email preferences can be toggled anytime
 - **Invalid Email Addresses**: Email validation on input; error message shown if address format is incorrect
+- **Insider Trade Data Unavailable**: If 12-hour scrape fails, display last known data with timestamp; show "Data updating..." message in header
+- **Empty Insider Trade Categories**: When filtering shows no results, display friendly empty state with sparkle icon and explanatory message
 
 ## Design Direction
 
@@ -81,7 +90,7 @@ The design should evoke sophistication and focus—a refined, monochromatic aest
 
 ## Color Selection
 
-A sophisticated monochromatic palette built around blue-grays with minimal saturation—evoking calm focus, analytical precision, and professional trading terminals.
+A sophisticated monochromatic palette built around blue-grays with minimal saturation—evoking calm focus, analytical precision, and professional trading terminals. The "Stonk: Omg It's In" insider trading section uses a distinctive black-gold color scheme that stands apart while maintaining the overall monochromatic design language.
 
 - **Primary Color**: Cool Steel Blue (oklch(0.72 0.06 210)) - Subtle, refined, represents clarity and upward momentum. Used for primary actions and positive performance indicators with restraint.
 - **Secondary Colors**: 
@@ -89,6 +98,10 @@ A sophisticated monochromatic palette built around blue-grays with minimal satur
   - Slate Surface (oklch(0.19 0.015 240)) - Slightly lighter panels for cards and surfaces
   - Muted Blue-Gray (oklch(0.38 0.04 240)) - Supporting color for secondary actions and neutral states
 - **Accent Color**: Light Steel (oklch(0.68 0.08 220)) - Subtle blue-gray highlight for CTAs and important elements. Refined and understated.
+- **Black-Gold Accent (Insider Trading Section)**: 
+  - Rich Gold (oklch(0.70 0.14 75)) - Luxurious gold for text and key elements in insider trading section
+  - Deep Black (oklch(0.05 0.008 70)) - Nearly pure black background creating premium contrast
+  - Gold Glow (oklch(0.65 0.12 75)) - Softer gold for borders and glowing effects
 - **Supporting Colors**:
   - Muted Green (oklch(0.70 0.12 145)) - Gains, positive returns, upward trends (desaturated)
   - Muted Red (oklch(0.58 0.18 25)) - Losses, negative returns, warnings (desaturated)
@@ -98,6 +111,7 @@ A sophisticated monochromatic palette built around blue-grays with minimal satur
   - Light text (oklch(0.92 0.01 240)): Deep Charcoal (oklch(0.15 0.01 240)) - Ratio 11.2:1 ✓
   - Light text (oklch(0.92 0.01 240)): Slate Surface (oklch(0.19 0.015 240)) - Ratio 8.8:1 ✓
   - Muted Green (oklch(0.70 0.12 145)): Deep Charcoal - Ratio 5.8:1 ✓
+  - Rich Gold (oklch(0.70 0.14 75)): Deep Black (oklch(0.05 0.008 70)) - Ratio 13.5:1 ✓
 
 ## Font Selection
 
@@ -125,7 +139,8 @@ Animations should feel electric and responsive—quick snaps for interactions, s
   - Logo: Custom SVG component with animated ascending chart line and gradient text (variants: sm, md, lg, xl)
   - BrandElements: ChartPattern (decorative background motifs), BrandBadge (category/status indicators), StatCard (metrics display with trend patterns), BrandDivider (gradient section separators)
   - Navigation: Tabs for main sections (Dashboard, Portfolio, Leaderboard, Groups, Insights, Profile)
-  - Dashboard: Card components for portfolio summary, market movers, recent insights
+  - Dashboard: Card components for portfolio summary, market movers, recent insights, and "Stonk: Omg It's In" insider trades section
+  - InsiderTrades: Distinctive black-gold themed card with category filters (All/Congress/White House/Trump Family), animated trade entries with buy/sell badges, trader details, asset information, and disclosure dates
   - Portfolio Manager: Table for holdings with editable percentage inputs, Dialog for trade confirmation
   - Leaderboard: Table with Avatar, ranking badges, sortable columns
   - Insights Feed: Scrollable Card list with timestamp, category badges
@@ -144,6 +159,7 @@ Animations should feel electric and responsive—quick snaps for interactions, s
   - Profile avatar component supporting both uploaded images and emoji selection
   - Custom insight card with AI-generated content and sassy tone indicators (emoji reactions)
   - Branded stat cards with subtle chart pattern backgrounds
+  - Black-gold themed insider trades section with distinctive glow effects, category filtering, and premium visual treatment
   
 - **States**: 
   - Buttons: Default with subtle glow, hover with brightness increase and scale 1.02, active with press down, disabled with 40% opacity
@@ -153,7 +169,7 @@ Animations should feel electric and responsive—quick snaps for interactions, s
   - Logo: Animated on first load (onboarding), static in header for performance
   
 - **Icon Selection**: 
-  - TrendUp/TrendDown: Portfolio performance indicators
+  - TrendUp/TrendDown: Portfolio performance indicators, insider trade buy/sell actions
   - ChartLine: Market data and insights
   - Trophy: Leaderboard and winners
   - User/UserCircle: Profile and user management
@@ -164,6 +180,9 @@ Animations should feel electric and responsive—quick snaps for interactions, s
   - Bell: Notifications
   - Gear: Settings
   - Envelope: Email notifications and settings
+  - Sparkle: Insider trading section header and empty states
+  - Gavel: Congress trades category
+  - Buildings: White House trades category
   
 - **Spacing**: 
   - Container padding: p-6 (24px) on desktop, p-4 (16px) on mobile
