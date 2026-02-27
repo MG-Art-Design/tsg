@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { TrendUp, TrendDown, Lightning, Trophy, ChartLine } from '@phosphor-icons/react'
 import { Portfolio, Asset, InsiderTrade, UserProfile } from '@/lib/types'
 import { formatCurrency, formatPercent, generateMockInsiderTrades } from '@/lib/helpers'
