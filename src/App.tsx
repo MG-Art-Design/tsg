@@ -262,12 +262,12 @@ function App() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
+      <header className="border-b-2 border-[oklch(0.70_0.14_75)] bg-gradient-to-r from-card to-[oklch(0.08_0.006_70)] backdrop-blur-sm sticky top-0 z-50 shadow-[0_2px_20px_oklch(0.65_0.12_75_/_0.15)]">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Logo size="sm" animated={false} />
             <div className="flex items-center gap-4">
-              <div className="text-sm text-muted-foreground">
+              <div className="text-sm text-[oklch(0.70_0.14_75)] font-semibold">
                 {getCurrentQuarter()} • {profile.username}
               </div>
               <div className="text-4xl">{profile.avatar}</div>
@@ -278,28 +278,28 @@ function App() {
 
       <main className="container mx-auto px-4 py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-6 mb-6">
-            <TabsTrigger value="dashboard" className="flex items-center gap-2">
+          <TabsList className="grid w-full grid-cols-6 mb-6 bg-gradient-to-r from-[oklch(0.10_0.005_60)] to-[oklch(0.08_0.006_70)] border-2 border-[oklch(0.70_0.14_75)] p-1 h-auto shadow-[0_0_20px_oklch(0.65_0.12_75_/_0.2)]">
+            <TabsTrigger value="dashboard" className="flex items-center gap-2 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold">
               <ChartLine size={18} />
               <span className="hidden sm:inline">Dashboard</span>
             </TabsTrigger>
-            <TabsTrigger value="portfolio" className="flex items-center gap-2">
+            <TabsTrigger value="portfolio" className="flex items-center gap-2 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold">
               <Lightning size={18} weight="fill" />
               <span className="hidden sm:inline">Portfolio</span>
             </TabsTrigger>
-            <TabsTrigger value="leaderboard" className="flex items-center gap-2">
+            <TabsTrigger value="leaderboard" className="flex items-center gap-2 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold">
               <Trophy size={18} weight="fill" />
               <span className="hidden sm:inline">Leaderboard</span>
             </TabsTrigger>
-            <TabsTrigger value="groups" className="flex items-center gap-2">
+            <TabsTrigger value="groups" className="flex items-center gap-2 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold">
               <Users size={18} weight="fill" />
               <span className="hidden sm:inline">Groups</span>
             </TabsTrigger>
-            <TabsTrigger value="insights" className="flex items-center gap-2">
+            <TabsTrigger value="insights" className="flex items-center gap-2 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold">
               <Notebook size={18} />
               <span className="hidden sm:inline">Insights</span>
             </TabsTrigger>
-            <TabsTrigger value="profile" className="flex items-center gap-2">
+            <TabsTrigger value="profile" className="flex items-center gap-2 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold">
               <User size={18} />
               <span className="hidden sm:inline">Profile</span>
             </TabsTrigger>
