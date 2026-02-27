@@ -59,7 +59,7 @@ export function InsiderTrades({ trades, userTier = 'free', onUpgradeClick }: Ins
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
-      <Card className="border-2 border-[oklch(0.65_0.12_75)] bg-gradient-to-br from-[oklch(0.08_0.005_60)] to-[oklch(0.05_0.008_70)] shadow-[0_0_40px_oklch(0.65_0.12_75_/_0.25)]">
+      <Card className="relative border-[6px] border-[oklch(0.65_0.12_75)] shadow-[0_0_2px_2px_oklch(0_0_0),0_0_40px_oklch(0.65_0.12_75_/_0.3)] bg-[radial-gradient(ellipse_at_top,oklch(0.08_0.015_240),oklch(0.03_0.008_240)),radial-gradient(ellipse_at_bottom,oklch(0.05_0.012_260),oklch(0.02_0.005_240))] before:absolute before:inset-0 before:bg-[repeating-linear-gradient(0deg,transparent,transparent_2px,oklch(0.12_0.02_240_/_0.15)_2px,oklch(0.12_0.02_240_/_0.15)_4px)] before:pointer-events-none before:rounded-[inherit]">
         <CardHeader className="border-b border-[oklch(0.65_0.12_75_/_0.3)] bg-gradient-to-r from-[oklch(0.65_0.12_75_/_0.08)] to-transparent">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
