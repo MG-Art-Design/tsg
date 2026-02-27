@@ -47,7 +47,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
             </div>
           </div>
           <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-            Welcome to Bulls & Bears
+            Welcome to TSG
           </CardTitle>
           <CardDescription className="text-base">
             Join the most competitive trading club. Time to show your friends who's got the best market instincts.

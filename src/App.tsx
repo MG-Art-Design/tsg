@@ -101,7 +101,7 @@ function App() {
       {
         id: Date.now().toString(),
         userId: profile!.id,
-        content: `Welcome to Bulls & Bears, ${profile!.username}! 🎉 Time to show your friends what you're made of. Build your portfolio, take some risks, and let's see who comes out on top this quarter. Remember: fortune favors the bold... but also the informed.`,
+        content: `Welcome to TSG: The Stonk Game, ${profile!.username}! 🎉 Time to show your friends what you're made of. Build your portfolio, take some risks, and let's see who comes out on top this quarter. Remember: fortune favors the bold... but also the informed.`,
         category: 'portfolio-tip',
         timestamp: Date.now(),
         read: false
@@ -235,7 +235,7 @@ function App() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-                Bulls & Bears Club
+                TSG: The Stonk Game
               </h1>
               <p className="text-sm text-muted-foreground">
                 {getCurrentQuarter()} • {profile.username}

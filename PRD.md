@@ -1,4 +1,4 @@
-# Planning Guide
+# TSG: The Stonk Game - Planning Guide
 
 A virtual trading competition platform where friends compete in quarterly S&P 500 and crypto prediction challenges, tracking performance, sharing achievements, and enjoying friendly rivalry through paper trading.
 
