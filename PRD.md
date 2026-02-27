@@ -67,6 +67,8 @@ This app requires multiple interconnected features including user profiles, real
 
 The design should evoke the excitement of a high-stakes casino mixed with the refinement of a premium financial terminal—dark, sleek, and energetic. Think neon accents against deep backgrounds, sharp geometric shapes, and confident typography that whispers "take the risk." The interface should feel like a secret society for ambitious friends, where making bold moves is celebrated and losses are learning opportunities wrapped in humor.
 
+**Brand Identity:** The logo features bold, geometric "STONK GAME" typography with an ascending chart arrow cutting diagonally across—symbolizing upward momentum and market gains. This ascending line motif is extrapolated throughout the entire design system: subtle chart patterns in card backgrounds, animated rising arrows for positive movements, and gradient flows that mirror stock trajectories. The geometric, technical aesthetic of Space Grotesk typography reinforces the trading terminal vibe while maintaining playful energy.
+
 ## Color Selection
 
 A dark, sophisticated palette with vibrant neon accents that pop against the shadows—evoking both late-night trading floors and exclusive gaming lounges.
@@ -111,7 +113,9 @@ Animations should feel electric and responsive—quick snaps for interactions, s
 ## Component Selection
 
 - **Components**: 
-  - Navigation: Tabs for main sections (Dashboard, Portfolio, Leaderboard, Insights, Profile)
+  - Logo: Custom SVG component with animated ascending chart line and gradient text (variants: sm, md, lg, xl)
+  - BrandElements: ChartPattern (decorative background motifs), BrandBadge (category/status indicators), StatCard (metrics display with trend patterns), BrandDivider (gradient section separators)
+  - Navigation: Tabs for main sections (Dashboard, Portfolio, Leaderboard, Groups, Insights, Profile)
   - Dashboard: Card components for portfolio summary, market movers, recent insights
   - Portfolio Manager: Table for holdings with editable percentage inputs, Dialog for trade confirmation
   - Leaderboard: Table with Avatar, ranking badges, sortable columns
@@ -121,24 +125,28 @@ Animations should feel electric and responsive—quick snaps for interactions, s
   - Toasts (Sonner): Trade confirmations, insight deliveries, competition updates
   
 - **Customizations**: 
+  - Custom animated Logo component reflecting brand's geometric typography and ascending arrow motif
+  - Chart pattern decorative elements that echo the logo's upward trajectory
   - Custom ranking badge component with gradient borders and glow effects
   - Animated percentage change indicators with color-coded arrows
   - Custom market ticker component with scrolling prices
   - Profile avatar component supporting both uploaded images and emoji selection
   - Custom insight card with AI-generated content and sassy tone indicators (emoji reactions)
+  - Branded stat cards with subtle chart pattern backgrounds
   
 - **States**: 
   - Buttons: Default with subtle glow, hover with brightness increase and scale 1.02, active with press down, disabled with 40% opacity
   - Inputs: Default with neon border-bottom, focus with full neon border and subtle glow, error with red border pulse
   - Cards: Default elevated shadow, hover with increased elevation and border glow
   - Trade buttons: Pulse animation when market is volatile, success state with green flash
+  - Logo: Animated on first load (onboarding), static in header for performance
   
 - **Icon Selection**: 
   - TrendUp/TrendDown: Portfolio performance indicators
   - ChartLine: Market data and insights
   - Trophy: Leaderboard and winners
   - User/UserCircle: Profile and user management
-  - Lightning: AI insights and quick actions
+  - Lightning: AI insights and quick actions (legacy, being phased out for chart arrow motif)
   - ArrowsClockwise: Refresh market data
   - Coins: Crypto assets
   - ChartBar: S&P 500 stocks
@@ -154,6 +162,7 @@ Animations should feel electric and responsive—quick snaps for interactions, s
   
 - **Mobile**: 
   - Tabs collapse to bottom navigation bar with icons only
+  - Logo scales to sm size on mobile headers
   - Dashboard cards stack vertically instead of grid
   - Leaderboard table shows abbreviated columns (rank, avatar, name, % return only)
   - Portfolio manager switches from table to card-based list

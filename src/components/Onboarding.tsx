@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useState } from 'react'
 import { UserProfile } from '@/lib/types'
 import { getRandomAvatar } from '@/lib/helpers'
-import { Lightning } from '@phosphor-icons/react'
+import { Logo } from '@/components/Logo'
 
 interface OnboardingProps {
   onComplete: (profile: UserProfile) => void
@@ -41,13 +41,11 @@ export function Onboarding({ onComplete }: OnboardingProps) {
     <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-background via-background to-muted">
       <Card className="w-full max-w-lg border-primary/20 shadow-lg glow">
         <CardHeader className="text-center space-y-2">
-          <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center glow">
-              <Lightning size={32} weight="fill" className="text-primary-foreground" />
-            </div>
+          <div className="flex justify-center mb-6">
+            <Logo size="md" animated={true} />
           </div>
-          <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-            Welcome to TSG
+          <CardTitle className="text-2xl font-bold">
+            Welcome to The Stonk Game
           </CardTitle>
           <CardDescription className="text-base">
             Join the most competitive trading club. Time to show your friends who's got the best market instincts.

@@ -8,6 +8,7 @@ import { PortfolioManager } from '@/components/PortfolioManager'
 import { Leaderboard } from '@/components/Leaderboard'
 import { Insights } from '@/components/Insights'
 import { Groups } from '@/components/Groups'
+import { Logo } from '@/components/Logo'
 import { UserProfile, Portfolio, Asset, PortfolioPosition, LeaderboardEntry, Insight } from '@/lib/types'
 import { 
   generateMockMarketData, 
@@ -233,15 +234,13 @@ function App() {
       <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-                TSG: The Stonk Game
-              </h1>
-              <p className="text-sm text-muted-foreground">
+            <Logo size="sm" animated={false} />
+            <div className="flex items-center gap-4">
+              <div className="text-sm text-muted-foreground">
                 {getCurrentQuarter()} • {profile.username}
-              </p>
+              </div>
+              <div className="text-4xl">{profile.avatar}</div>
             </div>
-            <div className="text-4xl">{profile.avatar}</div>
           </div>
         </div>
       </header>
