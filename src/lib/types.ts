@@ -8,6 +8,8 @@ export interface UserProfile {
   createdAt: number
   groupIds: string[]
   subscription: SubscriptionStatus
+  organizationId?: string
+  organizationRole?: 'owner' | 'admin' | 'member'
 }
 
 export interface EmailPreferences {
@@ -174,4 +176,59 @@ export interface SubscriptionFeatures {
   historicalData: boolean
   advancedAnalytics: boolean
   prioritySupport: boolean
+}
+
+export interface Organization {
+  id: string
+  name: string
+  description: string
+  logoUrl?: string
+  createdBy: string
+  createdAt: number
+  memberIds: string[]
+  adminIds: string[]
+  settings: OrganizationSettings
+  subscription: OrganizationSubscription
+}
+
+export interface OrganizationSettings {
+  allowMemberInvites: boolean
+  requireAdminApproval: boolean
+  defaultInsightFrequency: 'daily' | 'weekly' | 'monthly'
+  sharedGroups: boolean
+  sharedLeaderboard: boolean
+}
+
+export interface OrganizationSubscription {
+  tier: 'team' | 'enterprise'
+  seats: number
+  usedSeats: number
+  startDate: number
+  endDate?: number
+  autoRenew: boolean
+  features: OrganizationFeatures
+}
+
+export interface OrganizationFeatures {
+  unlimitedGroups: boolean
+  customBranding: boolean
+  advancedAnalytics: boolean
+  apiAccess: boolean
+  ssoEnabled: boolean
+  dedicatedSupport: boolean
+  dataExport: boolean
+  auditLogs: boolean
+}
+
+export interface OrganizationInvite {
+  id: string
+  organizationId: string
+  organizationName: string
+  invitedBy: string
+  invitedByUsername: string
+  email: string
+  role: 'admin' | 'member'
+  invitedAt: number
+  expiresAt: number
+  status: 'pending' | 'accepted' | 'declined' | 'expired'
 }
