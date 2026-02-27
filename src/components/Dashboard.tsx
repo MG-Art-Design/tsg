@@ -184,45 +184,6 @@ export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick }
 
       <InsiderTrades trades={insiderTrades} userTier={userTier} onUpgradeClick={onUpgradeClick} />
 
-      <div className="space-y-4">
-        {userTier !== 'premium' && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.4 }}
-          >
-            <Card className="border-2 border-[var(--insider-gold)]/30 bg-gradient-to-br from-[var(--insider-bg)] to-[var(--insider-bg)]/50 overflow-hidden relative">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,_var(--insider-gold-glow)_0%,_transparent_50%)] opacity-20" />
-              <CardContent className="p-4 sm:p-6 relative">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                  <div className="flex items-start gap-3 sm:gap-4 flex-1">
-                    <div className="p-2 sm:p-3 bg-[var(--insider-gold)]/10 rounded-lg border border-[var(--insider-gold)]/30 flex-shrink-0">
-                      <Lightning size={24} weight="fill" className="text-[var(--insider-gold)]" />
-                    </div>
-                    <div className="space-y-1">
-                      <h3 className="text-base sm:text-lg font-bold text-[var(--insider-gold)] leading-tight">
-                        Unlock Advanced Market Analytics
-                      </h3>
-                      <p className="text-xs sm:text-sm text-foreground/70 leading-relaxed">
-                        Get real-time alerts on major price swings, volume spikes, and volatility patterns. Premium members track unlimited assets and receive instant notifications.
-                      </p>
-                    </div>
-                  </div>
-                  <Button
-                    onClick={onUpgradeClick}
-                    size="lg"
-                    className="bg-[var(--insider-gold)] text-[var(--insider-bg)] hover:bg-[var(--insider-gold-glow)] font-semibold shadow-[0_0_20px_var(--insider-gold-glow)]/40 transition-all w-full sm:w-auto flex-shrink-0"
-                  >
-                    <Lightning size={18} weight="fill" className="mr-2" />
-                    Upgrade Now
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        )}
-      </div>
-
       {portfolio && portfolio.positions.length > 0 && (
         <Card className="border-primary/20">
           <CardHeader>
