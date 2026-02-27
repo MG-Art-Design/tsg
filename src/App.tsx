@@ -11,7 +11,6 @@ import { Groups } from '@/components/Groups'
 import { EmailSettings } from '@/components/EmailSettings'
 import { EmailNotificationsManager } from '@/components/EmailNotificationsManager'
 import { SubscriptionManager } from '@/components/SubscriptionManager'
-import { OrganizationManager } from '@/components/OrganizationManager'
 import { Logo } from '@/components/Logo'
 import { UserProfile, Portfolio, Asset, PortfolioPosition, LeaderboardEntry, Insight } from '@/lib/types'
 import { 
@@ -20,7 +19,7 @@ import {
   INITIAL_PORTFOLIO_VALUE,
   calculatePortfolioValue
 } from '@/lib/helpers'
-import { ChartLine, Lightning, Trophy, Notebook, User, Users, Building } from '@phosphor-icons/react'
+import { ChartLine, Lightning, Trophy, Notebook, User, Users } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 
 function App() {
@@ -270,7 +269,7 @@ function App() {
 
       <main className="container mx-auto px-4 py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-7 mb-6">
+          <TabsList className="grid w-full grid-cols-6 mb-6">
             <TabsTrigger value="dashboard" className="flex items-center gap-2">
               <ChartLine size={18} />
               <span className="hidden sm:inline">Dashboard</span>
@@ -286,10 +285,6 @@ function App() {
             <TabsTrigger value="groups" className="flex items-center gap-2">
               <Users size={18} weight="fill" />
               <span className="hidden sm:inline">Groups</span>
-            </TabsTrigger>
-            <TabsTrigger value="organization" className="flex items-center gap-2">
-              <Building size={18} weight="duotone" />
-              <span className="hidden sm:inline">Organization</span>
             </TabsTrigger>
             <TabsTrigger value="insights" className="flex items-center gap-2">
               <Notebook size={18} />
@@ -319,10 +314,6 @@ function App() {
 
           <TabsContent value="groups">
             <Groups currentUser={profile} onUserUpdate={handleUserUpdate} />
-          </TabsContent>
-
-          <TabsContent value="organization">
-            <OrganizationManager currentUser={profile} onUserUpdate={handleUserUpdate} />
           </TabsContent>
 
           <TabsContent value="insights">
