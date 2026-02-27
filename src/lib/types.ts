@@ -4,8 +4,19 @@ export interface UserProfile {
   avatar: string
   bio: string
   insightFrequency: 'daily' | 'weekly' | 'monthly'
+  emailNotifications: EmailPreferences
   createdAt: number
   groupIds: string[]
+}
+
+export interface EmailPreferences {
+  enabled: boolean
+  email: string
+  frequency: 'daily' | 'weekly' | 'monthly'
+  includeLeaderboard: boolean
+  includeMarketPerformance: boolean
+  includeInsights: boolean
+  lastSent?: number
 }
 
 export interface Asset {

@@ -54,6 +54,13 @@ This app requires multiple interconnected features including user profiles, real
 - **Progression**: View current positions → Search assets → Allocate percentage → Confirm changes → See updated portfolio value
 - **Success criteria**: Allocations total 100%, changes persist, portfolio value tracks market accurately, trade history logged
 
+### Email Notification System
+- **Functionality**: Automated email delivery of performance summaries, leaderboard updates, market insights, and portfolio changes based on user-selected frequency (daily/weekly/monthly)
+- **Purpose**: Keeps users engaged without requiring constant app checks; delivers personalized performance updates directly to inbox
+- **Trigger**: User enables email notifications in profile settings with specified frequency and content preferences
+- **Progression**: Enable in settings → Set email & frequency → Select content types (leaderboard/market/insights) → Receive scheduled updates → Email contains formatted HTML with portfolio performance, rankings, and AI insights
+- **Success criteria**: Emails sent at correct intervals, content respects user preferences, HTML formatting displays correctly, emails include current rankings and accurate portfolio data
+
 ## Edge Case Handling
 
 - **Mid-Quarter Joiners**: New users joining mid-quarter receive prorated virtual capital and compete in a "rookie league" until next quarter starts
@@ -62,6 +69,9 @@ This app requires multiple interconnected features including user profiles, real
 - **Tied Leaderboard Positions**: Ties broken by earliest trade timestamp or split ranking (both shown as #1)
 - **Invalid Portfolio Allocations**: Real-time validation prevents over-allocation; shows error with current total percentage
 - **Extreme Market Volatility**: Circuit breaker warnings displayed; no actual money at risk so maintains all positions
+- **Email Delivery Failures**: Emails queued locally and marked for retry; users see notification status in profile settings
+- **Disabled Email Notifications**: Users without email enabled still receive in-app insights; email preferences can be toggled anytime
+- **Invalid Email Addresses**: Email validation on input; error message shown if address format is incorrect
 
 ## Design Direction
 
@@ -119,9 +129,11 @@ Animations should feel electric and responsive—quick snaps for interactions, s
   - Portfolio Manager: Table for holdings with editable percentage inputs, Dialog for trade confirmation
   - Leaderboard: Table with Avatar, ranking badges, sortable columns
   - Insights Feed: Scrollable Card list with timestamp, category badges
-  - Profile: Avatar with upload/emoji picker, Input fields for username/bio, Switch components for notification preferences
+  - Profile: Avatar with upload/emoji picker, Input fields for username/bio, Switch components for notification preferences, EmailSettings card for email notification management
   - Market Data: Custom chart components with D3 for price history
-  - Toasts (Sonner): Trade confirmations, insight deliveries, competition updates
+  - Toasts (Sonner): Trade confirmations, insight deliveries, competition updates, email notification scheduling confirmations
+  - EmailSettings: Card component with email input, frequency selector, content checkboxes (leaderboard/market/insights)
+  - EmailNotificationsManager: Background component that monitors preferences and schedules email generation
   
 - **Customizations**: 
   - Custom animated Logo component reflecting brand's geometric typography and ascending arrow motif
@@ -151,6 +163,7 @@ Animations should feel electric and responsive—quick snaps for interactions, s
   - ChartBar: S&P 500 stocks
   - Bell: Notifications
   - Gear: Settings
+  - Envelope: Email notifications and settings
   
 - **Spacing**: 
   - Container padding: p-6 (24px) on desktop, p-4 (16px) on mobile

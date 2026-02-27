@@ -8,6 +8,8 @@ import { PortfolioManager } from '@/components/PortfolioManager'
 import { Leaderboard } from '@/components/Leaderboard'
 import { Insights } from '@/components/Insights'
 import { Groups } from '@/components/Groups'
+import { EmailSettings } from '@/components/EmailSettings'
+import { EmailNotificationsManager } from '@/components/EmailNotificationsManager'
 import { Logo } from '@/components/Logo'
 import { UserProfile, Portfolio, Asset, PortfolioPosition, LeaderboardEntry, Insight } from '@/lib/types'
 import { 
@@ -299,7 +301,7 @@ function App() {
           </TabsContent>
 
           <TabsContent value="profile">
-            <div className="max-w-2xl mx-auto">
+            <div className="max-w-2xl mx-auto space-y-6">
               <div className="text-center py-12">
                 <div className="text-6xl mb-4">{profile.avatar}</div>
                 <h2 className="text-3xl font-bold mb-2">{profile.username}</h2>
@@ -310,10 +312,19 @@ function App() {
                   Insights frequency: <span className="capitalize font-medium">{profile.insightFrequency}</span>
                 </div>
               </div>
+
+              <EmailSettings profile={profile} onUpdate={handleUserUpdate} />
             </div>
           </TabsContent>
         </Tabs>
       </main>
+
+      <EmailNotificationsManager
+        profile={profile}
+        portfolio={portfolio ?? null}
+        leaderboardEntries={mockLeaderboard}
+        insights={insights ?? []}
+      />
 
       <Toaster richColors position="top-right" />
     </div>
