@@ -1,9 +1,11 @@
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { TrendUp, TrendDown, Lightning, Trophy, ChartLine } from '@phosphor-icons/react'
-import { Portfolio, Asset } from '@/lib/types'
-import { formatCurrency, formatPercent } from '@/lib/helpers'
+import { Portfolio, Asset, InsiderTrade } from '@/lib/types'
+import { formatCurrency, formatPercent, generateMockInsiderTrades } from '@/lib/helpers'
 import { motion } from 'framer-motion'
+import { InsiderTrades } from './InsiderTrades'
 
 interface DashboardProps {
   portfolio: Portfolio | null
@@ -13,6 +15,20 @@ interface DashboardProps {
 export function Dashboard({ portfolio, marketData }: DashboardProps) {
   const topGainers = [...marketData].sort((a, b) => b.priceChangePercent24h - a.priceChangePercent24h).slice(0, 3)
   const topLosers = [...marketData].sort((a, b) => a.priceChangePercent24h - b.priceChangePercent24h).slice(0, 3)
+  
+  const [insiderTrades, setInsiderTrades] = useState<InsiderTrade[]>([])
+
+  useEffect(() => {
+    const initialTrades = generateMockInsiderTrades()
+    setInsiderTrades(initialTrades)
+
+    const interval = setInterval(() => {
+      const updatedTrades = generateMockInsiderTrades()
+      setInsiderTrades(updatedTrades)
+    }, 43200000)
+
+    return () => clearInterval(interval)
+  }, [])
 
   return (
     <div className="space-y-6">
@@ -192,6 +208,8 @@ export function Dashboard({ portfolio, marketData }: DashboardProps) {
           </CardContent>
         </Card>
       )}
+
+      <InsiderTrades trades={insiderTrades} />
     </div>
   )
 }

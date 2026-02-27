@@ -131,3 +131,18 @@ export interface MessageReaction {
   username: string
   timestamp: number
 }
+
+export interface InsiderTrade {
+  id: string
+  trader: string
+  title: string
+  category: 'congress' | 'whitehouse' | 'trump-family'
+  asset: string
+  assetType: 'stock' | 'crypto' | 'option'
+  action: 'buy' | 'sell'
+  amount: string
+  value: number
+  disclosureDate: number
+  tradeDate: number
+  source: string
+}
