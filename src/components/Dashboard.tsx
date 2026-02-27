@@ -37,7 +37,7 @@ export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick }
 
   return (
     <div className="space-y-6">
-      <InsiderTrades trades={insiderTrades} />
+      <InsiderTrades trades={insiderTrades} userTier={userTier} onUpgradeClick={onUpgradeClick} />
 
       <StrategicInsights trades={insiderTrades} userTier={userTier} onUpgradeClick={onUpgradeClick} />
 
