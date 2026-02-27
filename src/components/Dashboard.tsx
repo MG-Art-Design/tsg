@@ -32,6 +32,8 @@ export function Dashboard({ portfolio, marketData }: DashboardProps) {
 
   return (
     <div className="space-y-6">
+      <InsiderTrades trades={insiderTrades} />
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -208,8 +210,6 @@ export function Dashboard({ portfolio, marketData }: DashboardProps) {
           </CardContent>
         </Card>
       )}
-
-      <InsiderTrades trades={insiderTrades} />
     </div>
   )
 }
