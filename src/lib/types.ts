@@ -113,3 +113,21 @@ export interface GroupInvite {
 export interface GroupLeaderboardEntry extends LeaderboardEntry {
   groupId: string
 }
+
+export interface ChatMessage {
+  id: string
+  groupId: string
+  userId: string
+  username: string
+  avatar: string
+  content: string
+  timestamp: number
+  reactions: MessageReaction[]
+}
+
+export interface MessageReaction {
+  emoji: string
+  userId: string
+  username: string
+  timestamp: number
+}
