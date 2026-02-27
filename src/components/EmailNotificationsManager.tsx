@@ -27,7 +27,7 @@ export function EmailNotificationsManager({
   }>>('email-queue', [])
 
   useEffect(() => {
-    if (!profile.emailNotifications.enabled || !profile.emailNotifications.email) {
+    if (!profile.emailNotifications?.enabled || !profile.emailNotifications?.email) {
       return
     }
 
@@ -69,9 +69,9 @@ export function EmailNotificationsManager({
     return () => clearInterval(interval)
   }, [
     profile.id,
-    profile.emailNotifications.enabled,
-    profile.emailNotifications.frequency,
-    profile.emailNotifications.lastSent,
+    profile.emailNotifications?.enabled,
+    profile.emailNotifications?.frequency,
+    profile.emailNotifications?.lastSent,
     portfolio?.lastUpdated,
   ])
 

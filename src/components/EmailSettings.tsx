@@ -16,17 +16,17 @@ interface EmailSettingsProps {
 }
 
 export function EmailSettings({ profile, onUpdate }: EmailSettingsProps) {
-  const [enabled, setEnabled] = useState(profile.emailNotifications.enabled)
-  const [email, setEmail] = useState(profile.emailNotifications.email)
-  const [frequency, setFrequency] = useState(profile.emailNotifications.frequency)
+  const [enabled, setEnabled] = useState(profile.emailNotifications?.enabled ?? false)
+  const [email, setEmail] = useState(profile.emailNotifications?.email ?? '')
+  const [frequency, setFrequency] = useState(profile.emailNotifications?.frequency ?? 'weekly')
   const [includeLeaderboard, setIncludeLeaderboard] = useState(
-    profile.emailNotifications.includeLeaderboard
+    profile.emailNotifications?.includeLeaderboard ?? true
   )
   const [includeMarketPerformance, setIncludeMarketPerformance] = useState(
-    profile.emailNotifications.includeMarketPerformance
+    profile.emailNotifications?.includeMarketPerformance ?? true
   )
   const [includeInsights, setIncludeInsights] = useState(
-    profile.emailNotifications.includeInsights
+    profile.emailNotifications?.includeInsights ?? true
   )
 
   const handleSave = () => {
@@ -44,7 +44,7 @@ export function EmailSettings({ profile, onUpdate }: EmailSettingsProps) {
         includeLeaderboard,
         includeMarketPerformance,
         includeInsights,
-        lastSent: profile.emailNotifications.lastSent,
+        lastSent: profile.emailNotifications?.lastSent,
       },
     }
 
