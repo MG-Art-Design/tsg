@@ -316,10 +316,6 @@ function App() {
             <Groups currentUser={profile} onUserUpdate={handleUserUpdate} />
           </TabsContent>
 
-          <TabsContent value="insights">
-            <Insights insights={insights ?? []} />
-          </TabsContent>
-
           <TabsContent value="profile">
             <div className="max-w-2xl mx-auto space-y-6">
               <div className="text-center py-12">
