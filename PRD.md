@@ -65,30 +65,29 @@ This app requires multiple interconnected features including user profiles, real
 
 ## Design Direction
 
-The design should evoke the excitement of a high-stakes casino mixed with the refinement of a premium financial terminal—dark, sleek, and energetic. Think neon accents against deep backgrounds, sharp geometric shapes, and confident typography that whispers "take the risk." The interface should feel like a secret society for ambitious friends, where making bold moves is celebrated and losses are learning opportunities wrapped in humor.
+The design should evoke sophistication and focus—a refined, monochromatic aesthetic that feels like a private trading terminal for serious competitors. Deep charcoal backgrounds with subtle blue-gray accents create a calm, focused environment where data takes center stage. The interface should feel like an exclusive club where strategy matters more than flash, and bold moves are celebrated with elegant restraint.
 
-**Brand Identity:** The logo features bold, geometric "STONK GAME" typography with an ascending chart arrow cutting diagonally across—symbolizing upward momentum and market gains. This ascending line motif is extrapolated throughout the entire design system: subtle chart patterns in card backgrounds, animated rising arrows for positive movements, and gradient flows that mirror stock trajectories. The geometric, technical aesthetic of Space Grotesk typography reinforces the trading terminal vibe while maintaining playful energy.
+**Brand Identity:** The logo features hollow, outlined "STONK GAME" typography in the Playfair Display serif font with an ascending chart arrow cutting diagonally across—symbolizing upward momentum and market gains. This outlined, monochromatic treatment creates a refined, sophisticated appearance that integrates seamlessly with the dark background. The ascending line motif is extrapolated throughout: subtle chart patterns in card backgrounds, animated rising indicators, and gradient flows that echo stock trajectories.
 
 ## Color Selection
 
-A dark, sophisticated palette with vibrant neon accents that pop against the shadows—evoking both late-night trading floors and exclusive gaming lounges.
+A sophisticated monochromatic palette built around blue-grays with minimal saturation—evoking calm focus, analytical precision, and professional trading terminals.
 
-- **Primary Color**: Neon Cyan (oklch(0.75 0.15 195)) - Electric, attention-grabbing, represents upward momentum and winning positions. Used for primary actions and positive performance indicators.
+- **Primary Color**: Cool Steel Blue (oklch(0.72 0.06 210)) - Subtle, refined, represents clarity and upward momentum. Used for primary actions and positive performance indicators with restraint.
 - **Secondary Colors**: 
-  - Deep Charcoal Background (oklch(0.15 0.01 240)) - Rich, almost-black base that makes neon colors sing
-  - Slate Surface (oklch(0.22 0.015 240)) - Slightly lighter panels for cards and surfaces
-  - Muted Purple (oklch(0.45 0.12 290)) - Supporting color for secondary actions and neutral states
-- **Accent Color**: Hot Magenta (oklch(0.65 0.24 330)) - Electric pink for CTAs, winning streaks, and risky moves that paid off. Impossible to ignore.
+  - Deep Charcoal Background (oklch(0.15 0.01 240)) - Rich, almost-black base that provides excellent contrast
+  - Slate Surface (oklch(0.19 0.015 240)) - Slightly lighter panels for cards and surfaces
+  - Muted Blue-Gray (oklch(0.38 0.04 240)) - Supporting color for secondary actions and neutral states
+- **Accent Color**: Light Steel (oklch(0.68 0.08 220)) - Subtle blue-gray highlight for CTAs and important elements. Refined and understated.
 - **Supporting Colors**:
-  - Neon Green (oklch(0.75 0.18 145)) - Gains, positive returns, upward trends
-  - Electric Red (oklch(0.60 0.22 25)) - Losses, negative returns, warnings
-  - Amber Warning (oklch(0.70 0.15 70)) - Caution states, pending actions
+  - Muted Green (oklch(0.70 0.12 145)) - Gains, positive returns, upward trends (desaturated)
+  - Muted Red (oklch(0.58 0.18 25)) - Losses, negative returns, warnings (desaturated)
 - **Foreground/Background Pairings**: 
-  - Primary Cyan (oklch(0.75 0.15 195)): Deep Charcoal background (oklch(0.15 0.01 240)) - Ratio 6.2:1 ✓
-  - Hot Magenta (oklch(0.65 0.24 330)): Deep Charcoal background (oklch(0.15 0.01 240)) - Ratio 5.1:1 ✓
-  - White text (oklch(0.98 0 0)): Deep Charcoal (oklch(0.15 0.01 240)) - Ratio 13.8:1 ✓
-  - White text (oklch(0.98 0 0)): Slate Surface (oklch(0.22 0.015 240)) - Ratio 10.5:1 ✓
-  - Neon Green (oklch(0.75 0.18 145)): Deep Charcoal - Ratio 6.5:1 ✓
+  - Primary Steel Blue (oklch(0.72 0.06 210)): Deep Charcoal background (oklch(0.15 0.01 240)) - Ratio 6.2:1 ✓
+  - Light Steel (oklch(0.68 0.08 220)): Deep Charcoal background (oklch(0.15 0.01 240)) - Ratio 5.5:1 ✓
+  - Light text (oklch(0.92 0.01 240)): Deep Charcoal (oklch(0.15 0.01 240)) - Ratio 11.2:1 ✓
+  - Light text (oklch(0.92 0.01 240)): Slate Surface (oklch(0.19 0.015 240)) - Ratio 8.8:1 ✓
+  - Muted Green (oklch(0.70 0.12 145)): Deep Charcoal - Ratio 5.8:1 ✓
 
 ## Font Selection
 

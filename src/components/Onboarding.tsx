@@ -120,7 +120,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
           <Button
             onClick={handleSubmit}
             disabled={!username.trim()}
-            className="w-full bg-gradient-to-r from-primary to-accent hover:opacity-90 text-lg h-12 font-semibold shadow-lg hover:shadow-xl transition-all hover:scale-[1.02]"
+            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-lg h-12 font-semibold shadow-lg hover:shadow-xl transition-all hover:scale-[1.02]"
           >
             Start Trading
           </Button>

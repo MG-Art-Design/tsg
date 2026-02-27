@@ -20,9 +20,9 @@ export function ChartPattern({ variant = 'up', className = '', animated = true }
   }
 
   const colors = {
-    up: { start: 'oklch(0.75 0.18 145)', end: 'oklch(0.75 0.15 195)' },
-    down: { start: 'oklch(0.60 0.22 25)', end: 'oklch(0.65 0.24 330)' },
-    volatile: { start: 'oklch(0.65 0.24 330)', end: 'oklch(0.75 0.15 195)' }
+    up: { start: 'oklch(0.70 0.12 145)', end: 'oklch(0.72 0.06 210)' },
+    down: { start: 'oklch(0.58 0.18 25)', end: 'oklch(0.68 0.08 220)' },
+    volatile: { start: 'oklch(0.68 0.08 220)', end: 'oklch(0.72 0.06 210)' }
   }
 
   const pathVariants = animated ? {
