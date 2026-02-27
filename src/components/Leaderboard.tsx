@@ -79,11 +79,11 @@ export function Leaderboard({ entries, currentUserId, currentUser }: Leaderboard
     <div className="space-y-4">
       <Card className="border-primary/20">
         <CardHeader>
-          <CardTitle className="text-2xl flex items-center gap-2">
-            <Trophy size={28} weight="fill" className="text-accent" />
+          <CardTitle className="text-xl sm:text-2xl flex items-center gap-2">
+            <Trophy size={24} weight="fill" className="text-accent sm:w-7 sm:h-7" />
             Leaderboard
           </CardTitle>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="text-xs sm:text-sm text-muted-foreground mt-1">
             Who's got the hottest hand this quarter? Time to find out.
           </p>
           

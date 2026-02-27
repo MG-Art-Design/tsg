@@ -59,11 +59,11 @@ export function Insights({ insights }: InsightsProps) {
     <div className="space-y-4">
       <Card className="border-primary/20">
         <CardHeader>
-          <CardTitle className="text-2xl flex items-center gap-2">
-            <Lightning size={28} weight="fill" className="text-accent" />
+          <CardTitle className="text-xl sm:text-2xl flex items-center gap-2">
+            <Lightning size={24} weight="fill" className="text-accent sm:w-7 sm:h-7" />
             Market Insights
           </CardTitle>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="text-xs sm:text-sm text-muted-foreground mt-1">
             AI-powered analysis, delivered with just the right amount of sass. Stay sharp out there.
           </p>
         </CardHeader>

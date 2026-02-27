@@ -42,13 +42,13 @@ export function Dashboard({ portfolio, marketData }: DashboardProps) {
         >
           <Card className="border-primary/20 bg-gradient-to-br from-card to-muted/30">
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                <ChartLine size={18} />
-                Portfolio Value
+              <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground flex items-center gap-1.5 sm:gap-2">
+                <ChartLine size={16} className="sm:w-[18px] sm:h-[18px]" />
+                <span className="truncate">Portfolio Value</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold tracking-tight">
+              <div className="text-2xl sm:text-3xl font-bold tracking-tight">
                 {portfolio ? formatCurrency(portfolio.currentValue) : formatCurrency(10000)}
               </div>
               {portfolio && (
@@ -68,13 +68,13 @@ export function Dashboard({ portfolio, marketData }: DashboardProps) {
         >
           <Card className="border-accent/20 bg-gradient-to-br from-card to-muted/30">
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                <Lightning size={18} weight="fill" />
-                Active Positions
+              <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground flex items-center gap-1.5 sm:gap-2">
+                <Lightning size={16} weight="fill" className="sm:w-[18px] sm:h-[18px]" />
+                <span className="truncate">Active Positions</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold tracking-tight">
+              <div className="text-2xl sm:text-3xl font-bold tracking-tight">
                 {portfolio?.positions.length || 0}
               </div>
               <div className="text-sm text-muted-foreground mt-2">
@@ -91,13 +91,13 @@ export function Dashboard({ portfolio, marketData }: DashboardProps) {
         >
           <Card className="border-secondary/20 bg-gradient-to-br from-card to-muted/30">
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                <Trophy size={18} weight="fill" />
-                Quarter Rank
+              <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground flex items-center gap-1.5 sm:gap-2">
+                <Trophy size={16} weight="fill" className="sm:w-[18px] sm:h-[18px]" />
+                <span className="truncate">Quarter Rank</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold tracking-tight">
+              <div className="text-2xl sm:text-3xl font-bold tracking-tight">
                 --
               </div>
               <div className="text-sm text-muted-foreground mt-2">
@@ -111,8 +111,8 @@ export function Dashboard({ portfolio, marketData }: DashboardProps) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <Card className="border-success/20">
           <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
-              <TrendUp size={20} weight="bold" className="text-success" />
+            <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+              <TrendUp size={18} weight="bold" className="text-success sm:w-5 sm:h-5" />
               Top Movers
             </CardTitle>
           </CardHeader>
@@ -143,8 +143,8 @@ export function Dashboard({ portfolio, marketData }: DashboardProps) {
 
         <Card className="border-destructive/20">
           <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
-              <TrendDown size={20} weight="bold" className="text-destructive" />
+            <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+              <TrendDown size={18} weight="bold" className="text-destructive sm:w-5 sm:h-5" />
               Biggest Drops
             </CardTitle>
           </CardHeader>
@@ -177,7 +177,7 @@ export function Dashboard({ portfolio, marketData }: DashboardProps) {
       {portfolio && portfolio.positions.length > 0 && (
         <Card className="border-primary/20">
           <CardHeader>
-            <CardTitle className="text-lg">Your Top Holdings</CardTitle>
+            <CardTitle className="text-base sm:text-lg">Your Top Holdings</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
