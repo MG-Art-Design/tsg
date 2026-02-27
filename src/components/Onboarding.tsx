@@ -33,8 +33,9 @@ export function Onboarding({ onComplete }: OnboardingProps) {
     if (!username.trim()) return
     if (emailEnabled && !email.trim()) return
 
+    const userId = Date.now().toString()
     const profile: UserProfile = {
-      id: Date.now().toString(),
+      id: userId,
       username: username.trim(),
       avatar,
       bio: bio.trim(),
@@ -52,7 +53,9 @@ export function Onboarding({ onComplete }: OnboardingProps) {
       subscription: {
         tier: 'free',
         autoRenew: false
-      }
+      },
+      friendIds: [],
+      friendCode: `TSG-${userId.slice(-8)}`
     }
 
     onComplete(profile)

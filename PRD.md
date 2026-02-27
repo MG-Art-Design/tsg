@@ -41,11 +41,18 @@ This app requires multiple interconnected features including user profiles, real
 - **Success criteria**: Insights are relevant to current market conditions, tone is consistent (sassy yet respectful), delivery matches preferences
 
 ### Performance Leaderboard & Standings
-- **Functionality**: Real-time rankings showing all competitors' returns, with filters for daily/weekly/monthly/quarterly performance
-- **Purpose**: Fuels competition, celebrates winners, and motivates strategic improvement
+- **Functionality**: Real-time rankings showing only friends' returns, creating an intimate competition space with your chosen rivals
+- **Purpose**: Fuels personal competition with friends, celebrates winners in your circle, and motivates strategic improvement
 - **Trigger**: Leaderboard tab navigation
-- **Progression**: Open leaderboard → View rankings → Filter by timeframe → See detailed returns → Click user for profile view
-- **Success criteria**: Rankings are accurate and update in real-time, percentage returns calculated correctly, historical data preserved
+- **Progression**: Open leaderboard → View friend rankings → See detailed returns → Add more friends to expand competition
+- **Success criteria**: Rankings show only added friends, updates in real-time, percentage returns calculated correctly, empty state prompts friend adding
+
+### Friend Management System
+- **Functionality**: Add friends via unique friend code, creating bilateral connections that sync both users to each other's leaderboards
+- **Purpose**: Enables users to build their personal competition circle with chosen rivals, keeping competitions intimate and meaningful
+- **Trigger**: "Add Friend" button in Profile tab or empty leaderboard state
+- **Progression**: Click add friend → Enter friend's unique code → Confirmation → Friend appears on both leaderboards → Compete together
+- **Success criteria**: Friend codes are unique per user, adding friend syncs both users, friends appear on each other's leaderboards, can remove friends bilaterally
 
 ### Portfolio Management
 - **Functionality**: Allocate virtual $10k across S&P 500 stocks and crypto, rebalance positions, track value changes

@@ -1,11 +1,10 @@
 import { useState } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Avatar } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Trophy, Medal, CrownSimple } from '@phosphor-icons/react'
-import { LeaderboardEntry, Group, UserProfile, Portfolio } from '@/lib/types'
+import { Button } from '@/components/ui/button'
+import { Trophy, Medal, CrownSimple, UserPlus } from '@phosphor-icons/react'
+import { LeaderboardEntry, UserProfile, Portfolio } from '@/lib/types'
 import { formatPercent, formatCurrency } from '@/lib/helpers'
 import { motion } from 'framer-motion'
 
@@ -13,30 +12,18 @@ interface LeaderboardProps {
   entries: LeaderboardEntry[]
   currentUserId: string
   currentUser: UserProfile
+  onAddFriendsClick: () => void
 }
 
-export function Leaderboard({ entries, currentUserId, currentUser }: LeaderboardProps) {
-  const [groups] = useKV<Record<string, Group>>('all-groups', {})
+export function Leaderboard({ entries, currentUserId, currentUser, onAddFriendsClick }: LeaderboardProps) {
   const [allUsers] = useKV<Record<string, UserProfile>>('all-users', {})
   const [allPortfolios] = useKV<Record<string, Portfolio>>('all-portfolios', {})
-  const [selectedGroupId, setSelectedGroupId] = useState<string>('all')
-
-  const userGroups = currentUser.groupIds
-    .map(id => groups?.[id])
-    .filter(Boolean) as Group[]
 
   const getFilteredEntries = (): LeaderboardEntry[] => {
-    if (selectedGroupId === 'all') {
-      return entries
-    }
-
-    const group = groups?.[selectedGroupId]
-    if (!group) return []
-
-    const groupEntries: LeaderboardEntry[] = group.memberIds
-      .map(userId => {
-        const user = allUsers?.[userId]
-        const portfolio = allPortfolios?.[userId]
+    const friendEntries: LeaderboardEntry[] = currentUser.friendIds
+      .map(friendId => {
+        const user = allUsers?.[friendId]
+        const portfolio = allPortfolios?.[friendId]
         if (!user || !portfolio) return null
 
         return {
@@ -51,12 +38,17 @@ export function Leaderboard({ entries, currentUserId, currentUser }: Leaderboard
       })
       .filter(Boolean) as LeaderboardEntry[]
 
-    groupEntries.sort((a, b) => b.returnPercent - a.returnPercent)
-    groupEntries.forEach((entry, index) => {
+    const currentUserEntry = entries.find(e => e.userId === currentUserId)
+    if (currentUserEntry && !friendEntries.some(e => e.userId === currentUserId)) {
+      friendEntries.push(currentUserEntry)
+    }
+
+    friendEntries.sort((a, b) => b.returnPercent - a.returnPercent)
+    friendEntries.forEach((entry, index) => {
       entry.rank = index + 1
     })
 
-    return groupEntries
+    return friendEntries
   }
 
   const filteredEntries = getFilteredEntries()
@@ -84,26 +76,8 @@ export function Leaderboard({ entries, currentUserId, currentUser }: Leaderboard
             Leaderboard
           </CardTitle>
           <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-            Who's got the hottest hand this quarter? Time to find out.
+            Compete with your friends. Only your added friends appear here.
           </p>
-          
-          {userGroups.length > 0 && (
-            <div className="mt-4">
-              <Select value={selectedGroupId} onValueChange={setSelectedGroupId}>
-                <SelectTrigger className="w-full sm:w-[250px]">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Players</SelectItem>
-                  {userGroups.map(group => (
-                    <SelectItem key={group.id} value={group.id}>
-                      {group.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          )}
         </CardHeader>
       </Card>
 
@@ -111,13 +85,15 @@ export function Leaderboard({ entries, currentUserId, currentUser }: Leaderboard
         {filteredEntries.length === 0 ? (
           <Card className="border-border">
             <CardContent className="py-12 text-center">
-              <Trophy size={48} className="text-muted-foreground mx-auto mb-4" />
-              <p className="text-muted-foreground">
-                {selectedGroupId === 'all' 
-                  ? "No traders yet. Be the first to build your portfolio!"
-                  : "No members with portfolios in this group yet."
-                }
+              <UserPlus size={48} className="text-muted-foreground mx-auto mb-4" />
+              <p className="text-lg font-semibold mb-2">No friends yet</p>
+              <p className="text-sm text-muted-foreground mb-6">
+                Add friends to compete on your personal leaderboard
               </p>
+              <Button onClick={onAddFriendsClick} className="mx-auto">
+                <UserPlus size={18} weight="fill" className="mr-2" />
+                Add Friends
+              </Button>
             </CardContent>
           </Card>
         ) : (

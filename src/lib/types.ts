@@ -8,6 +8,8 @@ export interface UserProfile {
   createdAt: number
   groupIds: string[]
   subscription: SubscriptionStatus
+  friendIds: string[]
+  friendCode: string
 }
 
 export interface EmailPreferences {

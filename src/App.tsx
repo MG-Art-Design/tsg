@@ -11,6 +11,7 @@ import { Groups } from '@/components/Groups'
 import { EmailSettings } from '@/components/EmailSettings'
 import { EmailNotificationsManager } from '@/components/EmailNotificationsManager'
 import { SubscriptionManager } from '@/components/SubscriptionManager'
+import { FriendsManager } from '@/components/FriendsManager'
 import { Logo } from '@/components/Logo'
 import { UserProfile, Portfolio, Asset, PortfolioPosition, LeaderboardEntry, Insight } from '@/lib/types'
 import { 
@@ -39,6 +40,14 @@ function App() {
           tier: 'free',
           autoRenew: false
         }
+      } : null)
+    }
+
+    if (profile && !profile.friendIds) {
+      setProfile((current) => current ? {
+        ...current,
+        friendIds: [],
+        friendCode: `TSG-${current.id.slice(-8)}`
       } : null)
     }
   }, [profile?.id])
@@ -309,7 +318,12 @@ function App() {
           </TabsContent>
 
           <TabsContent value="leaderboard">
-            <Leaderboard entries={mockLeaderboard} currentUserId={profile.id} currentUser={profile} />
+            <Leaderboard 
+              entries={mockLeaderboard} 
+              currentUserId={profile.id} 
+              currentUser={profile}
+              onAddFriendsClick={() => setActiveTab('profile')}
+            />
           </TabsContent>
 
           <TabsContent value="groups">
@@ -328,6 +342,8 @@ function App() {
                   Insights frequency: <span className="capitalize font-medium">{profile.insightFrequency}</span>
                 </div>
               </div>
+
+              <FriendsManager profile={profile} onUpdate={handleUserUpdate} />
 
               <SubscriptionManager profile={profile} onUpdate={handleUserUpdate} />
 
