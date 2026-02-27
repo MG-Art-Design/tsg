@@ -7,7 +7,6 @@ import { Portfolio, Asset, InsiderTrade, UserProfile } from '@/lib/types'
 import { formatCurrency, formatPercent, generateMockInsiderTrades } from '@/lib/helpers'
 import { motion } from 'framer-motion'
 import { InsiderTrades } from './InsiderTrades'
-import { StrategicInsights } from './StrategicInsights'
 
 interface DashboardProps {
   portfolio: Portfolio | null
@@ -38,8 +37,6 @@ export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick }
 
   return (
     <div className="space-y-6">
-      <StrategicInsights trades={insiderTrades} userTier={userTier} onUpgradeClick={onUpgradeClick} />
-
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
