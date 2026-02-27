@@ -59,8 +59,16 @@ export function InsiderTrades({ trades, userTier = 'free', onUpgradeClick }: Ins
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
-      <Card className="relative border-[6px] border-[oklch(0.65_0.12_75)] shadow-[0_0_2px_2px_oklch(0_0_0),0_0_40px_oklch(0.65_0.12_75_/_0.3)] bg-[radial-gradient(ellipse_at_top,oklch(0.08_0.015_240),oklch(0.03_0.008_240)),radial-gradient(ellipse_at_bottom,oklch(0.05_0.012_260),oklch(0.02_0.005_240))] before:absolute before:inset-0 before:bg-[repeating-linear-gradient(0deg,transparent,transparent_2px,oklch(0.12_0.02_240_/_0.15)_2px,oklch(0.12_0.02_240_/_0.15)_4px)] before:pointer-events-none before:rounded-[inherit]">
-        <CardHeader className="border-b border-[oklch(0.65_0.12_75_/_0.3)] bg-gradient-to-r from-[oklch(0.65_0.12_75_/_0.08)] to-transparent">
+      <Card className="relative border-[6px] border-[oklch(0.65_0.12_75)] shadow-[0_0_2px_2px_oklch(0_0_0),0_0_40px_oklch(0.65_0.12_75_/_0.3)] bg-[radial-gradient(ellipse_at_top,oklch(0.08_0.015_240),oklch(0.03_0.008_240)),radial-gradient(ellipse_at_bottom,oklch(0.05_0.012_260),oklch(0.02_0.005_240))] overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="ripple-container absolute inset-0 opacity-40">
+            <div className="ripple ripple-1"></div>
+            <div className="ripple ripple-2"></div>
+            <div className="ripple ripple-3"></div>
+          </div>
+          <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent,transparent_2px,oklch(0.12_0.02_240_/_0.15)_2px,oklch(0.12_0.02_240_/_0.15)_4px)]"></div>
+        </div>
+        <CardHeader className="relative z-10 border-b border-[oklch(0.65_0.12_75_/_0.3)] bg-gradient-to-r from-[oklch(0.65_0.12_75_/_0.08)] to-transparent">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
               <div className="p-1.5 sm:p-2 rounded-lg bg-[oklch(0.65_0.12_75_/_0.2)] border border-[oklch(0.65_0.12_75_/_0.5)] flex-shrink-0">
@@ -85,7 +93,7 @@ export function InsiderTrades({ trades, userTier = 'free', onUpgradeClick }: Ins
           </div>
         </CardHeader>
 
-        <CardContent className="pt-6">
+        <CardContent className="relative z-10 pt-6">
           <Tabs value={filter} onValueChange={(v) => setFilter(v as typeof filter)} className="w-full">
             <TabsList className="grid w-full grid-cols-4 mb-4 sm:mb-6 bg-[oklch(0.10_0.005_60)] border border-[oklch(0.65_0.12_75_/_0.3)] h-auto">
               <TabsTrigger 
