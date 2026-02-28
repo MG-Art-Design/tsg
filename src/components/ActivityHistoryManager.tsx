@@ -24,7 +24,6 @@ export function ActivityHistoryManager({ currentUser, onUpdate, userGroups = [] 
   const [activityHistory, setActivityHistory] = useKV<Record<string, ActivityHistoryEntry>>('activity-history', {})
   const [gameActivityLogs, setGameActivityLogs] = useKV<Record<string, GameActivityLog>>('game-activity-logs', {})
   const [isGeneratingSummary, setIsGeneratingSummary] = useState(false)
-  const [selectedQuarter, setSelectedQuarter] = useState<string | null>(null)
   const [sharingDialogOpen, setSharingDialogOpen] = useState(false)
 
   const userHistory = Object.values(activityHistory || {}).filter(h => h.userId === currentUser.id)
