@@ -242,7 +242,7 @@ Return ONLY valid JSON:
   }
 
   const today = new Date().toDateString()
-  const isToday = dailyRecs && new Date(dailyRecs.date).toDateString() === today
+  const isToday = Boolean(dailyRecs && new Date(dailyRecs.date).toDateString() === today)
 
   return (
     <Card className="border-2 border-[oklch(0.65_0.12_75_/_0.3)] bg-gradient-to-br from-[oklch(0.08_0.005_60)] to-[oklch(0.05_0.008_70)] premium-glow">
@@ -264,7 +264,7 @@ Return ONLY valid JSON:
           <Button
             size="sm"
             onClick={generateDailyRecommendations}
-            disabled={isGenerating || (isToday && dailyRecs !== null)}
+            disabled={isGenerating || (isToday && Boolean(dailyRecs))}
             className="bg-[oklch(0.65_0.12_75)] hover:bg-[oklch(0.70_0.14_75)] text-[oklch(0.15_0.01_240)] border border-[oklch(0.70_0.14_75)]"
           >
             {isGenerating ? (

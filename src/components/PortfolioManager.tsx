@@ -44,12 +44,20 @@ export function PortfolioManager({ currentPortfolio, marketData, onSave }: Portf
   const isValidAllocation = totalAllocation === 100
 
   const handleAllocationChange = (symbol: string, value: string) => {
-    const numValue = parseFloat(value) || 0
-    if (numValue < 0 || numValue > 100) return
+    if (value === '') {
+      setAllocations(prev => ({
+        ...prev,
+        [symbol]: 0
+      }))
+      return
+    }
+    
+    const numValue = parseFloat(value)
+    if (isNaN(numValue) || numValue < 0 || numValue > 100) return
     
     setAllocations(prev => ({
       ...prev,
-      [symbol]: numValue
+      [symbol]: Math.min(100, Math.max(0, numValue))
     }))
   }
 
@@ -108,6 +116,20 @@ export function PortfolioManager({ currentPortfolio, marketData, onSave }: Portf
           </p>
         </CardHeader>
       </Card>
+
+      {Object.keys(allocations).length === 0 && (
+        <Card className="border-2 border-[oklch(0.70_0.14_75)] bg-muted/20">
+          <CardContent className="pt-6">
+            <div className="text-center py-8">
+              <Lightning size={48} weight="duotone" className="mx-auto mb-4 text-muted-foreground opacity-50" />
+              <h3 className="text-lg font-semibold mb-2">No Positions Yet</h3>
+              <p className="text-sm text-muted-foreground max-w-md mx-auto">
+                Select stocks or crypto below to start building your portfolio. Click any asset to add it to your allocation.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {Object.keys(allocations).length > 0 && (
         <Card className="border-2 border-[oklch(0.70_0.14_75)] bg-accent/5">

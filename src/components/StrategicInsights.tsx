@@ -7,7 +7,17 @@ import { InsiderTrade, SubscriptionTier } from '@/lib/types'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Brain, Sparkle, TrendUp, TrendDown, Warning, Target, Lightbulb, ChartLineUp, CheckCircle, ShieldCheck, Crown } from '@phosphor-icons/react'
 import { toast } from 'sonner'
-import { generateVettedInsight, VettedInsight } from '@/lib/insiderHelpers'
+
+interface GeneratedInsight {
+  id: string
+  title: string
+  content: string
+  signals: string[]
+  riskLevel: 'low' | 'medium' | 'high'
+  confidence: number
+  relevantTrades: string[]
+  timestamp: number
+}
 
 interface StrategicInsightsProps {
   trades: InsiderTrade[]
