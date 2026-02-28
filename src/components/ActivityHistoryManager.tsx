@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Checkbox } from '@/components/ui/checkbox'
 import { ActivityEvent, ActivityHistoryEntry, GameActivityLog, UserProfile, Group, SharingPreferences } from '@/lib/types'
 import { formatCurrency, formatPercent, getCurrentQuarter } from '@/lib/helpers'
-import { ClockClockwise, ShareNetwork, TrendUp, TrendDown, Lightning, Trophy, Users, Sparkle, ArrowRight, Crown, Medal } from '@phosphor-icons/react'
+import { ClockClockwise, ShareNetwork, TrendUp, TrendDown, Lightning, Trophy, Sparkle, Crown, Medal } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { motion } from 'framer-motion'
 
