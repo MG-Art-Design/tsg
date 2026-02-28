@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
-import { UserProfile, DailyInsiderRecommendation, ImportedPosition, InsiderTrade } from '@/lib/types'
+import { UserProfile, DailyInsiderRecommendation, InsiderTrade } from '@/lib/types'
 import { formatPercent } from '@/lib/helpers'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
