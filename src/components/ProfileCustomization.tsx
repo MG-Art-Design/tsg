@@ -390,3 +390,14 @@ export function ProfileCustomization({ profile, onUpdate }: ProfileCustomization
     </Card>
   )
 }
+              ))}
+            </div>
+            <Button onClick={handleCoverSave} className="w-full">
+              Save Cover Photo
+            </Button>
+          </DialogContent>
+        </Dialog>
+      </CardContent>
+    </Card>
+  )
+}
