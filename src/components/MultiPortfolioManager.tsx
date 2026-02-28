@@ -3,8 +3,6 @@ import { Portfolio, UserProfile, Asset, PortfolioPosition } from '@/lib/types'
 import { 
   formatCurrency, 
   formatPercent, 
-  getCurrentQuarter, 
-  INITIAL_PORTFOLIO_VALUE,
   getSubscriptionFeatures 
 } from '@/lib/helpers'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
