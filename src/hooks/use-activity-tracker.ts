@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { ActivityEvent, ActivityHistoryEntry, GameActivityLog } from '@/lib/types'
 import { getCurrentQuarter } from '@/lib/helpers'
