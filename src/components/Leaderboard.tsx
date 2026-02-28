@@ -1,4 +1,3 @@
-import { Trophy, Medal, CrownSimple, UserPlus } from '@phosphor-icons/react'
 import { LeaderboardEntry, UserProfile, Portfolio } from '@/lib/types'
 import { formatPercent, formatCurrency } from '@/lib/helpers'
 import { motion } from 'framer-motion'
