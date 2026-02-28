@@ -29,7 +29,6 @@ export function SubscriptionManager({ profile, onUpdate }: SubscriptionManagerPr
   const [processing, setProcessing] = useState(false)
 
   const currentFeatures = getSubscriptionFeatures(profile.subscription.tier)
-  const premiumFeatures = getSubscriptionFeatures('premium')
   const isActive = profile.subscription.endDate ? isSubscriptionActive(profile.subscription.endDate) : false
   const daysRemaining = profile.subscription.endDate ? getSubscriptionDaysRemaining(profile.subscription.endDate) : 0
 
