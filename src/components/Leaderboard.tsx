@@ -1,4 +1,3 @@
-  currentUser: UserProfile
   onAddFriendsClick: () => void
 }
 
