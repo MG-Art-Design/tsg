@@ -508,7 +508,12 @@ function App() {
           </TabsContent>
 
           <TabsContent value="groups">
-            <Groups currentUser={profile} onUserUpdate={handleUserUpdate} marketData={marketData} />
+            <Groups 
+              currentUser={profile} 
+              onUserUpdate={handleUserUpdate} 
+              marketData={marketData}
+              allPortfolios={allPortfolios || {}}
+            />
           </TabsContent>
 
           <TabsContent value="profile">

@@ -11,18 +11,20 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { GroupChat } from '@/components/GroupChat'
 import { GroupGameManager } from '@/components/GroupGameManager'
 import { GroupBettingManager } from '@/components/GroupBettingManager'
-import { Group, UserProfile, GroupInvite, Asset } from '@/lib/types'
+import { SignalExportManager } from '@/components/SignalExportManager'
+import { Group, UserProfile, GroupInvite, Asset, ChatMessage, Portfolio } from '@/lib/types'
 import { generateInviteCode } from '@/lib/helpers'
-import { Users, Plus, Copy, UserPlus, Check, X, ChatCircle, ArrowLeft, Flame, CurrencyDollar } from '@phosphor-icons/react'
+import { Users, Plus, Copy, UserPlus, Check, X, ChatCircle, ArrowLeft, Flame, CurrencyDollar, Lightning } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 
 interface GroupsProps {
   currentUser: UserProfile
   onUserUpdate: (updatedUser: UserProfile) => void
   marketData?: Asset[]
+  allPortfolios?: Record<string, Portfolio>
 }
 
-export function Groups({ currentUser, onUserUpdate, marketData = [] }: GroupsProps) {
+export function Groups({ currentUser, onUserUpdate, marketData = [], allPortfolios = {} }: GroupsProps) {
   const [groups, setGroups] = useKV<Record<string, Group>>('all-groups', {})
   const [allUsers, setAllUsers] = useKV<Record<string, UserProfile>>('all-users', {})
   const [invites, setInvites] = useKV<GroupInvite[]>('group-invites', [])
@@ -34,6 +36,10 @@ export function Groups({ currentUser, onUserUpdate, marketData = [] }: GroupsPro
   const [inviteCodeInput, setInviteCodeInput] = useState('')
   const [copiedCode, setCopiedCode] = useState<string | null>(null)
   const [selectedGroupChat, setSelectedGroupChat] = useState<Group | null>(null)
+  const [groupMessages, setGroupMessages] = useKV<ChatMessage[]>(
+    selectedGroupChat ? `group-chat-${selectedGroupChat.id}` : 'temp-key',
+    []
+  )
 
   const userGroups = currentUser.groupIds
     .map(id => groups?.[id])
@@ -43,6 +49,35 @@ export function Groups({ currentUser, onUserUpdate, marketData = [] }: GroupsPro
     inv => inv.status === 'pending' && 
     currentUser.groupIds.includes(inv.groupId) === false
   )
+
+  const getGroupLeaderboard = (group: Group) => {
+    if (!group) return []
+    
+    const groupMembers = group.memberIds
+      .map(userId => {
+        const user = allUsers?.[userId]
+        const portfolio = allPortfolios?.[userId]
+        if (!user || !portfolio) return null
+        
+        return {
+          userId: user.id,
+          username: user.username,
+          avatar: user.avatar,
+          returnPercent: portfolio.totalReturnPercent,
+          returnValue: portfolio.totalReturn,
+          portfolioValue: portfolio.currentValue,
+          rank: 0
+        }
+      })
+      .filter(Boolean) as any[]
+    
+    groupMembers.sort((a, b) => b.returnPercent - a.returnPercent)
+    groupMembers.forEach((member, index) => {
+      member.rank = index + 1
+    })
+    
+    return groupMembers
+  }
 
   const handleCreateGroup = () => {
     if (!newGroupName.trim()) {
@@ -189,7 +224,7 @@ export function Groups({ currentUser, onUserUpdate, marketData = [] }: GroupsPro
             Back to Groups
           </Button>
           <Tabs defaultValue="chat" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="chat" className="gap-2">
                 <ChatCircle size={18} weight="fill" />
                 Chat
@@ -201,6 +236,10 @@ export function Groups({ currentUser, onUserUpdate, marketData = [] }: GroupsPro
               <TabsTrigger value="betting" className="gap-2">
                 <CurrencyDollar size={18} weight="fill" />
                 Betting
+              </TabsTrigger>
+              <TabsTrigger value="signal" className="gap-2">
+                <Lightning size={18} weight="fill" />
+                Signal
               </TabsTrigger>
             </TabsList>
             <TabsContent value="chat" className="mt-4">
@@ -229,6 +268,16 @@ export function Groups({ currentUser, onUserUpdate, marketData = [] }: GroupsPro
                     [updatedGroup.id]: updatedGroup
                   }))
                 }}
+              />
+            </TabsContent>
+            <TabsContent value="signal" className="mt-4">
+              <SignalExportManager
+                group={selectedGroupChat}
+                groupChats={groupMessages || []}
+                groupLeaderboard={getGroupLeaderboard(selectedGroupChat)}
+                allPortfolios={allPortfolios}
+                allUsers={allUsers || {}}
+                currentUser={currentUser}
               />
             </TabsContent>
           </Tabs>

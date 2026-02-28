@@ -138,6 +138,13 @@ This app requires multiple interconnected features including user profiles, real
 - **Progression**: Click add account → Select Venmo or Zelle → Enter account identifier → Upload QR code image (optional) → Save → Account appears on profile → Automatically shown to group members when user wins a bet
 - **Success criteria**: QR codes upload and display correctly, account identifiers save properly, winner's payment info appears in payout notifications, can have multiple accounts, can delete accounts, QR images under 2MB
 
+### Signal Chat Export with AI Commentary
+- **Functionality**: Group admins can configure automatic or manual exports of group activity to external Signal group chats, including leaderboard standings, AI-generated trash talk about player performance, chat summaries, and performance praise/roasts
+- **Purpose**: Extends the competitive banter beyond the app into users' daily Signal conversations, keeps groups engaged even when not actively using TSG, and lets AI roast poor performers while praising savvy moves
+- **Trigger**: Groups tab → Select group → Signal tab (admin only)
+- **Progression**: Admin configures phone number (optional) → Sets update frequency (instant/hourly/daily) → Enables leaderboard updates → Enables AI trash talk → Sets intensity (mild/moderate/savage) → Clicks "Generate Export" → AI analyzes current standings and generates sarcastic commentary about leaders and losers → Preview shows formatted export with leaderboard rankings, trash talk messages, and chat summary → Admin copies to clipboard or downloads → Pastes into Signal group chat
+- **Success criteria**: Only group admins see Signal export tab, trash talk intensity affects AI tone (mild=friendly, moderate=competitive, savage=brutal), AI references actual returns and rank changes, messages under 160 characters, exports include formatted leaderboard with top 5 players, praise messages highlight significant gains/losses, chat summaries capture conversation vibe, copy to clipboard and download both work, instructions show Signal CLI commands if phone number provided, previous leaderboard tracked to detect rank changes for better trash talk
+
 ## Edge Case Handling
 
 - **Mid-Quarter Joiners**: New users joining mid-quarter receive prorated virtual capital and compete in a "rookie league" until next quarter starts
