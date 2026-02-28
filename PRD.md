@@ -117,6 +117,20 @@ This app requires multiple interconnected features including user profiles, real
 - **Progression**: User performs actions (create portfolio, update picks) → Events automatically logged with metadata → User navigates to Activity History → Views quarterly/game timelines → Clicks "Generate Summary" → AI analyzes activity and performance → Sassy, personalized summary created → User configures sharing preferences (friends/specific groups) → Selected audiences can view shared activity
 - **Success criteria**: All significant actions logged with timestamps and metadata, quarterly summaries track portfolio performance with 3-paragraph AI analysis, game summaries provide 2-paragraph roasts/celebrations, sharing toggles work per friend/group, activity timeline shows recent events with icons, summaries maintain TSG's witty personality, users can regenerate summaries for fresh perspectives
 
+### Group Betting System with Payment Integration
+- **Functionality**: Group admins can enable betting with customizable entry fees, payout structures (winner-take-all, top-3, top-5), and period types (weekly, monthly, season). Winners are automatically calculated at game end, and payout notifications with payment QR codes are sent to all group members. Users add Venmo/Zelle accounts to their profiles for seamless payment collection.
+- **Purpose**: Adds real stakes to competitions, motivating engagement and creating exciting financial incentives while keeping payments simple through QR codes
+- **Trigger**: Group admin enables betting in Groups → Betting tab; payouts trigger automatically when games end
+- **Progression**: Admin sets entry fee & payout structure → Members see betting status in group → Game ends → System calculates winner and amounts owed → Members receive payout notification with winner's payment QR codes → Members pay via Venmo/Zelle → Members mark payment as complete → Admin can reset payouts anytime
+- **Success criteria**: Betting settings save per group, payout calculations are accurate based on structure, notifications show winner's payment accounts with QR codes, payment status tracking works, admins can reset betting history, weekly/monthly/season payouts calculated correctly based on game duration, all members notified simultaneously when payouts are due
+
+### Payment Account Management
+- **Functionality**: Users can add multiple Venmo or Zelle payment accounts with QR code uploads and account identifiers (username/email/phone) from their profile settings
+- **Purpose**: Enables seamless payment collection when winning group bets without manual exchange of payment information
+- **Trigger**: Profile tab → Payment Accounts section → Add Account
+- **Progression**: Click add account → Select Venmo or Zelle → Enter account identifier → Upload QR code image (optional) → Save → Account appears on profile → Automatically shown to group members when user wins a bet
+- **Success criteria**: QR codes upload and display correctly, account identifiers save properly, winner's payment info appears in payout notifications, can have multiple accounts, can delete accounts, QR images under 2MB
+
 ## Edge Case Handling
 
 - **Mid-Quarter Joiners**: New users joining mid-quarter receive prorated virtual capital and compete in a "rookie league" until next quarter starts
@@ -143,6 +157,12 @@ This app requires multiple interconnected features including user profiles, real
 - **Sharing Permission Changes**: When user removes sharing permission, previously shared data becomes private immediately
 - **Missing Game Data for Summary**: System gracefully handles incomplete game data by generating partial summaries
 - **Concurrent Summary Generation**: Prevents multiple simultaneous summary requests with loading state
+- **Betting Without Payment Accounts**: Winners without payment accounts still show in notifications with prompt to add accounts
+- **Betting Payout Disputes**: No built-in dispute system; users handle payment issues directly via group chat
+- **Mid-Game Betting Changes**: Betting settings cannot be changed once a game is active with bets placed
+- **Zero Members After Betting Reset**: Group continues normally; new games can be created with fresh betting settings
+- **Payment QR Code Display Failures**: If QR doesn't load, fallback to account identifier text
+- **Multiple Simultaneous Payout Notifications**: Users can have multiple pending payments across different groups
 
 ## Design Direction
 

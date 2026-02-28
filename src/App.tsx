@@ -18,6 +18,7 @@ import { ProfileCustomization } from '@/components/ProfileCustomization'
 import { NotificationCenter } from '@/components/NotificationCenter'
 import { NotificationPreferences } from '@/components/NotificationPreferences'
 import { ActivityHistoryManager } from '@/components/ActivityHistoryManager'
+import { PaymentAccountManager } from '@/components/PaymentAccountManager'
 import { Logo } from '@/components/Logo'
 import { Button } from '@/components/ui/button'
 import { UserProfile, Portfolio, Asset, PortfolioPosition, LeaderboardEntry, Insight, Group } from '@/lib/types'
@@ -512,6 +513,8 @@ function App() {
                 userGroups={Object.values(allGroups || {}).filter(g => g.memberIds.includes(profile.id))}
               />
 
+              <PaymentAccountManager profile={profile} onUpdate={handleUserUpdate} />
+
               <NotificationPreferences profile={profile} onUpdate={handleUserUpdate} />
 
               <SubscriptionManager profile={profile} onUpdate={handleUserUpdate} />
@@ -534,6 +537,8 @@ function App() {
         allUsers={allUsers || {}}
         allPortfolios={allPortfolios || {}}
       />
+
+      <BettingPayoutNotifier currentUser={profile} />
 
       <Toaster richColors position="top-right" />
     </div>

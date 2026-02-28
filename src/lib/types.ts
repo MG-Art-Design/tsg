@@ -112,6 +112,63 @@ export interface QuarterData {
   isActive: boolean
 }
 
+export interface BettingSettings {
+  enabled: boolean
+  entryFee: number
+  weeklyPayout?: number
+  monthlyPayout?: number
+  seasonPayout?: number
+  payoutStructure: 'winner-take-all' | 'top-3' | 'top-5'
+  weeklyEnabled: boolean
+  monthlyEnabled: boolean
+  seasonEnabled: boolean
+}
+
+export interface BettingPeriod {
+  id: string
+  groupId: string
+  gameId?: string
+  type: 'weekly' | 'monthly' | 'season'
+  startDate: number
+  endDate: number
+  winnerId?: string
+  winnerUsername?: string
+  winnerAvatar?: string
+  totalPot: number
+  payout: number
+  payoutStatus: 'pending' | 'notified' | 'completed'
+  payoutNotifiedAt?: number
+  standings: Array<{
+    userId: string
+    username: string
+    avatar: string
+    returnPercent: number
+    returnValue: number
+    amountOwed?: number
+  }>
+}
+
+export interface PayoutNotification {
+  id: string
+  groupId: string
+  periodId: string
+  periodType: 'weekly' | 'monthly' | 'season'
+  winnerId: string
+  winnerUsername: string
+  winnerAvatar: string
+  winnerPaymentAccounts?: PaymentAccount[]
+  totalPayout: number
+  memberPayments: Array<{
+    userId: string
+    username: string
+    avatar: string
+    amountOwed: number
+    paymentStatus: 'pending' | 'acknowledged'
+  }>
+  createdAt: number
+  groupName: string
+}
+
 export interface Group {
   id: string
   name: string
@@ -121,6 +178,8 @@ export interface Group {
   memberIds: string[]
   inviteCode: string
   activeGameId?: string
+  bettingSettings?: BettingSettings
+  bettingPeriods?: BettingPeriod[]
 }
 
 export interface GroupGame {
@@ -288,6 +347,12 @@ export interface SharingPreferences {
   sharePerformanceMetrics: boolean
 }
 
+export interface PaymentAccount {
+  type: 'venmo' | 'zelle'
+  qrCodeDataUrl?: string
+  accountIdentifier?: string
+}
+
 export interface UserProfile {
   id: string
   email: string
@@ -305,4 +370,5 @@ export interface UserProfile {
   relationshipStatuses: Record<string, RelationshipStatus>
   notificationPreferences: NotificationPreferences
   sharingPreferences?: SharingPreferences
+  paymentAccounts?: PaymentAccount[]
 }

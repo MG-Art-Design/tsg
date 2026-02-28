@@ -1,0 +1,75 @@
+import { useEffect } from 'react'
+import { useKV } from '@github/spark/hooks'
+import { 
+  Group, 
+  UserProfile, 
+  GroupGame, 
+  GroupGameLeaderboardEntry,
+  BettingPeriod,
+  PayoutNotification
+} from '@/lib/types'
+import { calculateGameWinner, createPayoutNotification } from '@/lib/bettingHelpers'
+import { toast } from 'sonner'
+
+export function useBettingPayouts(
+  group: Group | null,
+  activeGame: GroupGame | null,
+  leaderboard: GroupGameLeaderboardEntry[],
+  allUsers: Record<string, UserProfile>
+) {
+  const [groups, setGroups] = useKV<Record<string, Group>>('all-groups', {})
+  const [payoutNotifications, setPayoutNotifications] = useKV<PayoutNotification[]>('payout-notifications', [])
+  const [processedGames, setProcessedGames] = useKV<string[]>('processed-betting-games', [])
+
+  useEffect(() => {
+    if (!group || !activeGame || !group.bettingSettings?.enabled) return
+    if (Date.now() < activeGame.endDate) return
+    if ((processedGames || []).includes(activeGame.id)) return
+    if (leaderboard.length === 0) return
+
+    const winner = allUsers[leaderboard[0].userId]
+    if (!winner) return
+
+    const gameEndDate = new Date(activeGame.endDate)
+    const gameStartDate = new Date(activeGame.startDate)
+    const gameDuration = gameEndDate.getTime() - gameStartDate.getTime()
+    const oneWeek = 7 * 24 * 60 * 60 * 1000
+    const oneMonth = 30 * 24 * 60 * 60 * 1000
+
+    let periodType: 'weekly' | 'monthly' | 'season' = 'season'
+    
+    if (group.bettingSettings.weeklyEnabled && gameDuration <= oneWeek + 86400000) {
+      periodType = 'weekly'
+    } else if (group.bettingSettings.monthlyEnabled && gameDuration <= oneMonth + 86400000) {
+      periodType = 'monthly'
+    } else if (group.bettingSettings.seasonEnabled) {
+      periodType = 'season'
+    }
+
+    const bettingPeriod = calculateGameWinner(group, leaderboard, allUsers, periodType)
+    if (!bettingPeriod) return
+
+    bettingPeriod.endDate = activeGame.endDate
+    bettingPeriod.startDate = activeGame.startDate
+    bettingPeriod.payoutStatus = 'notified'
+    bettingPeriod.payoutNotifiedAt = Date.now()
+
+    const notification = createPayoutNotification(bettingPeriod, group, winner)
+
+    setGroups((current) => ({
+      ...(current || {}),
+      [group.id]: {
+        ...group,
+        bettingPeriods: [...(group.bettingPeriods || []), bettingPeriod]
+      }
+    }))
+
+    setPayoutNotifications((current) => [...(current || []), notification])
+
+    setProcessedGames((current) => [...(current || []), activeGame.id])
+
+    toast.success(`🏆 ${winner.username} won the ${periodType} pot!`, {
+      description: `$${bettingPeriod.payout} payout ready • Check Betting tab`
+    })
+  }, [activeGame?.id, activeGame?.endDate, leaderboard.length, processedGames?.length])
+}

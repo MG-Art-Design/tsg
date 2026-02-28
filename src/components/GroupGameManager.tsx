@@ -11,6 +11,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Group, UserProfile, GroupGame, GroupGamePick, Asset, GamePickPosition, GroupGameLeaderboardEntry } from '@/lib/types'
 import { formatCurrency, formatPercent } from '@/lib/helpers'
 import { useActivityTracker } from '@/hooks/use-activity-tracker'
+import { useBettingPayouts } from '@/hooks/use-betting-payouts'
 import { Trophy, Flame, Plus, Check, ArrowRight, Crown, Medal } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { motion } from 'framer-motion'
@@ -38,6 +39,44 @@ export function GroupGameManager({ group, currentUser, marketData, allUsers }: G
 
   const activeGame = group.activeGameId ? groupGames?.[group.activeGameId] : null
   const userPick = activeGame ? gamePicks?.[`${currentUser.id}-${activeGame.id}`] : null
+
+  const getGameLeaderboard = (): GroupGameLeaderboardEntry[] => {
+    if (!activeGame) return []
+
+    const entries: GroupGameLeaderboardEntry[] = []
+
+    Object.entries(gamePicks || {}).forEach(([key, pick]) => {
+      if (!key.endsWith(`-${activeGame.id}`)) return
+
+      const totalReturn = pick.picks.reduce((sum, p) => sum + p.returnValue, 0)
+      const totalReturnPercent = pick.picks.reduce((sum, p) => sum + p.returnPercent, 0) / pick.picks.length
+
+      const user = allUsers?.[pick.userId]
+      if (!user) return
+
+      entries.push({
+        userId: pick.userId,
+        username: user.username,
+        avatar: user.avatar,
+        gameId: activeGame.id,
+        totalReturnPercent,
+        totalReturnValue: totalReturn,
+        picks: pick.picks,
+        rank: 0,
+      })
+    })
+
+    entries.sort((a, b) => b.totalReturnPercent - a.totalReturnPercent)
+    entries.forEach((entry, index) => {
+      entry.rank = index + 1
+    })
+
+    return entries
+  }
+
+  const leaderboard = getGameLeaderboard()
+
+  useBettingPayouts(group, activeGame || null, leaderboard, allUsers)
 
   const getDurationInMs = (duration: string) => {
     const durations = {
@@ -196,41 +235,6 @@ export function GroupGameManager({ group, currentUser, marketData, allUsers }: G
     })
   }, [marketData, activeGame?.id])
 
-  const getGameLeaderboard = (): GroupGameLeaderboardEntry[] => {
-    if (!activeGame) return []
-
-    const entries: GroupGameLeaderboardEntry[] = []
-
-    Object.entries(gamePicks || {}).forEach(([key, pick]) => {
-      if (!key.endsWith(`-${activeGame.id}`)) return
-
-      const totalReturn = pick.picks.reduce((sum, p) => sum + p.returnValue, 0)
-      const totalReturnPercent = pick.picks.reduce((sum, p) => sum + p.returnPercent, 0) / pick.picks.length
-
-      const user = allUsers?.[pick.userId]
-      if (!user) return
-
-      entries.push({
-        userId: pick.userId,
-        username: user.username,
-        avatar: user.avatar,
-        gameId: activeGame.id,
-        totalReturnPercent,
-        totalReturnValue: totalReturn,
-        picks: pick.picks,
-        rank: 0,
-      })
-    })
-
-    entries.sort((a, b) => b.totalReturnPercent - a.totalReturnPercent)
-    entries.forEach((entry, index) => {
-      entry.rank = index + 1
-    })
-
-    return entries
-  }
-
-  const leaderboard = getGameLeaderboard()
   const hasSubmitted = !!userPick
   const gameEnded = activeGame && Date.now() > activeGame.endDate
 

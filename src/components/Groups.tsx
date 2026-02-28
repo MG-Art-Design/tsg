@@ -10,9 +10,10 @@ import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { GroupChat } from '@/components/GroupChat'
 import { GroupGameManager } from '@/components/GroupGameManager'
+import { GroupBettingManager } from '@/components/GroupBettingManager'
 import { Group, UserProfile, GroupInvite, Asset } from '@/lib/types'
 import { generateInviteCode } from '@/lib/helpers'
-import { Users, Plus, Copy, UserPlus, Check, X, ChatCircle, ArrowLeft, Flame } from '@phosphor-icons/react'
+import { Users, Plus, Copy, UserPlus, Check, X, ChatCircle, ArrowLeft, Flame, CurrencyDollar } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 
 interface GroupsProps {
@@ -188,7 +189,7 @@ export function Groups({ currentUser, onUserUpdate, marketData = [] }: GroupsPro
             Back to Groups
           </Button>
           <Tabs defaultValue="chat" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="chat" className="gap-2">
                 <ChatCircle size={18} weight="fill" />
                 Chat
@@ -196,6 +197,10 @@ export function Groups({ currentUser, onUserUpdate, marketData = [] }: GroupsPro
               <TabsTrigger value="game" className="gap-2">
                 <Flame size={18} weight="fill" />
                 Game
+              </TabsTrigger>
+              <TabsTrigger value="betting" className="gap-2">
+                <CurrencyDollar size={18} weight="fill" />
+                Betting
               </TabsTrigger>
             </TabsList>
             <TabsContent value="chat" className="mt-4">
@@ -211,6 +216,19 @@ export function Groups({ currentUser, onUserUpdate, marketData = [] }: GroupsPro
                 currentUser={currentUser}
                 marketData={marketData}
                 allUsers={allUsers || {}}
+              />
+            </TabsContent>
+            <TabsContent value="betting" className="mt-4">
+              <GroupBettingManager
+                group={selectedGroupChat}
+                currentUser={currentUser}
+                isAdmin={selectedGroupChat.createdBy === currentUser.id}
+                onGroupUpdate={(updatedGroup) => {
+                  setGroups((current) => ({
+                    ...(current || {}),
+                    [updatedGroup.id]: updatedGroup
+                  }))
+                }}
               />
             </TabsContent>
           </Tabs>
