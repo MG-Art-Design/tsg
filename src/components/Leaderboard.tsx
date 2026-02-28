@@ -1,3 +1,17 @@
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Trophy, CrownSimple, Medal, UserPlus } from '@phosphor-icons/react'
+import { motion } from 'framer-motion'
+import { useKV } from '@github/spark/hooks'
+import { LeaderboardEntry, UserProfile, Portfolio } from '@/lib/types'
+import { formatCurrency, formatPercent } from '@/lib/helpers'
+
+interface LeaderboardProps {
+  entries: LeaderboardEntry[]
+  currentUserId: string
+  currentUser: UserProfile
+  onAddFriendsClick: () => void
 }
 
 export function Leaderboard({ entries, currentUserId, currentUser, onAddFriendsClick }: LeaderboardProps) {
