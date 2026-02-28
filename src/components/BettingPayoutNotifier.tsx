@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Separator } from '@/components/ui/separator'
 import { PayoutNotification, UserProfile } from '@/lib/types'
-import { CurrencyDollar, Trophy, X, QrCode, CreditCard } from '@phosphor-icons/react'
+import { Trophy, X, QrCode } from '@phosphor-icons/react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'sonner'
 
