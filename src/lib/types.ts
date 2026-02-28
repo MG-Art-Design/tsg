@@ -3,6 +3,7 @@ export interface UserProfile {
   email: string
   username: string
   avatar: string
+  coverPhoto?: string
   bio: string
   insightFrequency: 'daily' | 'weekly' | 'monthly'
   emailNotifications: EmailPreferences
@@ -12,6 +13,7 @@ export interface UserProfile {
   friendIds: string[]
   friendCode: string
   relationshipStatuses: Record<string, RelationshipStatus>
+  notificationPreferences: NotificationPreferences
 }
 
 export type RelationshipStatus = 'friend' | 'rival' | 'mentor' | 'mentee' | 'colleague' | 'family' | 'other'
@@ -20,6 +22,14 @@ export interface RelationshipConnection {
   userId: string
   status: RelationshipStatus
   addedAt: number
+}
+
+export interface NotificationPreferences {
+  relationshipChanges: boolean
+  friendPortfolioUpdates: boolean
+  leaderboardChanges: boolean
+  groupActivity: boolean
+  groupGameInvites: boolean
 }
 
 export interface EmailPreferences {
@@ -110,6 +120,47 @@ export interface Group {
   createdAt: number
   memberIds: string[]
   inviteCode: string
+  activeGameId?: string
+}
+
+export interface GroupGame {
+  id: string
+  groupId: string
+  name: string
+  startDate: number
+  endDate: number
+  isActive: boolean
+  maxPicks: 3
+  allowedTypes: ('stock' | 'crypto')[]
+  createdBy: string
+}
+
+export interface GroupGamePick {
+  userId: string
+  gameId: string
+  picks: GamePickPosition[]
+  submittedAt: number
+}
+
+export interface GamePickPosition {
+  symbol: string
+  name: string
+  type: 'stock' | 'crypto'
+  entryPrice: number
+  currentPrice: number
+  returnPercent: number
+  returnValue: number
+}
+
+export interface GroupGameLeaderboardEntry {
+  userId: string
+  username: string
+  avatar: string
+  gameId: string
+  totalReturnPercent: number
+  totalReturnValue: number
+  picks: GamePickPosition[]
+  rank: number
 }
 
 export interface GroupInvite {

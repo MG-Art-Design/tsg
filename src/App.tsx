@@ -14,6 +14,9 @@ import { EmailNotificationsManager } from '@/components/EmailNotificationsManage
 import { SubscriptionManager } from '@/components/SubscriptionManager'
 import { FriendsManager } from '@/components/FriendsManager'
 import { RelationshipManager } from '@/components/RelationshipManager'
+import { ProfileCustomization } from '@/components/ProfileCustomization'
+import { NotificationCenter } from '@/components/NotificationCenter'
+import { NotificationPreferences } from '@/components/NotificationPreferences'
 import { Logo } from '@/components/Logo'
 import { Button } from '@/components/ui/button'
 import { UserProfile, Portfolio, Asset, PortfolioPosition, LeaderboardEntry, Insight } from '@/lib/types'
@@ -76,6 +79,19 @@ function App() {
       setProfile((current) => current ? {
         ...current,
         relationshipStatuses: {}
+      } : null)
+    }
+
+    if (profile && !profile.notificationPreferences) {
+      setProfile((current) => current ? {
+        ...current,
+        notificationPreferences: {
+          relationshipChanges: true,
+          friendPortfolioUpdates: true,
+          leaderboardChanges: true,
+          groupActivity: true,
+          groupGameInvites: true
+        }
       } : null)
     }
   }, [profile?.id])
@@ -424,26 +440,12 @@ function App() {
           </TabsContent>
 
           <TabsContent value="groups">
-            <Groups currentUser={profile} onUserUpdate={handleUserUpdate} />
+            <Groups currentUser={profile} onUserUpdate={handleUserUpdate} marketData={marketData} />
           </TabsContent>
 
           <TabsContent value="profile">
             <div className="max-w-2xl mx-auto space-y-6">
-              <div className="text-center py-12">
-                <div className="text-6xl mb-4">{profile.avatar}</div>
-                <h2 className="text-3xl font-bold mb-2">{profile.username}</h2>
-                {profile.bio && (
-                  <p className="text-muted-foreground mb-4">{profile.bio}</p>
-                )}
-                <div className="text-sm text-muted-foreground">
-                  Insights frequency: <span className="capitalize font-medium">{profile.insightFrequency}</span>
-                </div>
-                {profile.email && (
-                  <div className="text-xs text-muted-foreground mt-2">
-                    {profile.email}
-                  </div>
-                )}
-              </div>
+              <ProfileCustomization profile={profile} onUpdate={handleUserUpdate} />
 
               <FriendsManager profile={profile} onUpdate={handleUserUpdate} />
 
@@ -453,6 +455,8 @@ function App() {
                 onUpdate={handleUserUpdate}
                 onUpdateFriend={handleFriendUpdate}
               />
+
+              <NotificationPreferences profile={profile} onUpdate={handleUserUpdate} />
 
               <SubscriptionManager profile={profile} onUpdate={handleUserUpdate} />
 
@@ -467,6 +471,12 @@ function App() {
         portfolio={portfolio ?? null}
         leaderboardEntries={mockLeaderboard}
         insights={insights ?? []}
+      />
+
+      <NotificationCenter
+        profile={profile}
+        allUsers={allUsers || {}}
+        allPortfolios={allPortfolios || {}}
       />
 
       <Toaster richColors position="top-right" />

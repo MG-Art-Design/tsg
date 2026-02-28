@@ -60,7 +60,14 @@ export function Onboarding({ onComplete, initialEmail, initialUserId, initialFri
       },
       friendIds: [],
       friendCode: initialFriendCode || `TSG-${userId.slice(-8)}`,
-      relationshipStatuses: {}
+      relationshipStatuses: {},
+      notificationPreferences: {
+        relationshipChanges: true,
+        friendPortfolioUpdates: true,
+        leaderboardChanges: true,
+        groupActivity: true,
+        groupGameInvites: true
+      }
     }
 
     onComplete(profile)

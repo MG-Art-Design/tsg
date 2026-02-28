@@ -20,11 +20,11 @@ This app requires multiple interconnected features including user profiles, real
 - **Success criteria**: Users remain logged in across page refreshes, email addresses are unique, passwords securely stored, sign out clears session and returns to login
 
 ### User Profile Creation & Management
-- **Functionality**: Create custom profiles with email, avatar upload (or emoji selection), username, bio, and notification preferences
-- **Purpose**: Establishes personal identity within the competitive space and allows preference customization tied to a unique email
+- **Functionality**: Create custom profiles with email, avatar upload (or emoji selection), username, bio, cover photo customization, and notification preferences
+- **Purpose**: Establishes personal identity within the competitive space and allows preference customization tied to a unique email, with visual personalization through cover photos
 - **Trigger**: After account creation or clicking profile settings
-- **Progression**: Authentication → Profile creation form → Avatar selection → Bio entry → Notification preferences → Dashboard
-- **Success criteria**: Profile persists across sessions tied to email, displays correctly on leaderboards, preferences control notification frequency
+- **Progression**: Authentication → Profile creation form → Avatar selection → Cover photo selection → Bio entry → Notification preferences → Dashboard
+- **Success criteria**: Profile persists across sessions tied to email, displays correctly on leaderboards with cover photos, preferences control notification frequency, cover photos display on profile header
 
 ### Quarterly Trading Competitions
 - **Functionality**: Virtual trading rounds where users select S&P 500 stocks or crypto assets, allocate virtual capital, and compete for best returns
@@ -48,11 +48,11 @@ This app requires multiple interconnected features including user profiles, real
 - **Success criteria**: Insights are relevant to current market conditions, tone is consistent (sassy yet respectful), delivery matches preferences
 
 ### Performance Leaderboard & Standings
-- **Functionality**: Real-time rankings showing only friends' returns, creating an intimate competition space with your chosen rivals
-- **Purpose**: Fuels personal competition with friends, celebrates winners in your circle, and motivates strategic improvement
+- **Functionality**: Real-time rankings showing only friends' returns with relationship-based filtering (All/Friend/Rival/Mentor/Mentee/Colleague/Family/Other), creating an intimate competition space with your chosen rivals
+- **Purpose**: Fuels personal competition with friends, celebrates winners in your circle, motivates strategic improvement, and allows focused competition views based on relationship types
 - **Trigger**: Leaderboard tab navigation
-- **Progression**: Open leaderboard → View friend rankings → See detailed returns → Add more friends to expand competition
-- **Success criteria**: Rankings show only added friends, updates in real-time, percentage returns calculated correctly, empty state prompts friend adding
+- **Progression**: Open leaderboard → View friend rankings → Filter by relationship type → See detailed returns → Add more friends to expand competition
+- **Success criteria**: Rankings show only added friends, updates in real-time, percentage returns calculated correctly, filters work correctly to show specific relationship types, empty state prompts friend adding
 
 ### Friend Management System
 - **Functionality**: Add friends via unique friend code, creating bilateral connections that sync both users to each other's leaderboards
@@ -95,6 +95,20 @@ This app requires multiple interconnected features including user profiles, real
 - **Trigger**: User clicks "Generate Insight" button in Strategic Positioning AI card on Dashboard
 - **Progression**: Click Generate → AI analyzes recent insider trades → Generates insight with title, analysis paragraphs, signals to watch, hypothesized moves, risk level, and confidence score → Display formatted insight with black-gold styling → Option to refresh for new perspective
 - **Success criteria**: Insights are contextually relevant to current insider trades, analysis has personality (sassy but strategic), risk levels and confidence scores make sense, hypothesized moves are actionable, maintains black-gold design theme
+
+### Relationship-Based Notifications
+- **Functionality**: Real-time toast notifications for friend activity, portfolio changes, leaderboard movements, and relationship updates, all contextual to the relationship status set by the user
+- **Purpose**: Keeps users engaged with their friend network through timely alerts about significant portfolio movements (±5%), rank changes, and new connections
+- **Trigger**: Automatic background monitoring every 30 seconds; fires when conditions are met based on user preferences
+- **Progression**: Background check → Detect significant change (portfolio shift, rank change, new friend) → Check notification preferences → Display toast with relationship context → Auto-dismiss after 5 seconds
+- **Success criteria**: Notifications respect user preferences, only fire for significant changes, include relationship context (e.g., "Your rival is surging!"), don't spam users, can be toggled on/off per category
+
+### Group-Based Mini Games
+- **Functionality**: Group administrators can start "New Game" competitions where members select exactly 3 stocks or cryptos to compete on performance over a defined period (1 week, 2 weeks, or 1 month), with separate leaderboards and the ability to re-select picks for each new game
+- **Purpose**: Creates focused, time-bound competitions within groups with simpler rules (only 3 picks) to encourage quick engagement and friendly rivalry
+- **Trigger**: Group owner clicks "New Game" button in Groups tab → Game section
+- **Progression**: Owner creates game (name, duration, allowed asset types) → Game starts → Members submit 3 picks → Real-time leaderboard updates as market moves → Game ends → Winner declared → New game can be started with fresh picks
+- **Success criteria**: Only group owners can create games, members can only submit picks once per game, picks are locked after submission, leaderboard shows only game participants, performance tracked independently from main portfolios, games can run concurrent with quarterly competitions, past game results are preserved
 
 ## Edge Case Handling
 

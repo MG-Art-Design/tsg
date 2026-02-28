@@ -1,7 +1,9 @@
+import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Trophy, CrownSimple, Medal, UserPlus, Heart, GraduationCap, Briefcase, House, Tag } from '@phosphor-icons/react'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Trophy, CrownSimple, Medal, UserPlus, Heart, GraduationCap, Briefcase, House, Tag, Funnel } from '@phosphor-icons/react'
 import { motion } from 'framer-motion'
 import { useKV } from '@github/spark/hooks'
 import { LeaderboardEntry, UserProfile, Portfolio, RelationshipStatus } from '@/lib/types'
@@ -17,6 +19,7 @@ interface LeaderboardProps {
 export function Leaderboard({ entries, currentUserId, currentUser, onAddFriendsClick }: LeaderboardProps) {
   const [allUsers] = useKV<Record<string, UserProfile>>('all-users', {})
   const [allPortfolios] = useKV<Record<string, Portfolio>>('all-portfolios', {})
+  const [relationshipFilter, setRelationshipFilter] = useState<RelationshipStatus | 'all'>('all')
 
   const getFilteredEntries = (): LeaderboardEntry[] => {
     const friendEntries: LeaderboardEntry[] = currentUser.friendIds
@@ -42,12 +45,21 @@ export function Leaderboard({ entries, currentUserId, currentUser, onAddFriendsC
       friendEntries.push(currentUserEntry)
     }
 
-    friendEntries.sort((a, b) => b.returnPercent - a.returnPercent)
-    friendEntries.forEach((entry, index) => {
+    let filtered = friendEntries
+    if (relationshipFilter !== 'all') {
+      filtered = friendEntries.filter(entry => {
+        if (entry.userId === currentUserId) return true
+        const status = currentUser.relationshipStatuses?.[entry.userId] || 'friend'
+        return status === relationshipFilter
+      })
+    }
+
+    filtered.sort((a, b) => b.returnPercent - a.returnPercent)
+    filtered.forEach((entry, index) => {
       entry.rank = index + 1
     })
 
-    return friendEntries
+    return filtered
   }
 
   const filteredEntries = getFilteredEntries()
@@ -95,13 +107,35 @@ export function Leaderboard({ entries, currentUserId, currentUser, onAddFriendsC
     <div className="space-y-4">
       <Card className="border-2 border-[oklch(0.70_0.14_75)]">
         <CardHeader>
-          <CardTitle className="text-xl sm:text-2xl flex items-center gap-2">
-            <Trophy size={24} weight="fill" className="text-accent sm:w-7 sm:h-7" />
-            Leaderboard
-          </CardTitle>
-          <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-            Compete with your friends. Only your added friends appear here.
-          </p>
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <CardTitle className="text-xl sm:text-2xl flex items-center gap-2">
+                <Trophy size={24} weight="fill" className="text-accent sm:w-7 sm:h-7" />
+                Leaderboard
+              </CardTitle>
+              <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+                Compete with your friends. Only your added friends appear here.
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <Funnel size={18} className="text-muted-foreground" />
+              <Select value={relationshipFilter} onValueChange={(value) => setRelationshipFilter(value as RelationshipStatus | 'all')}>
+                <SelectTrigger className="w-[140px]">
+                  <SelectValue placeholder="Filter by" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Friends</SelectItem>
+                  <SelectItem value="friend">Friends</SelectItem>
+                  <SelectItem value="rival">Rivals</SelectItem>
+                  <SelectItem value="mentor">Mentors</SelectItem>
+                  <SelectItem value="mentee">Mentees</SelectItem>
+                  <SelectItem value="colleague">Colleagues</SelectItem>
+                  <SelectItem value="family">Family</SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
         </CardHeader>
       </Card>
 

@@ -9,17 +9,19 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { GroupChat } from '@/components/GroupChat'
-import { Group, UserProfile, GroupInvite } from '@/lib/types'
+import { GroupGameManager } from '@/components/GroupGameManager'
+import { Group, UserProfile, GroupInvite, Asset } from '@/lib/types'
 import { generateInviteCode } from '@/lib/helpers'
-import { Users, Plus, Copy, UserPlus, Check, X, ChatCircle, ArrowLeft } from '@phosphor-icons/react'
+import { Users, Plus, Copy, UserPlus, Check, X, ChatCircle, ArrowLeft, Flame } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 
 interface GroupsProps {
   currentUser: UserProfile
   onUserUpdate: (updatedUser: UserProfile) => void
+  marketData?: Asset[]
 }
 
-export function Groups({ currentUser, onUserUpdate }: GroupsProps) {
+export function Groups({ currentUser, onUserUpdate, marketData = [] }: GroupsProps) {
   const [groups, setGroups] = useKV<Record<string, Group>>('all-groups', {})
   const [allUsers, setAllUsers] = useKV<Record<string, UserProfile>>('all-users', {})
   const [invites, setInvites] = useKV<GroupInvite[]>('group-invites', [])
@@ -185,11 +187,33 @@ export function Groups({ currentUser, onUserUpdate }: GroupsProps) {
             <ArrowLeft size={18} />
             Back to Groups
           </Button>
-          <GroupChat
-            groupId={selectedGroupChat.id}
-            groupName={selectedGroupChat.name}
-            currentUser={currentUser}
-          />
+          <Tabs defaultValue="chat" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="chat" className="gap-2">
+                <ChatCircle size={18} weight="fill" />
+                Chat
+              </TabsTrigger>
+              <TabsTrigger value="game" className="gap-2">
+                <Flame size={18} weight="fill" />
+                Game
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="chat" className="mt-4">
+              <GroupChat
+                groupId={selectedGroupChat.id}
+                groupName={selectedGroupChat.name}
+                currentUser={currentUser}
+              />
+            </TabsContent>
+            <TabsContent value="game" className="mt-4">
+              <GroupGameManager
+                group={selectedGroupChat}
+                currentUser={currentUser}
+                marketData={marketData}
+                allUsers={allUsers || {}}
+              />
+            </TabsContent>
+          </Tabs>
         </div>
       ) : (
         <>
