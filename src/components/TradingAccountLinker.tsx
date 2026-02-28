@@ -9,20 +9,6 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { UserProfile, LinkedTradingAccount, ImportedPosition } from '@/lib/types'
 import { formatCurrency, formatPercent } from '@/lib/helpers'
 import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  Link, 
-  LinkBreak, 
-  Bank, 
-  CheckCircle, 
-  Warning, 
-  ArrowsClockwise,
-  Plus,
-  LockKey,
-  Sparkle,
-  TrendUp,
-  TrendDown,
-  Lightning
-} from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { HapticFeedback } from '@/lib/haptics'
 
