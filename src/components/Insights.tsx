@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Lightning, TrendUp, ChartLine, Warning, Trophy } from '@phosphor-icons/react'
+import { Lightning, ChartLine, Warning, Trophy } from '@phosphor-icons/react'
 import { Insight, UserProfile, InsiderTrade } from '@/lib/types'
 import { motion } from 'framer-motion'
 import { InsiderTrades } from '@/components/InsiderTrades'
