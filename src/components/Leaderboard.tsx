@@ -1,4 +1,3 @@
-  onAddFriendsClick: () => void
 }
 
 export function Leaderboard({ entries, currentUserId, currentUser, onAddFriendsClick }: LeaderboardProps) {
