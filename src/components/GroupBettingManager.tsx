@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Separator } from '@/components/ui/separator'
 import { Group, UserProfile, BettingSettings, BettingPeriod, PayoutNotification } from '@/lib/types'
 import { calculateTieredPayouts } from '@/lib/bettingHelpers'
-import { CurrencyDollar, Trophy, CalendarBlank, Bell, CheckCircle, ArrowsClockwise, Medal } from '@phosphor-icons/react'
+import { CurrencyDollar, Trophy, Bell, CheckCircle, ArrowsClockwise, Medal } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 
 interface GroupBettingManagerProps {
