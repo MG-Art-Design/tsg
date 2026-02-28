@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { Badge } from '@/components/ui/badge'
 import { ChatMessage, UserProfile } from '@/lib/types'
 import { cleanupOldMessages, formatMessageTime } from '@/lib/helpers'
 import { PaperPlaneRight, Smiley } from '@phosphor-icons/react'
@@ -23,7 +24,10 @@ export function GroupChat({ groupId, groupName, currentUser }: GroupChatProps) {
   const [messages, setMessages] = useKV<ChatMessage[]>(`group-chat-${groupId}`, [])
   const [messageInput, setMessageInput] = useState('')
   const [reactionPopover, setReactionPopover] = useState<string | null>(null)
+  const [allUsers] = useKV<Record<string, UserProfile>>('all-users', {})
   const scrollRef = useRef<HTMLDivElement>(null)
+  
+  const isPremiumUser = currentUser.subscription?.tier === 'premium'
 
   useEffect(() => {
     if (messages && messages.length > 0) {
@@ -130,10 +134,21 @@ export function GroupChat({ groupId, groupName, currentUser }: GroupChatProps) {
   return (
     <Card className="h-[600px] flex flex-col">
       <CardHeader className="border-b">
-        <CardTitle className="text-xl">{groupName} Chat</CardTitle>
-        <p className="text-sm text-muted-foreground">
-          Messages are stored for 3 months
-        </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle className="text-xl flex items-center gap-2">
+              {groupName} Chat
+              {isPremiumUser && (
+                <Badge variant="outline" className="text-xs text-[oklch(0.70_0.14_75)] border-[oklch(0.70_0.14_75)] gold-shimmer">
+                  Premium Features Enabled
+                </Badge>
+              )}
+            </CardTitle>
+            <p className="text-sm text-muted-foreground">
+              Messages are stored for 3 months
+            </p>
+          </div>
+        </div>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col p-0 overflow-hidden">
         <ScrollArea className="flex-1 p-4" ref={scrollRef}>
@@ -149,6 +164,8 @@ export function GroupChat({ groupId, groupName, currentUser }: GroupChatProps) {
                 const isCurrentUser = message.userId === currentUser.id
                 const showAvatar = index === 0 || sortedMessages[index - 1].userId !== message.userId
                 const grouped = groupedReactions(message.reactions)
+                const messageUser = allUsers?.[message.userId]
+                const isMessagePremium = messageUser?.subscription?.tier === 'premium'
 
                 return (
                   <div
@@ -164,6 +181,11 @@ export function GroupChat({ groupId, groupName, currentUser }: GroupChatProps) {
                       {showAvatar && (
                         <div className="flex items-center gap-2 px-1">
                           <span className="text-sm font-semibold">{message.username}</span>
+                          {isMessagePremium && (
+                            <Badge variant="outline" className="text-[10px] text-[oklch(0.70_0.14_75)] border-[oklch(0.70_0.14_75)] gold-shimmer-fast px-1 py-0">
+                              Premium
+                            </Badge>
+                          )}
                           <span className="text-xs text-muted-foreground">
                             {formatMessageTime(message.timestamp)}
                           </span>
@@ -173,8 +195,12 @@ export function GroupChat({ groupId, groupName, currentUser }: GroupChatProps) {
                         <div
                           className={`px-4 py-2 rounded-2xl ${
                             isCurrentUser
-                              ? 'bg-primary text-primary-foreground'
-                              : 'bg-muted'
+                              ? isPremiumUser 
+                                ? 'bg-primary text-primary-foreground gold-shimmer-slow border border-[oklch(0.70_0.14_75_/_0.3)]' 
+                                : 'bg-primary text-primary-foreground'
+                              : isMessagePremium
+                                ? 'bg-muted gold-shimmer-slow border border-[oklch(0.70_0.14_75_/_0.2)]'
+                                : 'bg-muted'
                           }`}
                         >
                           <p className="text-sm whitespace-pre-wrap break-words">
@@ -250,19 +276,19 @@ export function GroupChat({ groupId, groupName, currentUser }: GroupChatProps) {
               onChange={(e) => setMessageInput(e.target.value)}
               onKeyPress={handleKeyPress}
               maxLength={500}
-              className="flex-1"
+              className={isPremiumUser ? 'flex-1 gold-shimmer-slow' : 'flex-1'}
             />
             <Button
               onClick={handleSendMessage}
               disabled={!messageInput.trim()}
-              className="gap-2"
+              className={isPremiumUser ? 'gap-2 gold-shimmer' : 'gap-2'}
             >
               <PaperPlaneRight size={18} weight="fill" />
               Send
             </Button>
           </div>
           <p className="text-xs text-muted-foreground mt-2">
-            {messageInput.length}/500
+            {messageInput.length}/500 {isPremiumUser && '• Premium features active'}
           </p>
         </div>
       </CardContent>

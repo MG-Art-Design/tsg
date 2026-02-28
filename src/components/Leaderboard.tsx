@@ -83,11 +83,23 @@ export function Leaderboard({ entries, currentUserId, currentUser, onAddFriendsC
     return <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-sm font-bold">{rank}</div>
   }
 
-  const getRankBorderClass = (rank: number) => {
-    if (rank === 1) return 'border-yellow-400/40 bg-yellow-400/5 glow-accent'
-    if (rank === 2) return 'border-gray-400/40 bg-gray-400/5'
-    if (rank === 3) return 'border-amber-600/40 bg-amber-600/5'
-    return 'border-border'
+  const getRankBorderClass = (rank: number, isPremium: boolean) => {
+    if (rank === 1) {
+      return isPremium 
+        ? 'border-yellow-400/40 bg-yellow-400/5 glow-accent gold-shimmer-slow' 
+        : 'border-yellow-400/40 bg-yellow-400/5 glow-accent'
+    }
+    if (rank === 2) {
+      return isPremium
+        ? 'border-gray-400/40 bg-gray-400/5 gold-shimmer-slow'
+        : 'border-gray-400/40 bg-gray-400/5'
+    }
+    if (rank === 3) {
+      return isPremium
+        ? 'border-amber-600/40 bg-amber-600/5 gold-shimmer-slow'
+        : 'border-amber-600/40 bg-amber-600/5'
+    }
+    return isPremium ? 'border-border gold-shimmer-slow' : 'border-border'
   }
 
   const getRelationshipBadge = (userId: string) => {
@@ -167,49 +179,59 @@ export function Leaderboard({ entries, currentUserId, currentUser, onAddFriendsC
             </CardContent>
           </Card>
         ) : (
-          filteredEntries.map((entry, i) => (
-            <motion.div
-              key={entry.userId}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: i * 0.05 }}
-            >
-              <Card className={`${getRankBorderClass(entry.rank)} ${entry.userId === currentUserId ? 'ring-2 ring-primary' : ''}`}>
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-4">
-                    <div className="flex-shrink-0">
-                      {getRankIcon(entry.rank)}
-                    </div>
+          filteredEntries.map((entry, i) => {
+            const entryUser = allUsers?.[entry.userId]
+            const isPremium = entryUser?.subscription?.tier === 'premium'
+            
+            return (
+              <motion.div
+                key={entry.userId}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: i * 0.05 }}
+              >
+                <Card className={`${getRankBorderClass(entry.rank, isPremium)} ${entry.userId === currentUserId ? 'ring-2 ring-primary' : ''}`}>
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-4">
+                      <div className="flex-shrink-0">
+                        {getRankIcon(entry.rank)}
+                      </div>
 
-                    <div className="flex items-center gap-3 flex-1">
-                      <div className="text-4xl">{entry.avatar}</div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="font-semibold truncate">{entry.username}</span>
-                          {entry.userId === currentUserId && (
-                            <Badge variant="outline" className="text-xs">You</Badge>
-                          )}
-                          {getRelationshipBadge(entry.userId)}
+                      <div className="flex items-center gap-3 flex-1">
+                        <div className="text-4xl">{entry.avatar}</div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="font-semibold truncate">{entry.username}</span>
+                            {entry.userId === currentUserId && (
+                              <Badge variant="outline" className="text-xs">You</Badge>
+                            )}
+                            {isPremium && (
+                              <Badge variant="outline" className="text-xs text-[oklch(0.70_0.14_75)] border-[oklch(0.70_0.14_75)] gold-shimmer-fast">
+                                Premium
+                              </Badge>
+                            )}
+                            {getRelationshipBadge(entry.userId)}
+                          </div>
+                          <div className="text-sm text-muted-foreground">
+                            {formatCurrency(entry.portfolioValue)} portfolio
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="text-right flex-shrink-0">
+                        <div className={`text-2xl font-bold ${entry.returnPercent >= 0 ? 'text-success' : 'text-destructive'}`}>
+                          {formatPercent(entry.returnPercent)}
                         </div>
                         <div className="text-sm text-muted-foreground">
-                          {formatCurrency(entry.portfolioValue)} portfolio
+                          {formatCurrency(Math.abs(entry.returnValue))}
                         </div>
                       </div>
                     </div>
-
-                    <div className="text-right flex-shrink-0">
-                      <div className={`text-2xl font-bold ${entry.returnPercent >= 0 ? 'text-success' : 'text-destructive'}`}>
-                        {formatPercent(entry.returnPercent)}
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        {formatCurrency(Math.abs(entry.returnValue))}
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))
+                  </CardContent>
+                </Card>
+              </motion.div>
+            )
+          })
         )}
       </div>
     </div>
