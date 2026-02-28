@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -7,7 +7,13 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Logo } from '@/components/Logo'
 import { toast } from 'sonner'
 import { UserProfile } from '@/lib/types'
-import { Envelope, Key, ArrowRight } from '@phosphor-icons/react'
+import { Envelope, Key, ArrowRight, Fingerprint, FingerprintSimple } from '@phosphor-icons/react'
+import { 
+  checkBiometricSupport, 
+  authenticateWithBiometric, 
+  getBiometricUsers,
+  type BiometricSupport 
+} from '@/lib/biometric'
 
 interface AuthProps {
   onAuthenticated: (profile: UserProfile) => void
@@ -20,6 +26,77 @@ export function Auth({ onAuthenticated, existingUsers }: AuthProps) {
   const [rememberMe, setRememberMe] = useState(false)
   const [isSignUp, setIsSignUp] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [biometricSupport, setBiometricSupport] = useState<BiometricSupport>({ available: false, type: 'unknown' })
+  const [biometricUsers, setBiometricUsers] = useState<Array<{ userId: string; email: string }>>([])
+  const [showBiometricPrompt, setShowBiometricPrompt] = useState(false)
+
+  useEffect(() => {
+    const initBiometric = async () => {
+      const support = await checkBiometricSupport()
+      setBiometricSupport(support)
+      
+      if (support.available) {
+        const users = await getBiometricUsers()
+        setBiometricUsers(users)
+        
+        if (users.length > 0) {
+          setShowBiometricPrompt(true)
+        }
+      }
+    }
+    initBiometric()
+  }, [])
+
+  const handleBiometricSignIn = async (userToAuth?: { userId: string; email: string }) => {
+    setIsLoading(true)
+
+    try {
+      let targetUser = userToAuth
+
+      if (!targetUser && biometricUsers.length === 1) {
+        targetUser = biometricUsers[0]
+      }
+
+      if (!targetUser) {
+        toast.error('No biometric user selected')
+        setIsLoading(false)
+        return
+      }
+
+      const existingUser = Object.values(existingUsers).find(u => u.id === targetUser.userId)
+      
+      if (!existingUser) {
+        toast.error('User not found', {
+          description: 'Please sign in with email and password.'
+        })
+        setIsLoading(false)
+        return
+      }
+
+      const authenticated = await authenticateWithBiometric(targetUser.userId)
+
+      if (authenticated) {
+        await window.spark.kv.set('currentUserId', existingUser.id)
+        await window.spark.kv.set('rememberMe', true)
+        await window.spark.kv.set('rememberedUserId', existingUser.id)
+        
+        toast.success(`Welcome back, ${existingUser.username}!`, {
+          description: `Signed in with ${biometricSupport.type === 'face' ? 'Face ID' : 'biometrics'}`
+        })
+        onAuthenticated(existingUser)
+      } else {
+        toast.error('Biometric authentication failed', {
+          description: 'Please try again or use password.'
+        })
+      }
+    } catch (error) {
+      toast.error('Authentication error', {
+        description: 'Please use email and password to sign in.'
+      })
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -148,6 +225,58 @@ export function Auth({ onAuthenticated, existingUsers }: AuthProps) {
             </CardDescription>
           </CardHeader>
           <CardContent>
+            {showBiometricPrompt && !isSignUp && biometricUsers.length > 0 && (
+              <div className="mb-6 space-y-3">
+                <div className="text-center">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-3">
+                    {biometricSupport.type === 'face' ? (
+                      <Fingerprint size={32} weight="duotone" className="text-primary" />
+                    ) : (
+                      <FingerprintSimple size={32} weight="duotone" className="text-primary" />
+                    )}
+                  </div>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Sign in quickly with {biometricSupport.type === 'face' ? 'Face ID' : 'biometrics'}
+                  </p>
+                </div>
+
+                {biometricUsers.map((user) => {
+                  const existingUser = Object.values(existingUsers).find(u => u.id === user.userId)
+                  return (
+                    <Button
+                      key={user.userId}
+                      onClick={() => handleBiometricSignIn(user)}
+                      disabled={isLoading}
+                      variant="outline"
+                      className="w-full border-primary/30 hover:border-primary hover:bg-primary/5"
+                      size="lg"
+                    >
+                      <div className="flex items-center gap-3 w-full">
+                        {biometricSupport.type === 'face' ? (
+                          <Fingerprint size={20} weight="duotone" />
+                        ) : (
+                          <FingerprintSimple size={20} weight="duotone" />
+                        )}
+                        <div className="flex-1 text-left">
+                          <div className="font-semibold">{existingUser?.username || user.email}</div>
+                          <div className="text-xs text-muted-foreground">{user.email}</div>
+                        </div>
+                      </div>
+                    </Button>
+                  )
+                })}
+
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t border-border" />
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-card px-2 text-muted-foreground">Or continue with password</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email" className="flex items-center gap-2">

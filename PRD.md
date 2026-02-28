@@ -19,6 +19,13 @@ This app requires multiple interconnected features including user profiles, real
 - **Progression**: Enter email → Set password (6+ characters) → Create account → Complete profile setup → Dashboard OR Return to site → Auto-login with saved session → Dashboard
 - **Success criteria**: Users remain logged in across page refreshes, email addresses are unique, passwords securely stored, sign out clears session and returns to login
 
+### Biometric Authentication (Fast Sign-In)
+- **Functionality**: Users can enable fingerprint or Face ID authentication for instant sign-in without password entry, using device's secure enclave via WebAuthn API
+- **Purpose**: Provides ultra-fast, secure authentication for returning users while maintaining security standards, reducing friction on frequent visits
+- **Trigger**: Login screen displays biometric option if device supports it and user previously enabled it; Profile settings allow enabling/disabling
+- **Progression**: First time: Sign in with password → Navigate to Profile → Enable biometric → Authenticate biometric enrollment → Enabled. Next visit: Open app → Tap biometric button → Face ID/fingerprint scan → Instant sign-in to dashboard
+- **Success criteria**: Biometric prompt appears automatically on supported devices, authentication completes in under 2 seconds, biometric data stays on device only, graceful fallback to password if biometric fails, toggle in Profile settings works correctly
+
 ### User Profile Creation & Management
 - **Functionality**: Create custom profiles with email, avatar upload (or emoji selection), username, bio, cover photo customization, and notification preferences
 - **Purpose**: Establishes personal identity within the competitive space and allows preference customization tied to a unique email, with visual personalization through cover photos
