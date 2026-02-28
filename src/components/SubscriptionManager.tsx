@@ -28,7 +28,6 @@ export function SubscriptionManager({ profile, onUpdate }: SubscriptionManagerPr
   const [expiryYear, setExpiryYear] = useState('')
   const [processing, setProcessing] = useState(false)
 
-  const isActive = profile.subscription.endDate ? isSubscriptionActive(profile.subscription.endDate) : false
   const daysRemaining = profile.subscription.endDate ? getSubscriptionDaysRemaining(profile.subscription.endDate) : 0
 
   const handleUpgrade = () => {
