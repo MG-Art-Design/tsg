@@ -1,4 +1,4 @@
-import { Asset, QuarterData, InsiderTrade } from './types'
+import { Asset, QuarterData } from './types'
 
 export function getCurrentQuarter(): string {
   const now = new Date()
