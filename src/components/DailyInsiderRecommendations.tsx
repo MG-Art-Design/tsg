@@ -39,8 +39,6 @@ export function DailyInsiderRecommendations({
   const hasLinkedAccounts = (profile.linkedAccounts || []).length > 0
   const importedPositions = profile.importedPositions || []
 
-  const canAccessFeature = isPremium && hasLinkedAccounts
-
   const generateDailyRecommendations = async () => {
     setIsGenerating(true)
 
