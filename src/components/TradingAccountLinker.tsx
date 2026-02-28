@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { UserProfile, LinkedTradingAccount, ImportedPosition, OptionsHistory } from '@/lib/types'
+import { UserProfile, LinkedTradingAccount, ImportedPosition } from '@/lib/types'
 import { formatCurrency, formatPercent } from '@/lib/helpers'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
