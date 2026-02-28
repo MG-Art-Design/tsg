@@ -49,6 +49,11 @@ export function Logo({ size = 'md', animated = true, className = '' }: LogoProps
       const timer = setTimeout(() => {
         setShowReverb(true)
         setShowEcho(true)
+        
+        if (navigator.vibrate && window.matchMedia('(pointer: coarse)').matches) {
+          navigator.vibrate([30, 20, 50])
+        }
+        
         shimmerControls.start({
           opacity: [0.3, 1, 0.5, 1, 0.3],
           scale: [1, 1.02, 1],
