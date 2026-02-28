@@ -21,7 +21,7 @@ export function useBettingPayouts(
   const [groups, setGroups] = useKV<Record<string, Group>>('all-groups', {})
   const [payoutNotifications, setPayoutNotifications] = useKV<PayoutNotification[]>('payout-notifications', [])
   const [processedGames, setProcessedGames] = useKV<string[]>('processed-betting-games', [])
-  const [bettingHistory, setBettingHistory] = useKV<BettingHistoryEntry[]>('betting-history', [])
+  const [, setBettingHistory] = useKV<BettingHistoryEntry[]>('betting-history', [])
 
   useEffect(() => {
     if (!group || !activeGame || !group.bettingSettings?.enabled) return
