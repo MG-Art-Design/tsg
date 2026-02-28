@@ -10,6 +10,7 @@ import { Leaderboard } from '@/components/Leaderboard'
 import { Insights } from '@/components/Insights'
 import { Groups } from '@/components/Groups'
 import { EmailSettings } from '@/components/EmailSettings'
+import { PasswordSettings } from '@/components/PasswordSettings'
 import { EmailNotificationsManager } from '@/components/EmailNotificationsManager'
 import { SubscriptionManager } from '@/components/SubscriptionManager'
 import { FriendsManager } from '@/components/FriendsManager'
@@ -516,6 +517,10 @@ function App() {
 
               <BiometricSettings profile={profile} />
 
+              <PasswordSettings profile={profile} />
+
+              <EmailSettings profile={profile} onUpdate={handleUserUpdate} />
+
               <BettingHistoryAnalytics profile={profile} />
 
               <FriendsManager profile={profile} onUpdate={handleUserUpdate} />
@@ -538,8 +543,6 @@ function App() {
               <NotificationPreferences profile={profile} onUpdate={handleUserUpdate} />
 
               <SubscriptionManager profile={profile} onUpdate={handleUserUpdate} />
-
-              <EmailSettings profile={profile} onUpdate={handleUserUpdate} />
             </div>
           </TabsContent>
         </Tabs>

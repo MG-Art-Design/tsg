@@ -7,8 +7,9 @@ import { Badge } from '@/components/ui/badge'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { UserProfile, PaymentAccount } from '@/lib/types'
-import { CreditCard, Plus, Trash, QrCode, Camera } from '@phosphor-icons/react'
+import { CreditCard, Plus, Trash, QrCode, Camera, ShieldCheck } from '@phosphor-icons/react'
 import { toast } from 'sonner'
+import { BiometricReauth } from '@/components/BiometricReauth'
 
 interface PaymentAccountManagerProps {
   profile: UserProfile
@@ -21,6 +22,9 @@ export function PaymentAccountManager({ profile, onUpdate }: PaymentAccountManag
   const [accountIdentifier, setAccountIdentifier] = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string | undefined>()
+  const [showReauth, setShowReauth] = useState(false)
+  const [reauthAction, setReauthAction] = useState<'add' | 'remove'>('add')
+  const [pendingRemovalIndex, setPendingRemovalIndex] = useState<number | null>(null)
 
   const paymentAccounts = profile.paymentAccounts || []
 
@@ -52,6 +56,11 @@ export function PaymentAccountManager({ profile, onUpdate }: PaymentAccountManag
       return
     }
 
+    setReauthAction('add')
+    setShowReauth(true)
+  }
+
+  const executeAddAccount = () => {
     const newAccount: PaymentAccount = {
       type: accountType,
       accountIdentifier: accountIdentifier.trim() || undefined,
@@ -75,12 +84,29 @@ export function PaymentAccountManager({ profile, onUpdate }: PaymentAccountManag
   }
 
   const handleRemoveAccount = (index: number) => {
-    const updatedAccounts = paymentAccounts.filter((_, i) => i !== index)
+    setPendingRemovalIndex(index)
+    setReauthAction('remove')
+    setShowReauth(true)
+  }
+
+  const executeRemoveAccount = () => {
+    if (pendingRemovalIndex === null) return
+
+    const updatedAccounts = paymentAccounts.filter((_, i) => i !== pendingRemovalIndex)
     onUpdate({
       ...profile,
       paymentAccounts: updatedAccounts
     })
     toast.success('Payment account removed')
+    setPendingRemovalIndex(null)
+  }
+
+  const handleAuthenticated = () => {
+    if (reauthAction === 'add') {
+      executeAddAccount()
+    } else if (reauthAction === 'remove') {
+      executeRemoveAccount()
+    }
   }
 
   return (
@@ -176,6 +202,13 @@ export function PaymentAccountManager({ profile, onUpdate }: PaymentAccountManag
                   </div>
                 </div>
 
+                <div className="flex items-start gap-2 p-3 bg-primary/5 border border-primary/20 rounded-lg text-xs">
+                  <ShieldCheck size={16} className="text-primary mt-0.5 flex-shrink-0" weight="fill" />
+                  <p className="text-muted-foreground">
+                    Adding payment accounts requires biometric or password verification
+                  </p>
+                </div>
+
                 <Button onClick={handleAddAccount} className="w-full">
                   Add Account
                 </Button>
@@ -235,6 +268,25 @@ export function PaymentAccountManager({ profile, onUpdate }: PaymentAccountManag
           </div>
         )}
       </CardContent>
+
+      <BiometricReauth
+        open={showReauth}
+        onOpenChange={(open) => {
+          setShowReauth(open)
+          if (!open) {
+            setPendingRemovalIndex(null)
+          }
+        }}
+        onAuthenticated={handleAuthenticated}
+        userId={profile.id}
+        userEmail={profile.email}
+        title={reauthAction === 'add' ? 'Verify Payment Account Addition' : 'Verify Payment Account Removal'}
+        description={
+          reauthAction === 'add' 
+            ? 'Please verify your identity before adding a payment account'
+            : 'Please verify your identity before removing a payment account'
+        }
+      />
     </Card>
   )
 }
