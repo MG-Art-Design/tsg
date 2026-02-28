@@ -55,18 +55,19 @@ export function Logo({ size = 'md', animated = true, className = '' }: LogoProps
         }
         
         shimmerControls.start({
-          opacity: [0.3, 1, 0.5, 1, 0.3],
-          scale: [1, 1.02, 1],
+          opacity: [0.8, 1, 0.9, 1],
+          scale: [1, 1.02, 1.01, 1.02],
           filter: [
-            'brightness(1) drop-shadow(0 0 8px oklch(0.75 0.14 75 / 0.4))',
+            'brightness(1.2) drop-shadow(0 0 12px oklch(0.75 0.14 75 / 0.6))',
             'brightness(1.4) drop-shadow(0 0 20px oklch(0.70 0.14 75 / 0.8))',
-            'brightness(1.2) drop-shadow(0 0 12px oklch(0.75 0.14 75 / 0.5))',
-            'brightness(1.3) drop-shadow(0 0 16px oklch(0.70 0.14 75 / 0.6))',
-            'brightness(1) drop-shadow(0 0 8px oklch(0.75 0.14 75 / 0.4))'
+            'brightness(1.3) drop-shadow(0 0 16px oklch(0.75 0.14 75 / 0.7))',
+            'brightness(1.35) drop-shadow(0 0 18px oklch(0.70 0.14 75 / 0.75))'
           ],
           transition: {
-            duration: 2.5,
-            ease: "easeInOut"
+            duration: 3,
+            ease: "easeInOut",
+            repeat: Infinity,
+            repeatType: "reverse"
           }
         })
       }, 1900)
