@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Logo } from '@/components/Logo'
 import { toast } from 'sonner'
 import { UserProfile } from '@/lib/types'
@@ -16,6 +17,7 @@ interface AuthProps {
 export function Auth({ onAuthenticated, existingUsers }: AuthProps) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [rememberMe, setRememberMe] = useState(false)
   const [isSignUp, setIsSignUp] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
@@ -97,6 +99,14 @@ export function Auth({ onAuthenticated, existingUsers }: AuthProps) {
 
         await window.spark.kv.set('currentUserId', existingUser.id)
         
+        if (rememberMe) {
+          await window.spark.kv.set('rememberMe', true)
+          await window.spark.kv.set('rememberedUserId', existingUser.id)
+        } else {
+          await window.spark.kv.delete('rememberMe')
+          await window.spark.kv.delete('rememberedUserId')
+        }
+        
         toast.success(`Welcome back, ${existingUser.username}!`)
         onAuthenticated(existingUser)
       }
@@ -176,6 +186,22 @@ export function Auth({ onAuthenticated, existingUsers }: AuthProps) {
                   </p>
                 )}
               </div>
+
+              {!isSignUp && (
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="remember-me" 
+                    checked={rememberMe}
+                    onCheckedChange={(checked) => setRememberMe(checked === true)}
+                  />
+                  <Label 
+                    htmlFor="remember-me" 
+                    className="text-sm font-normal cursor-pointer text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    Keep me signed in
+                  </Label>
+                </div>
+              )}
 
               <Button 
                 type="submit" 

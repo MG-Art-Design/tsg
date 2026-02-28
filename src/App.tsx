@@ -58,6 +58,17 @@ function App() {
         setProfile(user)
         setIsAuthenticated(true)
         setNeedsOnboarding(false)
+      } else {
+        const rememberMe = await window.spark.kv.get<boolean>('rememberMe')
+        const rememberedUserId = await window.spark.kv.get<string>('rememberedUserId')
+        
+        if (rememberMe && rememberedUserId && allUsers?.[rememberedUserId]) {
+          const user = allUsers[rememberedUserId]
+          setCurrentUserId(rememberedUserId)
+          setProfile(user)
+          setIsAuthenticated(true)
+          setNeedsOnboarding(false)
+        }
       }
       setIsLoading(false)
     }
@@ -248,6 +259,8 @@ function App() {
 
   const handleLogout = async () => {
     await window.spark.kv.set('currentUserId', null)
+    await window.spark.kv.delete('rememberMe')
+    await window.spark.kv.delete('rememberedUserId')
     setCurrentUserId(null)
     setProfile(null)
     setPortfolio(null)
