@@ -40,7 +40,6 @@ export function GroupBettingManager({ group, currentUser, isAdmin, onGroupUpdate
 
   const bettingSettings = group.bettingSettings
   const bettingPeriods = group.bettingPeriods || []
-  const activePeriods = bettingPeriods.filter(p => Date.now() < p.endDate)
   const completedPeriods = bettingPeriods.filter(p => Date.now() >= p.endDate)
 
   const groupNotifications = (payoutNotifications || []).filter(n => n.groupId === group.id)
