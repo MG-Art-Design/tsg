@@ -4,9 +4,11 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { TrendUp, TrendDown, Lightning, Trophy, ChartLine } from '@phosphor-icons/react'
 import { Portfolio, Asset, InsiderTrade, UserProfile } from '@/lib/types'
-import { formatCurrency, formatPercent, generateMockInsiderTrades } from '@/lib/helpers'
+import { formatCurrency, formatPercent } from '@/lib/helpers'
 import { motion } from 'framer-motion'
 import { InsiderTrades } from './InsiderTrades'
+import { StrategicInsightsEnhanced } from './StrategicInsightsEnhanced'
+import { generateMockInsiderTrades } from '@/lib/insiderHelpers'
 
 interface DashboardProps {
   portfolio: Portfolio | null
@@ -180,6 +182,8 @@ export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick }
       </div>
 
       <InsiderTrades trades={insiderTrades} userTier={userTier} onUpgradeClick={onUpgradeClick} />
+
+      <StrategicInsightsEnhanced trades={insiderTrades} userTier={userTier} onUpgradeClick={onUpgradeClick} />
 
       {portfolio && portfolio.positions.length > 0 && (
         <Card className="border-2 border-[oklch(0.70_0.14_75)]">

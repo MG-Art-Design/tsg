@@ -2,26 +2,17 @@ import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { InsiderTrade, SubscriptionTier } from '@/lib/types'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Brain, Sparkle, TrendUp, Warning, Target, Lightbulb } from '@phosphor-icons/react'
+import { Brain, Sparkle, TrendUp, TrendDown, Warning, Target, Lightbulb, ChartLineUp, CheckCircle, ShieldCheck, Crown } from '@phosphor-icons/react'
 import { toast } from 'sonner'
+import { generateVettedInsight, VettedInsight } from '@/lib/insiderHelpers'
 
 interface StrategicInsightsProps {
   trades: InsiderTrade[]
   userTier: SubscriptionTier
   onUpgradeClick: () => void
-}
-
-interface GeneratedInsight {
-  id: string
-  title: string
-  content: string
-  signals: string[]
-  riskLevel: 'low' | 'medium' | 'high'
-  confidence: number
-  relevantTrades: string[]
-  timestamp: number
 }
 
 export function StrategicInsights({ trades, userTier, onUpgradeClick }: StrategicInsightsProps) {

@@ -83,18 +83,18 @@ This app requires multiple interconnected features including user profiles, real
 - **Success criteria**: Emails sent at correct intervals, content respects user preferences, HTML formatting displays correctly, emails include current rankings and accurate portfolio data
 
 ### Insider Trading Intelligence Feed ("Stonk: Omg It's In")
-- **Functionality**: Displays publicly disclosed insider trades from Congress members, White House officials, and Trump family/partners, updated every 12 hours with filtering by category
+- **Functionality**: Displays publicly disclosed insider trades from Congress members, White House officials, Trump family/partners, and affiliates, updated every 12 hours with filtering by category, featuring 2x the research depth with mock data representing 35+ trades
 - **Purpose**: Provides competitive intelligence on high-profile trades to inform user investment strategies and add intrigue to the competition
 - **Trigger**: Automatically displayed on Dashboard; data refreshes every 12 hours
-- **Progression**: Load Dashboard → View "Stonk: Omg It's In" section → Filter by category (All/Congress/White House/Trump Family) → Review trade details (trader, asset, action, value, dates) → Use intelligence for portfolio decisions
-- **Success criteria**: Data updates every 12 hours, displays accurate trade information, filters work correctly, distinctive black-gold styling sets section apart visually, maintains monochromatic design consistency
+- **Progression**: Load Dashboard → View "Stonk: Omg It's In" section → Filter by category (All/Congress/White House/Trump Family) → Review trade details (trader, asset, action, value, dates) → Free users see 2 trades per category, Premium users see all → Use intelligence for portfolio decisions
+- **Success criteria**: Data updates every 12 hours, displays accurate trade information with 35+ mock trades, filters work correctly, distinctive black-gold styling sets section apart visually, maintains monochromatic design consistency, free users see limited preview with upgrade prompt
 
-### Strategic Positioning AI ("Stonk: Omg It's In" Analysis)
-- **Functionality**: AI-powered analysis of insider trading patterns that generates strategic market insights with hypothesized future moves and risk assessments
-- **Purpose**: Transforms raw insider trading data into actionable intelligence, helping users understand market signals and position their portfolios strategically
-- **Trigger**: User clicks "Generate Insight" button in Strategic Positioning AI card on Dashboard
-- **Progression**: Click Generate → AI analyzes recent insider trades → Generates insight with title, analysis paragraphs, signals to watch, hypothesized moves, risk level, and confidence score → Display formatted insight with black-gold styling → Option to refresh for new perspective
-- **Success criteria**: Insights are contextually relevant to current insider trades, analysis has personality (sassy but strategic), risk levels and confidence scores make sense, hypothesized moves are actionable, maintains black-gold design theme
+### Strategic Positioning AI - Enhanced ("Stonk: Omg It's In" Analysis)
+- **Functionality**: Premium-only feature with two-part AI vetting system that analyzes insider trading patterns at 2x research depth, identifying key Congress members, Trump family activities, Stephen Miller affiliates, and extrapolating quiet hand analysis to generate strategic asset categorizations and trading signals
+- **Purpose**: Transforms raw insider trading data into deeply vetted actionable intelligence with strategic asset recommendations across five categories (highest growth, highest volatility, lowest volatility, consistent performers, underrated genius choices)
+- **Trigger**: Premium users click "Generate Vetted Insight" button in Strategic Positioning AI - Enhanced card on Dashboard; free users see locked premium feature with upgrade prompt
+- **Progression**: Premium user clicks Generate → Phase 1 vetting begins (pattern recognition, player analysis, anomaly detection) → Phase 1 completes with score → Phase 2 vetting begins (quiet hand extrapolation, strategic synthesis, asset categorization) → Phase 2 completes with score → Final synthesis creates comprehensive insight → Display across 4 tabs: Overview (analysis with vet scores), Assets (5 categories with 3-5 recommendations each), Signals (5-7 trading signals with strength/time horizon), Players (key insider profiles with influence scores)
+- **Success criteria**: Two-part vetting completes successfully with Phase 1 and Phase 2 scores, combined vet score (0-100) displayed prominently, analysis identifies key players by category (congress/whitehouse/trump-family/stephen-miller/affiliate), asset recommendations span all 5 strategic categories with ticker symbols, trading signals include bullish/bearish/neutral designation with reasoning, quiet hand analysis reveals non-obvious positioning, tabbed interface allows exploration of different intelligence aspects, maintains black-gold design theme
 
 ### Relationship-Based Notifications
 - **Functionality**: Real-time toast notifications for friend activity, portfolio changes, leaderboard movements, and relationship updates, all contextual to the relationship status set by the user
