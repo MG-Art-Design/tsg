@@ -50,7 +50,7 @@ function App() {
   const [insights, setInsights] = useKV<Insight[]>('user-insights', [])
   const [allPortfolios, setAllPortfolios] = useKV<Record<string, Portfolio>>('all-portfolios', {})
   const [allUsers, setAllUsers] = useKV<Record<string, UserProfile>>('all-users', {})
-  const [allGroups, setAllGroups] = useKV<Record<string, Group>>('all-groups', {})
+  const [allGroups] = useKV<Record<string, Group>>('all-groups', {})
   const [marketData, setMarketData] = useState<Asset[]>([])
   const [activeTab, setActiveTab] = useState('dashboard')
   const [isAuthenticated, setIsAuthenticated] = useState(false)
