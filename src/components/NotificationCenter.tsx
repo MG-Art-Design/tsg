@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { UserProfile, Portfolio } from '@/lib/types'
 import { toast } from 'sonner'
-import { TrendUp, TrendDown, UserPlus, Trophy, Users } from '@phosphor-icons/react'
+import { TrendUp, TrendDown, UserPlus, Trophy } from '@phosphor-icons/react'
 import { HapticFeedback } from '@/lib/haptics'
 
 interface NotificationCenterProps {
