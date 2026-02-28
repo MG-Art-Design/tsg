@@ -8,7 +8,6 @@ import { formatCurrency } from '@/lib/helpers'
 import { motion } from 'framer-motion'
 import { Sparkle, TrendUp, TrendDown, Gavel, Buildings, User, LockKey } from '@phosphor-icons/react'
 import { formatDistanceToNow } from 'date-fns'
-import { PremiumFeatureGate } from './PremiumFeatureGate'
 
 interface InsiderTradesProps {
   trades: InsiderTrade[]
