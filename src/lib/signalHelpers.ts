@@ -10,6 +10,17 @@ export interface SignalExportConfig {
   trashTalkIntensity: 'mild' | 'moderate' | 'savage'
   updateFrequency: 'instant' | 'hourly' | 'daily'
   lastExportTimestamp?: number
+  automaticLeaderboardUpdates: {
+    enabled: boolean
+    daily: boolean
+    dailyTime?: string
+    weekly: boolean
+    weeklyDay?: 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday'
+    weeklyTime?: string
+    monthly: boolean
+    monthlyDay?: number
+    monthlyTime?: string
+  }
 }
 
 export interface SignalExportMessage {

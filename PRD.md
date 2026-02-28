@@ -138,12 +138,12 @@ This app requires multiple interconnected features including user profiles, real
 - **Progression**: Click add account → Select Venmo or Zelle → Enter account identifier → Upload QR code image (optional) → Save → Account appears on profile → Automatically shown to group members when user wins a bet
 - **Success criteria**: QR codes upload and display correctly, account identifiers save properly, winner's payment info appears in payout notifications, can have multiple accounts, can delete accounts, QR images under 2MB
 
-### Signal Chat Export with AI Commentary
-- **Functionality**: Group admins can configure automatic or manual exports of group activity to external Signal group chats, including leaderboard standings, AI-generated trash talk about player performance, chat summaries, and performance praise/roasts
-- **Purpose**: Extends the competitive banter beyond the app into users' daily Signal conversations, keeps groups engaged even when not actively using TSG, and lets AI roast poor performers while praising savvy moves
-- **Trigger**: Groups tab → Select group → Signal tab (admin only)
-- **Progression**: Admin configures phone number (optional) → Sets update frequency (instant/hourly/daily) → Enables leaderboard updates → Enables AI trash talk → Sets intensity (mild/moderate/savage) → Clicks "Generate Export" → AI analyzes current standings and generates sarcastic commentary about leaders and losers → Preview shows formatted export with leaderboard rankings, trash talk messages, and chat summary → Admin copies to clipboard or downloads → Pastes into Signal group chat
-- **Success criteria**: Only group admins see Signal export tab, trash talk intensity affects AI tone (mild=friendly, moderate=competitive, savage=brutal), AI references actual returns and rank changes, messages under 160 characters, exports include formatted leaderboard with top 5 players, praise messages highlight significant gains/losses, chat summaries capture conversation vibe, copy to clipboard and download both work, instructions show Signal CLI commands if phone number provided, previous leaderboard tracked to detect rank changes for better trash talk
+### Signal Chat Export with AI Commentary & Automatic Scheduling
+- **Functionality**: Group admins can configure automatic or manual exports of group activity to external Signal group chats, including leaderboard standings, AI-generated trash talk about player performance, chat summaries, and performance praise/roasts, with automatic scheduled updates (daily, weekly, and/or monthly)
+- **Purpose**: Extends the competitive banter beyond the app into users' daily Signal conversations, keeps groups engaged even when not actively using TSG, lets AI roast poor performers while praising savvy moves, and ensures regular leaderboard updates are delivered on a consistent schedule
+- **Trigger**: Groups tab → Select group → Signal tab (admin only); automatic triggers based on schedule configuration
+- **Progression**: Admin configures phone number (optional) → Sets update frequency (instant/hourly/daily) → Enables leaderboard updates → Enables AI trash talk → Sets intensity (mild/moderate/savage) → Enables automatic leaderboard updates → Configures daily schedule (specific time), weekly schedule (day + time), and/or monthly schedule (date + time) → Scheduled updates automatically generate exports at configured times with toast notification → Admin can also manually click "Generate Export" anytime → AI analyzes current standings and generates sarcastic commentary about leaders and losers → Preview shows formatted export with leaderboard rankings, trash talk messages, and chat summary → Admin copies to clipboard or downloads → Pastes into Signal group chat
+- **Success criteria**: Only group admins see Signal export tab, trash talk intensity affects AI tone (mild=friendly, moderate=competitive, savage=brutal), AI references actual returns and rank changes, messages under 160 characters, exports include formatted leaderboard with top 5 players, praise messages highlight significant gains/losses, chat summaries capture conversation vibe, copy to clipboard and download both work, instructions show Signal CLI commands if phone number provided, previous leaderboard tracked to detect rank changes for better trash talk, automatic scheduling triggers at correct times in user's local timezone, toast notifications appear when scheduled updates are ready, configuration UI shows active schedules clearly, can enable multiple schedule types simultaneously (daily + weekly + monthly), scheduled exports include indicator showing which schedule triggered them
 
 ## Edge Case Handling
 
@@ -177,6 +177,11 @@ This app requires multiple interconnected features including user profiles, real
 - **Zero Members After Betting Reset**: Group continues normally; new games can be created with fresh betting settings
 - **Payment QR Code Display Failures**: If QR doesn't load, fallback to account identifier text
 - **Multiple Simultaneous Payout Notifications**: Users can have multiple pending payments across different groups
+- **Missed Scheduled Signal Exports**: If user is offline when scheduled export triggers, notification appears on next app load; exports don't accumulate (only latest is kept)
+- **Timezone Changes**: Scheduled times respect user's current local timezone; changing timezone automatically adjusts schedule
+- **Multiple Active Schedules**: When daily, weekly, and monthly schedules overlap (e.g., Monday at 9am which is also the 1st), only one export is generated with highest priority schedule type noted
+- **Schedule During Inactive Group**: Scheduled exports pause if group has no recent activity; resume when activity detected
+- **Browser Tab Closed During Schedule**: Schedules only trigger when app is open; closing tab suspends scheduling until next app load
 
 ## Design Direction
 

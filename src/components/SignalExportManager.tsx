@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -10,6 +10,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { 
   SignalExportConfig, 
   SignalExportMessage,
@@ -20,7 +21,8 @@ import {
   generateChatExportSummary
 } from '@/lib/signalHelpers'
 import { ChatMessage, LeaderboardEntry, Portfolio, Group, UserProfile } from '@/lib/types'
-import { Copy, Download, Lightning, Trophy, ChatCircle, Fire } from '@phosphor-icons/react'
+import { useScheduledSignalExports } from '@/hooks/use-scheduled-signal-exports'
+import { Copy, Download, Lightning, Trophy, ChatCircle, Fire, Bell, Clock } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 
 interface SignalExportManagerProps {
@@ -48,7 +50,13 @@ export function SignalExportManager({
     includeLeaderboardUpdates: true,
     includeTrashTalk: true,
     trashTalkIntensity: 'moderate',
-    updateFrequency: 'daily'
+    updateFrequency: 'daily',
+    automaticLeaderboardUpdates: {
+      enabled: false,
+      daily: false,
+      weekly: false,
+      monthly: false
+    }
   })
 
   const [previousLeaderboard, setPreviousLeaderboard] = useKV<LeaderboardEntry[]>(
@@ -60,8 +68,28 @@ export function SignalExportManager({
   const [isGenerating, setIsGenerating] = useState(false)
   const [generatedExport, setGeneratedExport] = useState<string>('')
   const [instructions, setInstructions] = useState<string>('')
+  const [scheduledExportType, setScheduledExportType] = useState<'daily' | 'weekly' | 'monthly' | null>(null)
 
   const isGroupAdmin = group.createdBy === currentUser.id
+
+  const handleScheduledExport = useCallback((type: 'daily' | 'weekly' | 'monthly') => {
+    setScheduledExportType(type)
+    generateExport()
+    
+    toast.success(`${type.charAt(0).toUpperCase() + type.slice(1)} leaderboard update ready!`, {
+      description: 'Your scheduled export has been generated. Check the Export tab to copy it to Signal.',
+      duration: 10000,
+      action: {
+        label: 'View',
+        onClick: () => {
+          const tabTrigger = document.querySelector('[value="export"]') as HTMLElement
+          tabTrigger?.click()
+        }
+      }
+    })
+  }, [])
+
+  useScheduledSignalExports(config || null, handleScheduledExport)
 
   const handleUpdateConfig = (updates: Partial<SignalExportConfig>) => {
     setConfig(current => ({ ...current!, ...updates }))
@@ -319,10 +347,251 @@ export function SignalExportManager({
                   </Select>
                 </div>
               )}
+
+              <div className="border-t pt-4 mt-4 space-y-4">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <Label htmlFor="auto-leaderboard">Automatic Leaderboard Updates</Label>
+                      <p className="text-sm text-muted-foreground">
+                        Schedule regular leaderboard updates to Signal chat
+                      </p>
+                    </div>
+                    <Switch
+                      id="auto-leaderboard"
+                      checked={config?.automaticLeaderboardUpdates?.enabled}
+                      onCheckedChange={(checked) => 
+                        handleUpdateConfig({ 
+                          automaticLeaderboardUpdates: {
+                            ...config?.automaticLeaderboardUpdates!,
+                            enabled: checked
+                          }
+                        })
+                      }
+                    />
+                  </div>
+                </div>
+
+                {config?.automaticLeaderboardUpdates?.enabled && (
+                  <div className="space-y-4 pl-4 border-l-2 border-[oklch(0.70_0.14_75_/_0.3)]">
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-0.5">
+                        <Label htmlFor="daily-updates">Daily Updates</Label>
+                        <p className="text-xs text-muted-foreground">
+                          Send leaderboard update every day
+                        </p>
+                      </div>
+                      <Switch
+                        id="daily-updates"
+                        checked={config?.automaticLeaderboardUpdates?.daily}
+                        onCheckedChange={(checked) => 
+                          handleUpdateConfig({ 
+                            automaticLeaderboardUpdates: {
+                              ...config?.automaticLeaderboardUpdates!,
+                              daily: checked
+                            }
+                          })
+                        }
+                      />
+                    </div>
+
+                    {config?.automaticLeaderboardUpdates?.daily && (
+                      <div className="space-y-2">
+                        <Label htmlFor="daily-time">Daily Update Time</Label>
+                        <Input
+                          id="daily-time"
+                          type="time"
+                          value={config?.automaticLeaderboardUpdates?.dailyTime || '09:00'}
+                          onChange={(e) => 
+                            handleUpdateConfig({ 
+                              automaticLeaderboardUpdates: {
+                                ...config?.automaticLeaderboardUpdates!,
+                                dailyTime: e.target.value
+                              }
+                            })
+                          }
+                        />
+                        <p className="text-xs text-muted-foreground">
+                          Time is in your local timezone
+                        </p>
+                      </div>
+                    )}
+
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-0.5">
+                        <Label htmlFor="weekly-updates">Weekly Updates</Label>
+                        <p className="text-xs text-muted-foreground">
+                          Send leaderboard update once a week
+                        </p>
+                      </div>
+                      <Switch
+                        id="weekly-updates"
+                        checked={config?.automaticLeaderboardUpdates?.weekly}
+                        onCheckedChange={(checked) => 
+                          handleUpdateConfig({ 
+                            automaticLeaderboardUpdates: {
+                              ...config?.automaticLeaderboardUpdates!,
+                              weekly: checked
+                            }
+                          })
+                        }
+                      />
+                    </div>
+
+                    {config?.automaticLeaderboardUpdates?.weekly && (
+                      <div className="space-y-2">
+                        <Label htmlFor="weekly-day">Day of Week</Label>
+                        <Select
+                          value={config?.automaticLeaderboardUpdates?.weeklyDay || 'monday'}
+                          onValueChange={(value: 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday') => 
+                            handleUpdateConfig({ 
+                              automaticLeaderboardUpdates: {
+                                ...config?.automaticLeaderboardUpdates!,
+                                weeklyDay: value
+                              }
+                            })
+                          }
+                        >
+                          <SelectTrigger id="weekly-day">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="monday">Monday</SelectItem>
+                            <SelectItem value="tuesday">Tuesday</SelectItem>
+                            <SelectItem value="wednesday">Wednesday</SelectItem>
+                            <SelectItem value="thursday">Thursday</SelectItem>
+                            <SelectItem value="friday">Friday</SelectItem>
+                            <SelectItem value="saturday">Saturday</SelectItem>
+                            <SelectItem value="sunday">Sunday</SelectItem>
+                          </SelectContent>
+                        </Select>
+
+                        <Label htmlFor="weekly-time">Weekly Update Time</Label>
+                        <Input
+                          id="weekly-time"
+                          type="time"
+                          value={config?.automaticLeaderboardUpdates?.weeklyTime || '09:00'}
+                          onChange={(e) => 
+                            handleUpdateConfig({ 
+                              automaticLeaderboardUpdates: {
+                                ...config?.automaticLeaderboardUpdates!,
+                                weeklyTime: e.target.value
+                              }
+                            })
+                          }
+                        />
+                      </div>
+                    )}
+
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-0.5">
+                        <Label htmlFor="monthly-updates">Monthly Updates</Label>
+                        <p className="text-xs text-muted-foreground">
+                          Send leaderboard update once a month
+                        </p>
+                      </div>
+                      <Switch
+                        id="monthly-updates"
+                        checked={config?.automaticLeaderboardUpdates?.monthly}
+                        onCheckedChange={(checked) => 
+                          handleUpdateConfig({ 
+                            automaticLeaderboardUpdates: {
+                              ...config?.automaticLeaderboardUpdates!,
+                              monthly: checked
+                            }
+                          })
+                        }
+                      />
+                    </div>
+
+                    {config?.automaticLeaderboardUpdates?.monthly && (
+                      <div className="space-y-2">
+                        <Label htmlFor="monthly-day">Day of Month</Label>
+                        <Select
+                          value={config?.automaticLeaderboardUpdates?.monthlyDay?.toString() || '1'}
+                          onValueChange={(value) => 
+                            handleUpdateConfig({ 
+                              automaticLeaderboardUpdates: {
+                                ...config?.automaticLeaderboardUpdates!,
+                                monthlyDay: parseInt(value)
+                              }
+                            })
+                          }
+                        >
+                          <SelectTrigger id="monthly-day">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {Array.from({ length: 28 }, (_, i) => i + 1).map(day => (
+                              <SelectItem key={day} value={day.toString()}>
+                                {day}{day === 1 ? 'st' : day === 2 ? 'nd' : day === 3 ? 'rd' : 'th'}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+
+                        <Label htmlFor="monthly-time">Monthly Update Time</Label>
+                        <Input
+                          id="monthly-time"
+                          type="time"
+                          value={config?.automaticLeaderboardUpdates?.monthlyTime || '09:00'}
+                          onChange={(e) => 
+                            handleUpdateConfig({ 
+                              automaticLeaderboardUpdates: {
+                                ...config?.automaticLeaderboardUpdates!,
+                                monthlyTime: e.target.value
+                              }
+                            })
+                          }
+                        />
+                      </div>
+                    )}
+
+                    <div className="bg-muted/50 p-3 rounded-md text-sm space-y-2">
+                      <p className="text-muted-foreground">
+                        <strong>Note:</strong> Automatic updates will generate and prepare leaderboard exports based on your schedule. 
+                        You'll still need to manually copy and send them to your Signal group, or use the Signal CLI if configured.
+                      </p>
+                      
+                      {(config?.automaticLeaderboardUpdates?.daily || 
+                        config?.automaticLeaderboardUpdates?.weekly || 
+                        config?.automaticLeaderboardUpdates?.monthly) && (
+                        <div className="pt-2 border-t border-border">
+                          <p className="font-semibold mb-1 flex items-center gap-2">
+                            <Clock size={16} weight="fill" className="text-[oklch(0.70_0.14_75)]" />
+                            Active Schedules:
+                          </p>
+                          <ul className="space-y-1 ml-6 text-muted-foreground">
+                            {config?.automaticLeaderboardUpdates?.daily && (
+                              <li>• Daily at {config?.automaticLeaderboardUpdates?.dailyTime || '09:00'}</li>
+                            )}
+                            {config?.automaticLeaderboardUpdates?.weekly && (
+                              <li>• Weekly on {config?.automaticLeaderboardUpdates?.weeklyDay?.charAt(0).toUpperCase()}{config?.automaticLeaderboardUpdates?.weeklyDay?.slice(1)} at {config?.automaticLeaderboardUpdates?.weeklyTime || '09:00'}</li>
+                            )}
+                            {config?.automaticLeaderboardUpdates?.monthly && (
+                              <li>• Monthly on the {config?.automaticLeaderboardUpdates?.monthlyDay}{config?.automaticLeaderboardUpdates?.monthlyDay === 1 ? 'st' : config?.automaticLeaderboardUpdates?.monthlyDay === 2 ? 'nd' : config?.automaticLeaderboardUpdates?.monthlyDay === 3 ? 'rd' : 'th'} at {config?.automaticLeaderboardUpdates?.monthlyTime || '09:00'}</li>
+                            )}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </TabsContent>
 
           <TabsContent value="export" className="space-y-4">
+            {scheduledExportType && exportMessages.length > 0 && (
+              <Alert className="border-[oklch(0.70_0.14_75)] bg-[oklch(0.65_0.12_75_/_0.1)]">
+                <Bell size={18} weight="fill" className="text-[oklch(0.70_0.14_75)]" />
+                <AlertTitle>Scheduled {scheduledExportType.charAt(0).toUpperCase() + scheduledExportType.slice(1)} Update Ready!</AlertTitle>
+                <AlertDescription>
+                  Your automatic leaderboard update has been generated and is ready to copy to Signal.
+                </AlertDescription>
+              </Alert>
+            )}
+
             <div className="flex justify-between items-start">
               <div>
                 <h3 className="font-semibold mb-1">Generate Export</h3>
