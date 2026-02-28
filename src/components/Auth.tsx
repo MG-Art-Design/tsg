@@ -15,6 +15,17 @@ import {
   type BiometricSupport 
 } from '@/lib/biometric'
 
+function generateSecureFriendCode(): string {
+  // Generate an 8-character uppercase base-36 string using a cryptographically secure RNG
+  if (typeof window !== 'undefined' && window.crypto && window.crypto.getRandomValues) {
+    const array = new Uint32Array(1)
+    window.crypto.getRandomValues(array)
+    return array[0].toString(36).toUpperCase().padStart(8, '0').slice(0, 8)
+  }
+  // Fallback: use Math.random if crypto is unavailable (older environments)
+  return Math.random().toString(36).substring(2, 10).toUpperCase()
+}
+
 interface AuthProps {
   onAuthenticated: (profile: UserProfile) => void
   existingUsers: Record<string, UserProfile>
@@ -153,7 +164,7 @@ export function Auth({ onAuthenticated, existingUsers }: AuthProps) {
         const tempProfile: Partial<UserProfile> = {
           email,
           id: `user-${Date.now()}-${Math.random().toString(36).substring(7)}`,
-          friendCode: `TSG-${Math.random().toString(36).substring(2, 10).toUpperCase()}`
+          friendCode: `TSG-${generateSecureFriendCode()}`
         }
 
         onAuthenticated(tempProfile as UserProfile)
