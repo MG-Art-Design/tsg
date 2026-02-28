@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Portfolio, UserProfile, Asset, LinkedTradingAccount } from '@/lib/types'
+import { Portfolio, UserProfile, Asset } from '@/lib/types'
 import { formatCurrency, formatPercent } from '@/lib/helpers'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
