@@ -19,7 +19,7 @@ export function useBettingPayouts(
   allUsers: Record<string, UserProfile>
 ) {
   const [, setGroups] = useKV<Record<string, Group>>('all-groups', {})
-  const [payoutNotifications, setPayoutNotifications] = useKV<PayoutNotification[]>('payout-notifications', [])
+  const [, setPayoutNotifications] = useKV<PayoutNotification[]>('payout-notifications', [])
   const [processedGames, setProcessedGames] = useKV<string[]>('processed-betting-games', [])
   const [, setBettingHistory] = useKV<BettingHistoryEntry[]>('betting-history', [])
 
