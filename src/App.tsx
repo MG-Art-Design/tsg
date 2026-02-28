@@ -27,6 +27,7 @@ import { BettingHistoryAnalytics } from '@/components/BettingHistoryAnalytics'
 import { BiometricSettings } from '@/components/BiometricSettings'
 import { TradingAccountLinker } from '@/components/TradingAccountLinker'
 import { Logo } from '@/components/Logo'
+import { ScrollToTop } from '@/components/ScrollToTop'
 import { Button } from '@/components/ui/button'
 import { UserProfile, Portfolio, Asset, PortfolioPosition, LeaderboardEntry, Insight, Group } from '@/lib/types'
 import { 
@@ -313,6 +314,21 @@ function App() {
     portfolioName?: string,
     portfolioId?: string
   ) => {
+    if (!positions || positions.length === 0) {
+      toast.error('Cannot save empty portfolio', {
+        description: 'Add at least one position before saving.'
+      })
+      return
+    }
+
+    const totalAllocation = positions.reduce((sum, pos) => sum + pos.allocation, 0)
+    if (Math.abs(totalAllocation - 100) > 0.01) {
+      toast.error('Invalid allocation', {
+        description: `Total allocation is ${totalAllocation.toFixed(1)}%. Must equal 100%.`
+      })
+      return
+    }
+
     const currentQuarter = getCurrentQuarter()
     
     const portfolioPositions: PortfolioPosition[] = positions.map(pos => {
@@ -699,6 +715,8 @@ function App() {
       />
 
       <BettingPayoutNotifier currentUser={profile} />
+
+      <ScrollToTop />
 
       <Toaster richColors position="top-right" />
     </div>

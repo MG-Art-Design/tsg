@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Asset, Portfolio } from '@/lib/types'
 import { formatCurrency, formatPercent, INITIAL_PORTFOLIO_VALUE } from '@/lib/helpers'
 import { MagnifyingGlass, Coins, ChartBar, Lightning } from '@phosphor-icons/react'
@@ -26,6 +26,7 @@ export function PortfolioManager({ currentPortfolio, marketData, onSave }: Portf
     return initial
   })
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
 
   const stocks = marketData.filter(a => a.type === 'stock')
   const crypto = marketData.filter(a => a.type === 'crypto')
@@ -43,6 +44,51 @@ export function PortfolioManager({ currentPortfolio, marketData, onSave }: Portf
   const totalAllocation = Object.values(allocations).reduce((sum, val) => sum + val, 0)
   const isValidAllocation = totalAllocation === 100
 
+  useEffect(() => {
+    const currentAllocationString = JSON.stringify(
+      Object.fromEntries(
+        Object.entries(allocations)
+          .filter(([, val]) => val > 0)
+          .sort()
+      )
+    )
+    
+    const initialAllocationString = JSON.stringify(
+      Object.fromEntries(
+        (currentPortfolio?.positions || [])
+          .map(p => [p.symbol, p.allocation])
+          .sort()
+      )
+    )
+    
+    setHasUnsavedChanges(currentAllocationString !== initialAllocationString)
+  }, [allocations, currentPortfolio])
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+        e.preventDefault()
+        if (isValidAllocation && Object.keys(allocations).length > 0) {
+          setIsConfirmOpen(true)
+        } else if (!isValidAllocation) {
+          toast.warning('Cannot save', {
+            description: 'Total allocation must equal 100%'
+          })
+        } else {
+          toast.warning('Cannot save', {
+            description: 'Add at least one position'
+          })
+        }
+      }
+      if (e.key === 'Escape' && isConfirmOpen) {
+        setIsConfirmOpen(false)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [allocations, isValidAllocation, isConfirmOpen])
+
   const handleAllocationChange = (symbol: string, value: string) => {
     if (value === '') {
       setAllocations(prev => ({
@@ -55,10 +101,21 @@ export function PortfolioManager({ currentPortfolio, marketData, onSave }: Portf
     const numValue = parseFloat(value)
     if (isNaN(numValue) || numValue < 0 || numValue > 100) return
     
-    setAllocations(prev => ({
-      ...prev,
-      [symbol]: Math.min(100, Math.max(0, numValue))
-    }))
+    setAllocations(prev => {
+      const newAllocations = {
+        ...prev,
+        [symbol]: Math.min(100, Math.max(0, numValue))
+      }
+      
+      const total = Object.values(newAllocations).reduce((sum, val) => sum + val, 0)
+      if (total > 100) {
+        toast.warning('Allocation exceeds 100%', {
+          description: `Current total: ${total.toFixed(1)}%. Reduce other positions.`
+        })
+      }
+      
+      return newAllocations
+    })
   }
 
   const handleRemove = (symbol: string) => {
@@ -110,6 +167,11 @@ export function PortfolioManager({ currentPortfolio, marketData, onSave }: Portf
           <CardTitle className="text-2xl flex items-center gap-2">
             <Lightning size={28} weight="fill" className="text-primary" />
             Build Your Portfolio
+            {hasUnsavedChanges && (
+              <Badge variant="outline" className="ml-auto text-yellow-500 border-yellow-500">
+                Unsaved Changes
+              </Badge>
+            )}
           </CardTitle>
           <p className="text-sm text-muted-foreground mt-1">
             You've got {formatCurrency(INITIAL_PORTFOLIO_VALUE)} to play with. Allocate wisely... or go all in on meme coins. Your call.
@@ -136,13 +198,39 @@ export function PortfolioManager({ currentPortfolio, marketData, onSave }: Portf
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle className="text-lg">Current Allocation</CardTitle>
-              <div className="text-right">
-                <div className={`text-2xl font-bold ${isValidAllocation ? 'text-success' : 'text-destructive'}`}>
-                  {totalAllocation.toFixed(1)}%
+              <div className="flex items-center gap-3">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    setAllocations({})
+                    toast.info('All positions cleared')
+                  }}
+                  className="text-muted-foreground hover:text-foreground"
+                  title="Clear all positions"
+                >
+                  Clear All
+                </Button>
+                <div className="text-right">
+                  <div className={`text-2xl font-bold ${isValidAllocation ? 'text-success' : totalAllocation > 100 ? 'text-destructive' : 'text-warning'}`}>
+                    {totalAllocation.toFixed(1)}%
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    {isValidAllocation ? '✓ Ready to save' : totalAllocation > 100 ? '⚠ Over 100%' : `${(100 - totalAllocation).toFixed(1)}% remaining`}
+                  </div>
                 </div>
-                <div className="text-xs text-muted-foreground">
-                  {isValidAllocation ? '✓ Ready to save' : 'Must equal 100%'}
-                </div>
+              </div>
+            </div>
+            <div className="mt-2">
+              <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
+                <div 
+                  className={`h-full transition-all duration-300 ${
+                    isValidAllocation ? 'bg-success' : 
+                    totalAllocation > 100 ? 'bg-destructive' : 
+                    'bg-primary'
+                  }`}
+                  style={{ width: `${Math.min(totalAllocation, 100)}%` }}
+                />
               </div>
             </div>
           </CardHeader>
@@ -150,6 +238,13 @@ export function PortfolioManager({ currentPortfolio, marketData, onSave }: Portf
             {Object.entries(allocations).map(([symbol, allocation]) => {
               const asset = marketData.find(a => a.symbol === symbol)
               if (!asset) return null
+              
+              const handleQuickFill = (percent: number) => {
+                setAllocations(prev => ({
+                  ...prev,
+                  [symbol]: percent
+                }))
+              }
               
               return (
                 <div key={symbol} className="flex items-center gap-3 p-3 rounded-lg bg-card border-2 border-[oklch(0.70_0.14_75)]/30">
@@ -160,35 +255,69 @@ export function PortfolioManager({ currentPortfolio, marketData, onSave }: Portf
                     <div className="font-semibold">{symbol}</div>
                     <div className="text-sm text-muted-foreground">{asset.name}</div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Input
-                      type="number"
-                      value={allocation}
-                      onChange={(e) => handleAllocationChange(symbol, e.target.value)}
-                      className="w-20 text-right"
-                      min={0}
-                      max={100}
-                      step={0.1}
-                    />
-                    <span className="text-muted-foreground">%</span>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleRemove(symbol)}
-                      className="text-destructive hover:text-destructive"
-                    >
-                      Remove
-                    </Button>
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-2 flex-1">
+                    <div className="hidden sm:flex gap-1">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleQuickFill(10)}
+                        className="h-6 px-2 text-xs"
+                        title="Set to 10%"
+                      >
+                        10%
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleQuickFill(25)}
+                        className="h-6 px-2 text-xs"
+                        title="Set to 25%"
+                      >
+                        25%
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleQuickFill(50)}
+                        className="h-6 px-2 text-xs"
+                        title="Set to 50%"
+                      >
+                        50%
+                      </Button>
+                    </div>
+                    <div className="flex items-center gap-2 w-full sm:w-auto">
+                      <Input
+                        type="number"
+                        value={allocation}
+                        onChange={(e) => handleAllocationChange(symbol, e.target.value)}
+                        className="w-20 text-right"
+                        min={0}
+                        max={100}
+                        step={0.1}
+                      />
+                      <span className="text-muted-foreground">%</span>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleRemove(symbol)}
+                        className="text-destructive hover:text-destructive flex-shrink-0"
+                        title="Remove from portfolio"
+                      >
+                        <span className="hidden sm:inline">Remove</span>
+                        <span className="sm:hidden">✕</span>
+                      </Button>
+                    </div>
                   </div>
                 </div>
               )
             })}
             <Button
               onClick={() => setIsConfirmOpen(true)}
-              disabled={!isValidAllocation}
+              disabled={!isValidAllocation || Object.keys(allocations).length === 0}
               className="w-full bg-gradient-to-r from-primary to-accent hover:opacity-90 mt-4"
+              title={!isValidAllocation ? 'Total allocation must equal 100%' : 'Save your portfolio (Ctrl+S / Cmd+S)'}
             >
-              Save Portfolio
+              Save Portfolio {isValidAllocation && '✓'}
             </Button>
           </CardContent>
         </Card>

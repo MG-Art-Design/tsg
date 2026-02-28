@@ -168,14 +168,28 @@ export function Leaderboard({ entries, currentUserId, currentUser, onAddFriendsC
           <Card className="border-2 border-[oklch(0.70_0.14_75)]">
             <CardContent className="py-12 text-center">
               <UserPlus size={48} className="text-muted-foreground mx-auto mb-4" />
-              <p className="text-lg font-semibold mb-2">No friends yet</p>
-              <p className="text-sm text-muted-foreground mb-6">
-                Add friends to compete on your personal leaderboard
-              </p>
-              <Button onClick={onAddFriendsClick} className="mx-auto">
-                <UserPlus size={18} weight="fill" className="mr-2" />
-                Add Friends
-              </Button>
+              {relationshipFilter === 'all' ? (
+                <>
+                  <p className="text-lg font-semibold mb-2">No friends yet</p>
+                  <p className="text-sm text-muted-foreground mb-6">
+                    Add friends to compete on your personal leaderboard
+                  </p>
+                  <Button onClick={onAddFriendsClick} className="mx-auto">
+                    <UserPlus size={18} weight="fill" className="mr-2" />
+                    Add Friends
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <p className="text-lg font-semibold mb-2">No {relationshipFilter}s found</p>
+                  <p className="text-sm text-muted-foreground mb-6">
+                    You haven't categorized any friends as {relationshipFilter}s yet. Update relationship statuses in your Profile tab.
+                  </p>
+                  <Button onClick={() => setRelationshipFilter('all')} variant="outline">
+                    Show All Friends
+                  </Button>
+                </>
+              )}
             </CardContent>
           </Card>
         ) : (

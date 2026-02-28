@@ -45,6 +45,91 @@ export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick }
 
   const userTier = userProfile.subscription?.tier || 'free'
 
+  if (!portfolio || portfolio.positions.length === 0) {
+    return (
+      <div className="space-y-6">
+        <Card className="border-2 border-[oklch(0.70_0.14_75)] bg-gradient-to-br from-card to-muted/30">
+          <CardContent className="pt-12 pb-12">
+            <div className="text-center max-w-2xl mx-auto">
+              <Lightning size={64} weight="duotone" className="mx-auto mb-6 text-primary opacity-60" />
+              <h2 className="text-2xl sm:text-3xl font-bold mb-3">Welcome to TSG: The Stonk Game!</h2>
+              <p className="text-base sm:text-lg text-muted-foreground mb-6">
+                You've got {formatCurrency(10000)} burning a hole in your virtual pocket. Time to build your first portfolio and show everyone what you're made of.
+              </p>
+              <p className="text-sm text-muted-foreground mb-8">
+                Pick your stocks, choose your cryptos, and may the odds be ever in your favor. Head to the <strong>Edit</strong> tab to get started.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <Card className="border-2 border-[oklch(0.70_0.14_75)]">
+            <CardHeader>
+              <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+                <TrendUp size={18} weight="bold" className="text-success sm:w-5 sm:h-5" />
+                Top Movers Today
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {topGainers.map((asset) => (
+                <div
+                  key={asset.symbol}
+                  className="flex items-center justify-between p-3 rounded-lg bg-success/5 border border-[oklch(0.70_0.14_75)]/30"
+                >
+                  <div>
+                    <div className="font-semibold">{asset.symbol}</div>
+                    <div className="text-sm text-muted-foreground">{asset.name}</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="font-semibold">{formatCurrency(asset.currentPrice)}</div>
+                    <div className="text-sm text-success font-medium flex items-center gap-1 justify-end">
+                      <TrendUp size={14} weight="bold" />
+                      {formatPercent(asset.priceChangePercent24h)}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+
+          <Card className="border-2 border-[oklch(0.70_0.14_75)]">
+            <CardHeader>
+              <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+                <TrendDown size={18} weight="bold" className="text-destructive sm:w-5 sm:h-5" />
+                Biggest Drops Today
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {topLosers.map((asset) => (
+                <div
+                  key={asset.symbol}
+                  className="flex items-center justify-between p-3 rounded-lg bg-destructive/5 border border-[oklch(0.70_0.14_75)]/30"
+                >
+                  <div>
+                    <div className="font-semibold">{asset.symbol}</div>
+                    <div className="text-sm text-muted-foreground">{asset.name}</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="font-semibold">{formatCurrency(asset.currentPrice)}</div>
+                    <div className="text-sm text-destructive font-medium flex items-center gap-1 justify-end">
+                      <TrendDown size={14} weight="bold" />
+                      {formatPercent(asset.priceChangePercent24h)}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
+
+        <InsiderTrades trades={insiderTrades} userTier={userTier} onUpgradeClick={onUpgradeClick} />
+
+        <StrategicInsightsEnhanced trades={insiderTrades} userTier={userTier} onUpgradeClick={onUpgradeClick} />
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-6">
       {portfolio && (
