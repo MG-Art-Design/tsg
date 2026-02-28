@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Crown, Lock } from '@phosphor-icons/react'
 import { SubscriptionTier } from '@/lib/types'
