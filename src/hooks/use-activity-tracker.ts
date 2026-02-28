@@ -4,7 +4,7 @@ import { ActivityEvent, ActivityHistoryEntry, GameActivityLog } from '@/lib/type
 import { getCurrentQuarter } from '@/lib/helpers'
 
 export function useActivityTracker(userId: string) {
-  const [activityHistory, setActivityHistory] = useKV<Record<string, ActivityHistoryEntry>>('activity-history', {})
+  const [, setActivityHistory] = useKV<Record<string, ActivityHistoryEntry>>('activity-history', {})
   const [, setGameActivityLogs] = useKV<Record<string, GameActivityLog>>('game-activity-logs', {})
 
   const recordEvent = (event: Omit<ActivityEvent, 'id' | 'userId' | 'timestamp'>) => {
