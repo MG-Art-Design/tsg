@@ -1,4 +1,3 @@
-import { formatPercent, formatCurrency } from '@/lib/helpers'
 import { motion } from 'framer-motion'
 
 interface LeaderboardProps {
