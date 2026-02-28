@@ -1,4 +1,3 @@
-interface LeaderboardProps {
   entries: LeaderboardEntry[]
   currentUserId: string
   currentUser: UserProfile
