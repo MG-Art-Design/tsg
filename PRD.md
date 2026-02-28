@@ -104,11 +104,18 @@ This app requires multiple interconnected features including user profiles, real
 - **Success criteria**: Notifications respect user preferences, only fire for significant changes, include relationship context (e.g., "Your rival is surging!"), don't spam users, can be toggled on/off per category
 
 ### Group-Based Mini Games
-- **Functionality**: Group administrators can start "New Game" competitions where members select exactly 3 stocks or cryptos to compete on performance over a defined period (1 week, 2 weeks, or 1 month), with separate leaderboards and the ability to re-select picks for each new game
-- **Purpose**: Creates focused, time-bound competitions within groups with simpler rules (only 3 picks) to encourage quick engagement and friendly rivalry
+- **Functionality**: Group administrators can start "New Game" competitions where members select exactly 3 stocks or cryptos to compete on performance over a defined period (1 week, 2 weeks, or 1 month), with separate leaderboards and the ability to re-select picks for each new game. All game activity is tracked in the activity history system with AI-generated performance summaries.
+- **Purpose**: Creates focused, time-bound competitions within groups with simpler rules (only 3 picks) to encourage quick engagement and friendly rivalry, while providing historical context through AI-powered summaries
 - **Trigger**: Group owner clicks "New Game" button in Groups tab → Game section
-- **Progression**: Owner creates game (name, duration, allowed asset types) → Game starts → Members submit 3 picks → Real-time leaderboard updates as market moves → Game ends → Winner declared → New game can be started with fresh picks
-- **Success criteria**: Only group owners can create games, members can only submit picks once per game, picks are locked after submission, leaderboard shows only game participants, performance tracked independently from main portfolios, games can run concurrent with quarterly competitions, past game results are preserved
+- **Progression**: Owner creates game (name, duration, allowed asset types) → Game starts → Members submit 3 picks (tracked in activity log) → Real-time leaderboard updates as market moves → Game ends → Winner declared → AI generates sassy performance summary → New game can be started with fresh picks
+- **Success criteria**: Only group owners can create games, members can only submit picks once per game, picks are locked after submission, leaderboard shows only game participants, performance tracked independently from main portfolios, games can run concurrent with quarterly competitions, past game results are preserved, activity events logged for picks and updates, AI summaries generated on completion
+
+### Activity History & Selective Sharing
+- **Functionality**: Comprehensive tracking system that logs all user activity (portfolio changes, game picks, rank movements, milestones) with selective sharing controls and AI-powered quarterly and game summaries in TSG's signature sassy style
+- **Purpose**: Provides users with a rich historical record of their trading journey while allowing them to control what activity data is shared with friends and specific groups, fostering transparency and competition
+- **Trigger**: Automatic activity logging on all portfolio/game actions; manual summary generation from Profile tab → Activity History section
+- **Progression**: User performs actions (create portfolio, update picks) → Events automatically logged with metadata → User navigates to Activity History → Views quarterly/game timelines → Clicks "Generate Summary" → AI analyzes activity and performance → Sassy, personalized summary created → User configures sharing preferences (friends/specific groups) → Selected audiences can view shared activity
+- **Success criteria**: All significant actions logged with timestamps and metadata, quarterly summaries track portfolio performance with 3-paragraph AI analysis, game summaries provide 2-paragraph roasts/celebrations, sharing toggles work per friend/group, activity timeline shows recent events with icons, summaries maintain TSG's witty personality, users can regenerate summaries for fresh perspectives
 
 ## Edge Case Handling
 
@@ -130,6 +137,12 @@ This app requires multiple interconnected features including user profiles, real
 - **Empty Insider Trade Categories**: When filtering shows no results, display friendly empty state with sparkle icon and explanatory message
 - **AI Insight Generation Failures**: If LLM call fails, show error toast with retry option; previous insights remain visible
 - **No Trades Available for Analysis**: Generate Insight button disabled with tooltip explaining data needed; empty state shown in Strategic Positioning AI card
+- **Empty Activity History**: Shows friendly empty states for quarters and games with prompts to start trading
+- **AI Summary Generation Failures**: Error toast with retry button; existing summaries remain accessible
+- **No Activity Data for Summary**: Button disabled with explanation that activity data is needed
+- **Sharing Permission Changes**: When user removes sharing permission, previously shared data becomes private immediately
+- **Missing Game Data for Summary**: System gracefully handles incomplete game data by generating partial summaries
+- **Concurrent Summary Generation**: Prevents multiple simultaneous summary requests with loading state
 
 ## Design Direction
 
@@ -196,12 +209,14 @@ Animations should feel electric and responsive—quick snaps for interactions, s
   - Leaderboard: Table with Avatar, ranking badges, relationship status badges (Friend/Rival/Mentor/etc), sortable columns
   - FriendsManager: Card for adding friends via code, displaying friend list with relationship indicators
   - RelationshipManager: Card for categorizing friends by relationship type with visual badges and bilateral sync
+  - ActivityHistoryManager: Tabbed card showing quarterly performance and game history, with timeline of events (portfolio changes, game picks, rank movements, milestones), AI summary generation buttons, sharing preferences dialog with friend/group selection
   - Insights Feed: Scrollable Card list with timestamp, category badges
-  - Profile: Avatar with upload/emoji picker, Input fields for username/bio, Switch components for notification preferences, EmailSettings card for email notification management, relationship status management
+  - Profile: Avatar with upload/emoji picker, Input fields for username/bio, Switch components for notification preferences, EmailSettings card for email notification management, relationship status management, Activity History section
   - Market Data: Custom chart components with D3 for price history
-  - Toasts (Sonner): Trade confirmations, insight deliveries, competition updates, email notification scheduling confirmations, AI insight generation success/failures, authentication feedback, friend/relationship updates
+  - Toasts (Sonner): Trade confirmations, insight deliveries, competition updates, email notification scheduling confirmations, AI insight generation success/failures, authentication feedback, friend/relationship updates, activity tracking confirmations, summary generation status
   - EmailSettings: Card component with email input, frequency selector, content checkboxes (leaderboard/market/insights)
   - EmailNotificationsManager: Background component that monitors preferences and schedules email generation
+  - GroupGameManager: Game creation and management with activity tracking for all pick submissions and updates
   
 - **Customizations**: 
   - Custom animated Logo component reflecting brand's geometric typography and ascending arrow motif
@@ -222,20 +237,24 @@ Animations should feel electric and responsive—quick snaps for interactions, s
   - Logo: Animated on first load (onboarding), static in header for performance
   
 - **Icon Selection**: 
-  - TrendUp/TrendDown: Portfolio performance indicators, insider trade buy/sell actions
+  - TrendUp/TrendDown: Portfolio performance indicators, insider trade buy/sell actions, activity performance changes
   - ChartLine: Market data and insights
-  - Trophy: Leaderboard and winners
+  - Trophy: Leaderboard and winners, game competitions
   - User/UserCircle: Profile and user management
-  - Lightning: AI insights and quick actions (legacy, being phased out for chart arrow motif)
+  - Lightning: AI insights and quick actions, portfolio activities
   - ArrowsClockwise: Refresh market data
   - Coins: Crypto assets
   - ChartBar: S&P 500 stocks
   - Bell: Notifications
   - Gear: Settings
   - Envelope: Email notifications and settings
-  - Sparkle: Insider trading section header and empty states
+  - Sparkle: Insider trading section header and empty states, AI summary generation
   - Gavel: Congress trades category
   - Buildings: White House trades category
+  - ClockClockwise: Activity history and timeline
+  - ShareNetwork: Sharing preferences and controls
+  - Crown: First place rankings in games
+  - Medal: Second and third place rankings in games
   
 - **Spacing**: 
   - Container padding: p-6 (24px) on desktop, p-4 (16px) on mobile

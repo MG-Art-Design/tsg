@@ -238,3 +238,71 @@ export interface SubscriptionFeatures {
   advancedAnalytics: boolean
   prioritySupport: boolean
 }
+
+export interface ActivityEvent {
+  id: string
+  userId: string
+  type: 'portfolio_created' | 'portfolio_updated' | 'game_pick_submitted' | 'game_pick_updated' | 'friend_added' | 'group_joined' | 'game_completed' | 'rank_changed' | 'milestone_reached'
+  timestamp: number
+  quarter?: string
+  gameId?: string
+  data: Record<string, any>
+  metadata?: {
+    positions?: PortfolioPosition[]
+    picks?: GamePickPosition[]
+    oldRank?: number
+    newRank?: number
+    performanceChange?: number
+  }
+}
+
+export interface ActivityHistoryEntry {
+  id: string
+  userId: string
+  quarter: string
+  events: ActivityEvent[]
+  summary?: string
+  quarterStartValue: number
+  quarterEndValue: number
+  totalReturn: number
+  totalReturnPercent: number
+  generatedAt?: number
+}
+
+export interface GameActivityLog {
+  id: string
+  gameId: string
+  userId: string
+  events: ActivityEvent[]
+  summary?: string
+  finalRank?: number
+  totalReturn?: number
+  generatedAt?: number
+}
+
+export interface SharingPreferences {
+  shareWithFriends: boolean
+  shareWithGroups: string[]
+  shareActivityHistory: boolean
+  shareGameSummaries: boolean
+  sharePerformanceMetrics: boolean
+}
+
+export interface UserProfile {
+  id: string
+  email: string
+  username: string
+  avatar: string
+  coverPhoto?: string
+  bio: string
+  insightFrequency: 'daily' | 'weekly' | 'monthly'
+  emailNotifications: EmailPreferences
+  createdAt: number
+  groupIds: string[]
+  subscription: SubscriptionStatus
+  friendIds: string[]
+  friendCode: string
+  relationshipStatuses: Record<string, RelationshipStatus>
+  notificationPreferences: NotificationPreferences
+  sharingPreferences?: SharingPreferences
+}

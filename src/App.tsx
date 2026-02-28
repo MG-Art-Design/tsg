@@ -17,15 +17,17 @@ import { RelationshipManager } from '@/components/RelationshipManager'
 import { ProfileCustomization } from '@/components/ProfileCustomization'
 import { NotificationCenter } from '@/components/NotificationCenter'
 import { NotificationPreferences } from '@/components/NotificationPreferences'
+import { ActivityHistoryManager } from '@/components/ActivityHistoryManager'
 import { Logo } from '@/components/Logo'
 import { Button } from '@/components/ui/button'
-import { UserProfile, Portfolio, Asset, PortfolioPosition, LeaderboardEntry, Insight } from '@/lib/types'
+import { UserProfile, Portfolio, Asset, PortfolioPosition, LeaderboardEntry, Insight, Group } from '@/lib/types'
 import { 
   generateMockMarketData, 
   getCurrentQuarter, 
   INITIAL_PORTFOLIO_VALUE,
   calculatePortfolioValue
 } from '@/lib/helpers'
+import { useActivityTracker } from '@/hooks/use-activity-tracker'
 import { ChartLine, Lightning, Trophy, Notebook, User, Users, SignOut } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 
@@ -36,12 +38,15 @@ function App() {
   const [insights, setInsights] = useKV<Insight[]>('user-insights', [])
   const [allPortfolios, setAllPortfolios] = useKV<Record<string, Portfolio>>('all-portfolios', {})
   const [allUsers, setAllUsers] = useKV<Record<string, UserProfile>>('all-users', {})
+  const [allGroups, setAllGroups] = useKV<Record<string, Group>>('all-groups', {})
   const [marketData, setMarketData] = useState<Asset[]>([])
   const [activeTab, setActiveTab] = useState('dashboard')
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [needsOnboarding, setNeedsOnboarding] = useState(false)
   const [tempAuthData, setTempAuthData] = useState<Partial<UserProfile> | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+
+  const activityTracker = profile ? useActivityTracker(profile.id) : null
 
   useEffect(() => {
     const initAuth = async () => {
@@ -91,6 +96,19 @@ function App() {
           leaderboardChanges: true,
           groupActivity: true,
           groupGameInvites: true
+        }
+      } : null)
+    }
+
+    if (profile && !profile.sharingPreferences) {
+      setProfile((current) => current ? {
+        ...current,
+        sharingPreferences: {
+          shareWithFriends: false,
+          shareWithGroups: [],
+          shareActivityHistory: true,
+          shareGameSummaries: true,
+          sharePerformanceMetrics: true
         }
       } : null)
     }
@@ -163,6 +181,14 @@ function App() {
         totalReturnPercent,
         lastUpdated: Date.now()
       } : null)
+
+      if (activityTracker && portfolio) {
+        activityTracker.updateQuarterSummary(
+          portfolio.quarter,
+          currentValue,
+          INITIAL_PORTFOLIO_VALUE
+        )
+      }
     }
   }, [marketData, portfolio?.positions.length])
 
@@ -262,6 +288,8 @@ function App() {
       lastUpdated: Date.now()
     }
 
+    const isNewPortfolio = !portfolio || portfolio.quarter !== currentQuarter
+
     setPortfolio(newPortfolio)
     setActiveTab('dashboard')
 
@@ -269,6 +297,28 @@ function App() {
       ...(current || {}),
       [profile!.id]: newPortfolio
     }))
+
+    if (activityTracker) {
+      activityTracker.recordEvent({
+        type: isNewPortfolio ? 'portfolio_created' : 'portfolio_updated',
+        quarter: currentQuarter,
+        data: {
+          action: isNewPortfolio ? 'Created new portfolio' : 'Updated portfolio allocation',
+          positionsCount: positions.length,
+          stocksCount: positions.filter(p => p.type === 'stock').length,
+          cryptoCount: positions.filter(p => p.type === 'crypto').length
+        },
+        metadata: {
+          positions: portfolioPositions
+        }
+      })
+      
+      activityTracker.updateQuarterSummary(
+        currentQuarter,
+        INITIAL_PORTFOLIO_VALUE,
+        INITIAL_PORTFOLIO_VALUE
+      )
+    }
 
     const newInsight: Insight = {
       id: Date.now().toString(),
@@ -454,6 +504,12 @@ function App() {
                 friends={friends}
                 onUpdate={handleUserUpdate}
                 onUpdateFriend={handleFriendUpdate}
+              />
+
+              <ActivityHistoryManager
+                currentUser={profile}
+                onUpdate={handleUserUpdate}
+                userGroups={Object.values(allGroups || {}).filter(g => g.memberIds.includes(profile.id))}
               />
 
               <NotificationPreferences profile={profile} onUpdate={handleUserUpdate} />

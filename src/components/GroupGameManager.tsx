@@ -10,7 +10,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox'
 import { Group, UserProfile, GroupGame, GroupGamePick, Asset, GamePickPosition, GroupGameLeaderboardEntry } from '@/lib/types'
 import { formatCurrency, formatPercent } from '@/lib/helpers'
-import { Trophy, Flame, Plus, Check, ArrowRight, CrownSimple, Medal } from '@phosphor-icons/react'
+import { useActivityTracker } from '@/hooks/use-activity-tracker'
+import { Trophy, Flame, Plus, Check, ArrowRight, Crown, Medal } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { motion } from 'framer-motion'
 
@@ -24,6 +25,7 @@ interface GroupGameManagerProps {
 export function GroupGameManager({ group, currentUser, marketData, allUsers }: GroupGameManagerProps) {
   const [groupGames, setGroupGames] = useKV<Record<string, GroupGame>>('group-games', {})
   const [gamePicks, setGamePicks] = useKV<Record<string, GroupGamePick>>('game-picks', {})
+  const activityTracker = useActivityTracker(currentUser.id)
   
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
   const [pickDialogOpen, setPickDialogOpen] = useState(false)
@@ -107,6 +109,8 @@ export function GroupGameManager({ group, currentUser, marketData, allUsers }: G
       }
     })
 
+    const isUpdate = !!userPick
+
     const newPick: GroupGamePick = {
       userId: currentUser.id,
       gameId: activeGame.id,
@@ -119,7 +123,18 @@ export function GroupGameManager({ group, currentUser, marketData, allUsers }: G
       [`${currentUser.id}-${activeGame.id}`]: newPick
     }))
 
-    toast.success('Picks submitted! 🔥', {
+    activityTracker.recordGameEvent(activeGame.id, {
+      type: isUpdate ? 'game_pick_updated' : 'game_pick_submitted',
+      data: {
+        gameName: activeGame.name,
+        pickCount: picks.length
+      },
+      metadata: {
+        picks
+      }
+    })
+
+    toast.success(isUpdate ? 'Picks updated! 🔥' : 'Picks submitted! 🔥', {
       description: 'Good luck! May the best trader win.'
     })
 
@@ -219,8 +234,31 @@ export function GroupGameManager({ group, currentUser, marketData, allUsers }: G
   const hasSubmitted = !!userPick
   const gameEnded = activeGame && Date.now() > activeGame.endDate
 
+  useEffect(() => {
+    if (gameEnded && activeGame && userPick) {
+      const userEntry = leaderboard.find(e => e.userId === currentUser.id)
+      if (userEntry) {
+        activityTracker.updateGameSummary(
+          activeGame.id,
+          userEntry.rank,
+          userEntry.totalReturnPercent
+        )
+
+        activityTracker.recordGameEvent(activeGame.id, {
+          type: 'game_completed',
+          data: {
+            gameName: activeGame.name,
+            finalRank: userEntry.rank,
+            totalReturn: userEntry.totalReturnPercent,
+            participantCount: leaderboard.length
+          }
+        })
+      }
+    }
+  }, [gameEnded, activeGame?.id, leaderboard.length])
+
   const getRankIcon = (rank: number) => {
-    if (rank === 1) return <CrownSimple size={20} weight="fill" className="text-yellow-400" />
+    if (rank === 1) return <Crown size={20} weight="fill" className="text-yellow-400" />
     if (rank === 2) return <Medal size={20} weight="fill" className="text-gray-400" />
     if (rank === 3) return <Medal size={20} weight="fill" className="text-amber-600" />
     return <span className="text-sm font-bold text-muted-foreground">#{rank}</span>
