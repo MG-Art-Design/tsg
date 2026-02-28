@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { UserProfile } from '@/lib/types'
 import { Camera, User, Palette } from '@phosphor-icons/react'
 import { toast } from 'sonner'
+import { motion, useScroll, useTransform } from 'framer-motion'
 
 interface ProfileCustomizationProps {
   profile: UserProfile
@@ -38,6 +39,34 @@ export function ProfileCustomization({ profile, onUpdate }: ProfileCustomization
   const [selectedAvatar, setSelectedAvatar] = useState(profile.avatar)
   const [selectedCover, setSelectedCover] = useState(profile.coverPhoto || COVER_PHOTO_GRADIENTS[0])
   const [bioText, setBioText] = useState(profile.bio || '')
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  
+  const bannerRef = useRef<HTMLDivElement>(null)
+  const { scrollYProgress } = useScroll({
+    target: bannerRef,
+    offset: ["start start", "end start"]
+  })
+  
+  const y = useTransform(scrollYProgress, [0, 1], [0, 100])
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.2])
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0.3])
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (bannerRef.current) {
+        const rect = bannerRef.current.getBoundingClientRect()
+        const x = (e.clientX - rect.left) / rect.width
+        const y = (e.clientY - rect.top) / rect.height
+        setMousePosition({ x, y })
+      }
+    }
+
+    const banner = bannerRef.current
+    if (banner) {
+      banner.addEventListener('mousemove', handleMouseMove)
+      return () => banner.removeEventListener('mousemove', handleMouseMove)
+    }
+  }, [])
 
   const handleAvatarSave = () => {
     onUpdate({ ...profile, avatar: selectedAvatar })
@@ -69,33 +98,164 @@ export function ProfileCustomization({ profile, onUpdate }: ProfileCustomization
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div 
-          className="relative w-full h-32 rounded-lg overflow-hidden cursor-pointer group"
-          style={{ background: profile.coverPhoto || COVER_PHOTO_GRADIENTS[0] }}
+        <motion.div 
+          ref={bannerRef}
+          className="relative w-full h-48 rounded-lg overflow-hidden cursor-pointer group"
           onClick={() => setCoverDialogOpen(true)}
+          whileHover={{ scale: 1.02 }}
+          transition={{ duration: 0.3 }}
         >
-          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-            <div className="text-white text-center">
+          <motion.div
+            className="absolute inset-0"
+            style={{ 
+              background: profile.coverPhoto || COVER_PHOTO_GRADIENTS[0],
+              y,
+              scale
+            }}
+          />
+          
+          <motion.div 
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: `radial-gradient(circle at ${mousePosition.x * 100}% ${mousePosition.y * 100}%, oklch(0.75 0.15 75 / 0.15) 0%, transparent 50%)`
+            }}
+          />
+
+          <motion.div
+            className="absolute top-4 left-4 w-32 h-32 rounded-full"
+            style={{
+              background: 'radial-gradient(circle, oklch(0.70 0.14 75 / 0.2) 0%, transparent 70%)',
+              x: useTransform(scrollYProgress, [0, 1], [0, 50]),
+              y: useTransform(scrollYProgress, [0, 1], [0, 30]),
+            }}
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.3, 0.6, 0.3]
+            }}
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+
+          <motion.div
+            className="absolute bottom-6 right-8 w-24 h-24 rounded-full"
+            style={{
+              background: 'radial-gradient(circle, oklch(0.65 0.12 75 / 0.25) 0%, transparent 70%)',
+              x: useTransform(scrollYProgress, [0, 1], [0, -30]),
+              y: useTransform(scrollYProgress, [0, 1], [0, 20]),
+            }}
+            animate={{
+              scale: [1, 1.3, 1],
+              opacity: [0.2, 0.5, 0.2]
+            }}
+            transition={{
+              duration: 5,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 1
+            }}
+          />
+
+          <motion.div
+            className="absolute top-1/2 left-1/2 w-48 h-48 rounded-full blur-xl"
+            style={{
+              background: 'radial-gradient(circle, oklch(0.70 0.14 75 / 0.15) 0%, transparent 70%)',
+              x: useTransform(scrollYProgress, [0, 1], [-100, -50]),
+              y: useTransform(scrollYProgress, [0, 1], [-100, -50]),
+            }}
+            animate={{
+              rotate: [0, 360],
+              scale: [1, 1.5, 1]
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+          />
+
+          <motion.div 
+            className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+            style={{ opacity }}
+          >
+            <motion.div 
+              className="text-white text-center"
+              initial={{ y: 10, opacity: 0 }}
+              whileHover={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.2 }}
+            >
               <Camera size={32} weight="bold" />
               <p className="text-sm mt-2">Change Cover Photo</p>
-            </div>
-          </div>
-          <div className="absolute -bottom-8 left-6">
-            <div className="w-20 h-20 rounded-full bg-card border-4 border-card flex items-center justify-center text-4xl cursor-pointer hover:scale-110 transition-transform"
+            </motion.div>
+          </motion.div>
+
+          <motion.div 
+            className="absolute -bottom-12 left-6"
+            whileHover={{ scale: 1.1 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            <motion.div 
+              className="w-24 h-24 rounded-full bg-card border-4 border-card flex items-center justify-center text-5xl cursor-pointer shadow-lg relative overflow-hidden"
               onClick={(e) => {
                 e.stopPropagation()
                 setAvatarDialogOpen(true)
               }}
+              animate={{
+                boxShadow: [
+                  '0 0 20px oklch(0.70 0.14 75 / 0.3)',
+                  '0 0 30px oklch(0.70 0.14 75 / 0.5)',
+                  '0 0 20px oklch(0.70 0.14 75 / 0.3)'
+                ]
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
             >
-              {profile.avatar}
-            </div>
-          </div>
-        </div>
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-br from-[oklch(0.70_0.14_75_/_0.2)] to-transparent"
+                animate={{
+                  rotate: [0, 360]
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "linear"
+                }}
+              />
+              <span className="relative z-10">{profile.avatar}</span>
+            </motion.div>
+          </motion.div>
+        </motion.div>
 
-        <div className="pt-10 space-y-4">
-          <div className="flex justify-between items-start">
+        <div className="pt-16 space-y-4">
+          <motion.div 
+            className="flex justify-between items-start"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
             <div>
-              <h3 className="text-xl font-bold">{profile.username}</h3>
+              <motion.h3 
+                className="text-xl font-bold"
+                animate={{
+                  textShadow: [
+                    '0 0 10px oklch(0.70 0.14 75 / 0)',
+                    '0 0 10px oklch(0.70 0.14 75 / 0.3)',
+                    '0 0 10px oklch(0.70 0.14 75 / 0)'
+                  ]
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              >
+                {profile.username}
+              </motion.h3>
               <p className="text-muted-foreground text-sm">Friend Code: {profile.friendCode}</p>
             </div>
             <Dialog open={bioDialogOpen} onOpenChange={setBioDialogOpen}>
@@ -132,9 +292,16 @@ export function ProfileCustomization({ profile, onUpdate }: ProfileCustomization
                 </div>
               </DialogContent>
             </Dialog>
-          </div>
+          </motion.div>
           {profile.bio && (
-            <p className="text-sm text-muted-foreground">{profile.bio}</p>
+            <motion.p 
+              className="text-sm text-muted-foreground"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+            >
+              {profile.bio}
+            </motion.p>
           )}
         </div>
 
@@ -180,16 +347,38 @@ export function ProfileCustomization({ profile, onUpdate }: ProfileCustomization
             </DialogHeader>
             <div className="grid grid-cols-3 gap-4">
               {COVER_PHOTO_GRADIENTS.map((gradient, index) => (
-                <button
+                <motion.button
                   key={index}
                   onClick={() => setSelectedCover(gradient)}
-                  className={`h-24 rounded-lg transition-all hover:scale-105 ${
+                  className={`h-24 rounded-lg transition-all relative overflow-hidden ${
                     selectedCover === gradient
                       ? 'ring-4 ring-primary scale-105'
                       : 'ring-2 ring-border'
                   }`}
                   style={{ background: gradient }}
-                />
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                >
+                  <motion.div
+                    className="absolute inset-0"
+                    style={{
+                      background: 'radial-gradient(circle at 50% 50%, oklch(1 0 0 / 0.2) 0%, transparent 60%)'
+                    }}
+                    animate={{
+                      scale: [1, 1.5, 1],
+                      opacity: [0, 0.5, 0]
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      delay: index * 0.1
+                    }}
+                  />
+                </motion.button>
               ))}
             </div>
             <Button onClick={handleCoverSave} className="w-full">
