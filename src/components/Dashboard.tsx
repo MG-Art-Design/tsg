@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -9,6 +9,7 @@ import { motion } from 'framer-motion'
 import { InsiderTrades } from './InsiderTrades'
 import { StrategicInsightsEnhanced } from './StrategicInsightsEnhanced'
 import { generateMockInsiderTrades } from '@/lib/insiderHelpers'
+import { AnimatedPortfolioCounter } from './AnimatedPortfolioCounter'
 
 interface DashboardProps {
   portfolio: Portfolio | null
@@ -22,6 +23,13 @@ export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick }
   const topLosers = [...marketData].sort((a, b) => a.priceChangePercent24h - b.priceChangePercent24h).slice(0, 3)
   
   const [insiderTrades, setInsiderTrades] = useState<InsiderTrade[]>([])
+  const previousValueRef = useRef(portfolio?.currentValue || 10000)
+
+  useEffect(() => {
+    if (portfolio?.currentValue && portfolio.currentValue !== previousValueRef.current) {
+      previousValueRef.current = portfolio.currentValue
+    }
+  }, [portfolio?.currentValue])
 
   useEffect(() => {
     const initialTrades = generateMockInsiderTrades()
@@ -39,33 +47,16 @@ export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick }
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <Card className="border-2 border-[oklch(0.70_0.14_75)] bg-gradient-to-br from-card to-muted/30">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground flex items-center gap-1.5 sm:gap-2">
-                <ChartLine size={16} className="sm:w-[18px] sm:h-[18px]" />
-                <span className="truncate">Portfolio Value</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl sm:text-3xl font-bold tracking-tight">
-                {portfolio ? formatCurrency(portfolio.currentValue) : formatCurrency(10000)}
-              </div>
-              {portfolio && (
-                <div className={`flex items-center gap-1 mt-2 text-sm font-medium ${portfolio.totalReturn >= 0 ? 'text-success' : 'text-destructive'}`}>
-                  {portfolio.totalReturn >= 0 ? <TrendUp size={16} weight="bold" /> : <TrendDown size={16} weight="bold" />}
-                  {formatPercent(portfolio.totalReturnPercent)} ({formatCurrency(Math.abs(portfolio.totalReturn))})
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </motion.div>
+      {portfolio && (
+        <AnimatedPortfolioCounter
+          currentValue={portfolio.currentValue}
+          previousValue={previousValueRef.current}
+          totalReturn={portfolio.totalReturn}
+          totalReturnPercent={portfolio.totalReturnPercent}
+        />
+      )}
 
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
