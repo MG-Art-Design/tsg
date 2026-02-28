@@ -37,7 +37,7 @@ export function Groups({ currentUser, onUserUpdate, marketData = [], allPortfoli
   const [inviteCodeInput, setInviteCodeInput] = useState('')
   const [copiedCode, setCopiedCode] = useState<string | null>(null)
   const [selectedGroupChat, setSelectedGroupChat] = useState<Group | null>(null)
-  const [groupMessages, setGroupMessages] = useKV<ChatMessage[]>(
+  const [groupMessages] = useKV<ChatMessage[]>(
     selectedGroupChat ? `group-chat-${selectedGroupChat.id}` : 'temp-key',
     []
   )
