@@ -1,5 +1,6 @@
 export interface UserProfile {
   id: string
+  email: string
   username: string
   avatar: string
   bio: string
@@ -10,6 +11,15 @@ export interface UserProfile {
   subscription: SubscriptionStatus
   friendIds: string[]
   friendCode: string
+  relationshipStatuses: Record<string, RelationshipStatus>
+}
+
+export type RelationshipStatus = 'friend' | 'rival' | 'mentor' | 'mentee' | 'colleague' | 'family' | 'other'
+
+export interface RelationshipConnection {
+  userId: string
+  status: RelationshipStatus
+  addedAt: number
 }
 
 export interface EmailPreferences {

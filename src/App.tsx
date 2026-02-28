@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { Toaster } from '@/components/ui/sonner'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Auth } from '@/components/Auth'
 import { Onboarding } from '@/components/Onboarding'
 import { Dashboard } from '@/components/Dashboard'
 import { PortfolioManager } from '@/components/PortfolioManager'
@@ -12,7 +13,9 @@ import { EmailSettings } from '@/components/EmailSettings'
 import { EmailNotificationsManager } from '@/components/EmailNotificationsManager'
 import { SubscriptionManager } from '@/components/SubscriptionManager'
 import { FriendsManager } from '@/components/FriendsManager'
+import { RelationshipManager } from '@/components/RelationshipManager'
 import { Logo } from '@/components/Logo'
+import { Button } from '@/components/ui/button'
 import { UserProfile, Portfolio, Asset, PortfolioPosition, LeaderboardEntry, Insight } from '@/lib/types'
 import { 
   generateMockMarketData, 
@@ -20,10 +23,11 @@ import {
   INITIAL_PORTFOLIO_VALUE,
   calculatePortfolioValue
 } from '@/lib/helpers'
-import { ChartLine, Lightning, Trophy, Notebook, User, Users } from '@phosphor-icons/react'
+import { ChartLine, Lightning, Trophy, Notebook, User, Users, SignOut } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 
 function App() {
+  const [currentUserId, setCurrentUserId] = useKV<string | null>('currentUserId', null)
   const [profile, setProfile] = useKV<UserProfile | null>('user-profile', null)
   const [portfolio, setPortfolio] = useKV<Portfolio | null>('user-portfolio', null)
   const [insights, setInsights] = useKV<Insight[]>('user-insights', [])
@@ -31,6 +35,23 @@ function App() {
   const [allUsers, setAllUsers] = useKV<Record<string, UserProfile>>('all-users', {})
   const [marketData, setMarketData] = useState<Asset[]>([])
   const [activeTab, setActiveTab] = useState('dashboard')
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [needsOnboarding, setNeedsOnboarding] = useState(false)
+  const [tempAuthData, setTempAuthData] = useState<Partial<UserProfile> | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const initAuth = async () => {
+      if (currentUserId && allUsers?.[currentUserId]) {
+        const user = allUsers[currentUserId]
+        setProfile(user)
+        setIsAuthenticated(true)
+        setNeedsOnboarding(false)
+      }
+      setIsLoading(false)
+    }
+    initAuth()
+  }, [currentUserId, allUsers])
 
   useEffect(() => {
     if (profile && !profile.subscription) {
@@ -48,6 +69,13 @@ function App() {
         ...current,
         friendIds: [],
         friendCode: `TSG-${current.id.slice(-8)}`
+      } : null)
+    }
+
+    if (profile && !profile.relationshipStatuses) {
+      setProfile((current) => current ? {
+        ...current,
+        relationshipStatuses: {}
       } : null)
     }
   }, [profile?.id])
@@ -151,11 +179,36 @@ function App() {
     setInsights(() => welcomeInsights)
   }
 
+  const handleAuthenticated = (authenticatedProfile: UserProfile) => {
+    if (!authenticatedProfile.username) {
+      setTempAuthData(authenticatedProfile)
+      setNeedsOnboarding(true)
+    } else {
+      setProfile(authenticatedProfile)
+      setCurrentUserId(authenticatedProfile.id)
+      setIsAuthenticated(true)
+      setNeedsOnboarding(false)
+    }
+  }
+
   const handleProfileComplete = (newProfile: UserProfile) => {
     setProfile(newProfile)
+    setCurrentUserId(newProfile.id)
+    setIsAuthenticated(true)
+    setNeedsOnboarding(false)
     toast.success(`Welcome aboard, ${newProfile.username}!`, {
       description: 'Time to build your first portfolio and show everyone what you\'ve got.'
     })
+  }
+
+  const handleLogout = async () => {
+    await window.spark.kv.set('currentUserId', null)
+    setCurrentUserId(null)
+    setProfile(null)
+    setPortfolio(null)
+    setIsAuthenticated(false)
+    setNeedsOnboarding(false)
+    toast.info('Signed out successfully')
   }
 
   const handlePortfolioSave = (
@@ -221,6 +274,13 @@ function App() {
     }))
   }
 
+  const handleFriendUpdate = async (friendId: string, updatedFriend: UserProfile) => {
+    await window.spark.kv.set('all-users', {
+      ...(allUsers || {}),
+      [friendId]: updatedFriend
+    })
+  }
+
   useEffect(() => {
     if (profile) {
       setAllUsers(current => ({
@@ -251,14 +311,43 @@ function App() {
     }
   ] : []
 
-  if (!profile) {
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <Logo size="lg" animated />
+          <p className="text-muted-foreground mt-4">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (!isAuthenticated) {
     return (
       <>
-        <Onboarding onComplete={handleProfileComplete} />
+        <Auth onAuthenticated={handleAuthenticated} existingUsers={allUsers || {}} />
         <Toaster richColors position="top-right" />
       </>
     )
   }
+
+  if (needsOnboarding || !profile?.username) {
+    return (
+      <>
+        <Onboarding 
+          onComplete={handleProfileComplete} 
+          initialEmail={tempAuthData?.email}
+          initialUserId={tempAuthData?.id}
+          initialFriendCode={tempAuthData?.friendCode}
+        />
+        <Toaster richColors position="top-right" />
+      </>
+    )
+  }
+
+  const friends = profile.friendIds
+    .map(id => allUsers?.[id])
+    .filter(Boolean) as UserProfile[]
 
   return (
     <div className="min-h-screen bg-background">
@@ -271,6 +360,14 @@ function App() {
                 {getCurrentQuarter()} • {profile.username}
               </div>
               <div className="text-4xl">{profile.avatar}</div>
+              <Button
+                onClick={handleLogout}
+                variant="ghost"
+                size="sm"
+                className="text-muted-foreground hover:text-foreground"
+              >
+                <SignOut size={18} weight="bold" />
+              </Button>
             </div>
           </div>
         </div>
@@ -341,9 +438,21 @@ function App() {
                 <div className="text-sm text-muted-foreground">
                   Insights frequency: <span className="capitalize font-medium">{profile.insightFrequency}</span>
                 </div>
+                {profile.email && (
+                  <div className="text-xs text-muted-foreground mt-2">
+                    {profile.email}
+                  </div>
+                )}
               </div>
 
               <FriendsManager profile={profile} onUpdate={handleUserUpdate} />
+
+              <RelationshipManager 
+                profile={profile} 
+                friends={friends}
+                onUpdate={handleUserUpdate}
+                onUpdateFriend={handleFriendUpdate}
+              />
 
               <SubscriptionManager profile={profile} onUpdate={handleUserUpdate} />
 

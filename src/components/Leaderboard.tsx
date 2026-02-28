@@ -1,10 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Trophy, CrownSimple, Medal, UserPlus } from '@phosphor-icons/react'
+import { Trophy, CrownSimple, Medal, UserPlus, Heart, GraduationCap, Briefcase, House, Tag } from '@phosphor-icons/react'
 import { motion } from 'framer-motion'
 import { useKV } from '@github/spark/hooks'
-import { LeaderboardEntry, UserProfile, Portfolio } from '@/lib/types'
+import { LeaderboardEntry, UserProfile, Portfolio, RelationshipStatus } from '@/lib/types'
 import { formatCurrency, formatPercent } from '@/lib/helpers'
 
 interface LeaderboardProps {
@@ -66,6 +66,31 @@ export function Leaderboard({ entries, currentUserId, currentUser, onAddFriendsC
     return 'border-border'
   }
 
+  const getRelationshipBadge = (userId: string) => {
+    if (userId === currentUserId) return null
+    const status = currentUser.relationshipStatuses?.[userId] || 'friend'
+    
+    const badges: Record<RelationshipStatus, { icon: any; label: string; color: string }> = {
+      friend: { icon: Heart, label: 'Friend', color: 'text-pink-400' },
+      rival: { icon: Trophy, label: 'Rival', color: 'text-orange-400' },
+      mentor: { icon: GraduationCap, label: 'Mentor', color: 'text-blue-400' },
+      mentee: { icon: GraduationCap, label: 'Mentee', color: 'text-cyan-400' },
+      colleague: { icon: Briefcase, label: 'Colleague', color: 'text-purple-400' },
+      family: { icon: House, label: 'Family', color: 'text-green-400' },
+      other: { icon: Tag, label: 'Other', color: 'text-gray-400' },
+    }
+
+    const badge = badges[status]
+    const Icon = badge.icon
+
+    return (
+      <Badge variant="outline" className={`${badge.color} flex items-center gap-1 text-xs`}>
+        <Icon size={12} weight="fill" />
+        {badge.label}
+      </Badge>
+    )
+  }
+
   return (
     <div className="space-y-4">
       <Card className="border-2 border-[oklch(0.70_0.14_75)]">
@@ -113,11 +138,12 @@ export function Leaderboard({ entries, currentUserId, currentUser, onAddFriendsC
                     <div className="flex items-center gap-3 flex-1">
                       <div className="text-4xl">{entry.avatar}</div>
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 flex-wrap">
                           <span className="font-semibold truncate">{entry.username}</span>
                           {entry.userId === currentUserId && (
                             <Badge variant="outline" className="text-xs">You</Badge>
                           )}
+                          {getRelationshipBadge(entry.userId)}
                         </div>
                         <div className="text-sm text-muted-foreground">
                           {formatCurrency(entry.portfolioValue)} portfolio

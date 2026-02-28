@@ -69,12 +69,20 @@ export function FriendsManager({ profile, onUpdate }: FriendsManagerProps) {
 
     const updatedProfile = {
       ...profile,
-      friendIds: [...profile.friendIds, friendUser.id]
+      friendIds: [...profile.friendIds, friendUser.id],
+      relationshipStatuses: {
+        ...profile.relationshipStatuses,
+        [friendUser.id]: 'friend' as const
+      }
     }
 
     const updatedFriend = {
       ...friendUser,
-      friendIds: [...friendUser.friendIds, profile.id]
+      friendIds: [...friendUser.friendIds, profile.id],
+      relationshipStatuses: {
+        ...friendUser.relationshipStatuses,
+        [profile.id]: 'friend' as const
+      }
     }
 
     onUpdate(updatedProfile)
@@ -99,14 +107,20 @@ export function FriendsManager({ profile, onUpdate }: FriendsManagerProps) {
     const friend = allUsers?.[friendId]
     if (!friend) return
 
+    const { [friendId]: removed, ...remainingStatuses } = profile.relationshipStatuses || {}
+
     const updatedProfile = {
       ...profile,
-      friendIds: profile.friendIds.filter(id => id !== friendId)
+      friendIds: profile.friendIds.filter(id => id !== friendId),
+      relationshipStatuses: remainingStatuses
     }
+
+    const { [profile.id]: removedFriend, ...friendRemainingStatuses } = friend.relationshipStatuses || {}
 
     const updatedFriend = {
       ...friend,
-      friendIds: friend.friendIds.filter(id => id !== profile.id)
+      friendIds: friend.friendIds.filter(id => id !== profile.id),
+      relationshipStatuses: friendRemainingStatuses
     }
 
     onUpdate(updatedProfile)

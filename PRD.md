@@ -12,12 +12,19 @@ This app requires multiple interconnected features including user profiles, real
 
 ## Essential Features
 
+### Email-Based Authentication & Persistent Sessions
+- **Functionality**: Users create accounts with email and password, remain logged in across sessions, and can sign out when needed
+- **Purpose**: Provides secure user identity and enables persistent data tied to email addresses, allowing users to access their portfolios from any device
+- **Trigger**: First-time app load shows authentication screen; returning users automatically load their profile
+- **Progression**: Enter email → Set password (6+ characters) → Create account → Complete profile setup → Dashboard OR Return to site → Auto-login with saved session → Dashboard
+- **Success criteria**: Users remain logged in across page refreshes, email addresses are unique, passwords securely stored, sign out clears session and returns to login
+
 ### User Profile Creation & Management
-- **Functionality**: Create custom profiles with avatar upload (or emoji selection), username, bio, and notification preferences
-- **Purpose**: Establishes personal identity within the competitive space and allows preference customization
-- **Trigger**: First-time app load or clicking profile settings
-- **Progression**: Welcome screen → Profile creation form → Avatar selection → Bio entry → Notification preferences → Dashboard
-- **Success criteria**: Profile persists across sessions, displays correctly on leaderboards, preferences control notification frequency
+- **Functionality**: Create custom profiles with email, avatar upload (or emoji selection), username, bio, and notification preferences
+- **Purpose**: Establishes personal identity within the competitive space and allows preference customization tied to a unique email
+- **Trigger**: After account creation or clicking profile settings
+- **Progression**: Authentication → Profile creation form → Avatar selection → Bio entry → Notification preferences → Dashboard
+- **Success criteria**: Profile persists across sessions tied to email, displays correctly on leaderboards, preferences control notification frequency
 
 ### Quarterly Trading Competitions
 - **Functionality**: Virtual trading rounds where users select S&P 500 stocks or crypto assets, allocate virtual capital, and compete for best returns
@@ -53,6 +60,13 @@ This app requires multiple interconnected features including user profiles, real
 - **Trigger**: "Add Friend" button in Profile tab or empty leaderboard state
 - **Progression**: Click add friend → Enter friend's unique code → Confirmation → Friend appears on both leaderboards → Compete together
 - **Success criteria**: Friend codes are unique per user, adding friend syncs both users, friends appear on each other's leaderboards, can remove friends bilaterally
+
+### Relationship Status Management
+- **Functionality**: Categorize friends by relationship type (Friend, Rival, Mentor, Mentee, Colleague, Family, Other) with visual badges and bilateral synchronization
+- **Purpose**: Allows users to organize their leaderboard connections meaningfully, creating context for different competitive dynamics and viewing patterns
+- **Trigger**: Profile settings → Relationship Status section
+- **Progression**: View friends list → Select relationship type for each friend → Changes sync to both users → Relationship badges appear on leaderboard
+- **Success criteria**: Relationship statuses persist, display as badges on leaderboard entries, reciprocal statuses update automatically (mentor/mentee), can be changed anytime, filters work correctly
 
 ### Portfolio Management
 - **Functionality**: Allocate virtual $10k across S&P 500 stocks and crypto, rebalance positions, track value changes
@@ -93,6 +107,11 @@ This app requires multiple interconnected features including user profiles, real
 - **Email Delivery Failures**: Emails queued locally and marked for retry; users see notification status in profile settings
 - **Disabled Email Notifications**: Users without email enabled still receive in-app insights; email preferences can be toggled anytime
 - **Invalid Email Addresses**: Email validation on input; error message shown if address format is incorrect
+- **Email Already Registered**: Sign up prevents duplicate emails; prompts user to log in instead
+- **Incorrect Password**: Login shows error without revealing whether email exists for security
+- **Lost Session**: Auto-login fails gracefully, returning user to login screen with no data loss
+- **Relationship Status Conflicts**: If friend removes user, relationship statuses clear bilaterally
+- **Orphaned Relationship Data**: Removing friend cleans up relationship status for both users
 - **Insider Trade Data Unavailable**: If 12-hour scrape fails, display last known data with timestamp; show "Data updating..." message in header
 - **Empty Insider Trade Categories**: When filtering shows no results, display friendly empty state with sparkle icon and explanatory message
 - **AI Insight Generation Failures**: If LLM call fails, show error toast with retry option; previous insights remain visible
@@ -152,18 +171,21 @@ Animations should feel electric and responsive—quick snaps for interactions, s
 ## Component Selection
 
 - **Components**: 
+  - Auth: Email/password authentication card with sign up/sign in toggle, form validation, loading states
   - Logo: Custom SVG component with animated ascending chart line and gradient text (variants: sm, md, lg, xl)
   - BrandElements: ChartPattern (decorative background motifs), BrandBadge (category/status indicators), StatCard (metrics display with trend patterns), BrandDivider (gradient section separators)
-  - Navigation: Tabs for main sections (Dashboard, Portfolio, Leaderboard, Groups, Insights, Profile)
+  - Navigation: Tabs for main sections (Dashboard, Portfolio, Leaderboard, Groups, Insights, Profile) with sign out button
   - Dashboard: Card components for portfolio summary, market movers, recent insights, and "Stonk: Omg It's In" insider trades section
   - InsiderTrades: Distinctive black-gold themed card with category filters (All/Congress/White House/Trump Family), animated trade entries with buy/sell badges, trader details, asset information, and disclosure dates
   - StrategicInsights: AI-powered analysis card with black-gold theme, brain icon, "Generate Insight" button, loading states with animated sparkle, displays generated insights with title, multi-paragraph analysis, key signals list, hypothesized moves, risk level badge, and confidence percentage
   - Portfolio Manager: Table for holdings with editable percentage inputs, Dialog for trade confirmation
-  - Leaderboard: Table with Avatar, ranking badges, sortable columns
+  - Leaderboard: Table with Avatar, ranking badges, relationship status badges (Friend/Rival/Mentor/etc), sortable columns
+  - FriendsManager: Card for adding friends via code, displaying friend list with relationship indicators
+  - RelationshipManager: Card for categorizing friends by relationship type with visual badges and bilateral sync
   - Insights Feed: Scrollable Card list with timestamp, category badges
-  - Profile: Avatar with upload/emoji picker, Input fields for username/bio, Switch components for notification preferences, EmailSettings card for email notification management
+  - Profile: Avatar with upload/emoji picker, Input fields for username/bio, Switch components for notification preferences, EmailSettings card for email notification management, relationship status management
   - Market Data: Custom chart components with D3 for price history
-  - Toasts (Sonner): Trade confirmations, insight deliveries, competition updates, email notification scheduling confirmations, AI insight generation success/failures
+  - Toasts (Sonner): Trade confirmations, insight deliveries, competition updates, email notification scheduling confirmations, AI insight generation success/failures, authentication feedback, friend/relationship updates
   - EmailSettings: Card component with email input, frequency selector, content checkboxes (leaderboard/market/insights)
   - EmailNotificationsManager: Background component that monitors preferences and schedules email generation
   

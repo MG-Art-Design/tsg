@@ -13,17 +13,20 @@ import { Logo } from '@/components/Logo'
 
 interface OnboardingProps {
   onComplete: (profile: UserProfile) => void
+  initialEmail?: string
+  initialUserId?: string
+  initialFriendCode?: string
 }
 
 const AVATAR_OPTIONS = ['🦁', '🐯', '🐻', '🦊', '🐺', '🦅', '🦈', '🐉', '🦖', '🦏', '🐘', '🦒', '🦌', '🐎', '🦓', '🦍', '🐆', '🐅']
 
-export function Onboarding({ onComplete }: OnboardingProps) {
+export function Onboarding({ onComplete, initialEmail, initialUserId, initialFriendCode }: OnboardingProps) {
   const [username, setUsername] = useState('')
   const [avatar, setAvatar] = useState(getRandomAvatar())
   const [bio, setBio] = useState('')
   const [insightFrequency, setInsightFrequency] = useState<'daily' | 'weekly' | 'monthly'>('daily')
-  const [emailEnabled, setEmailEnabled] = useState(false)
-  const [email, setEmail] = useState('')
+  const [emailEnabled, setEmailEnabled] = useState(!!initialEmail)
+  const [email, setEmail] = useState(initialEmail || '')
   const [emailFrequency, setEmailFrequency] = useState<'daily' | 'weekly' | 'monthly'>('weekly')
   const [includeLeaderboard, setIncludeLeaderboard] = useState(true)
   const [includeMarketPerformance, setIncludeMarketPerformance] = useState(true)
@@ -33,9 +36,10 @@ export function Onboarding({ onComplete }: OnboardingProps) {
     if (!username.trim()) return
     if (emailEnabled && !email.trim()) return
 
-    const userId = Date.now().toString()
+    const userId = initialUserId || Date.now().toString()
     const profile: UserProfile = {
       id: userId,
+      email: email.trim(),
       username: username.trim(),
       avatar,
       bio: bio.trim(),
@@ -55,7 +59,8 @@ export function Onboarding({ onComplete }: OnboardingProps) {
         autoRenew: false
       },
       friendIds: [],
-      friendCode: `TSG-${userId.slice(-8)}`
+      friendCode: initialFriendCode || `TSG-${userId.slice(-8)}`,
+      relationshipStatuses: {}
     }
 
     onComplete(profile)
