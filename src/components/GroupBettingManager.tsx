@@ -446,7 +446,7 @@ export function GroupBettingManager({ group, currentUser, isAdmin, onGroupUpdate
                       : payoutStructure === 'top-3'
                       ? 'Prize pool split among top 3 performers'
                       : 'Prize pool split among top 5 performers'}
-                  setViewPayoutDialogOpen(false)
+                  </p>
                 </div>
 
                 <Separator />
