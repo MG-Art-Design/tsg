@@ -11,6 +11,7 @@ import { UserProfile, PaymentMethod } from '@/lib/types'
 import { getSubscriptionFeatures, getSubscriptionDaysRemaining, isSubscriptionActive, SUBSCRIPTION_PRICING, calculateSubscriptionEndDate } from '@/lib/helpers'
 import { Crown, Check, Sparkle, TrendUp, Users, Envelope, ChartBar, HeadCircuit } from '@phosphor-icons/react'
 import { toast } from 'sonner'
+import { HapticFeedback } from '@/lib/haptics'
 
 interface SubscriptionManagerProps {
   profile: UserProfile
@@ -62,6 +63,8 @@ export function SubscriptionManager({ profile, onUpdate }: SubscriptionManagerPr
       onUpdate(updatedProfile)
       setProcessing(false)
       setShowUpgradeDialog(false)
+
+      HapticFeedback.subscriptionUpgraded()
 
       toast.success('Welcome to Premium! 🎉', {
         description: `You now have access to all premium features. Your subscription ${billingCycle === 'annual' ? 'renews in 1 year' : 'renews monthly'}.`

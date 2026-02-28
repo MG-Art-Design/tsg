@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -8,6 +8,7 @@ import { motion } from 'framer-motion'
 import { useKV } from '@github/spark/hooks'
 import { LeaderboardEntry, UserProfile, Portfolio, RelationshipStatus } from '@/lib/types'
 import { formatCurrency, formatPercent } from '@/lib/helpers'
+import { HapticFeedback } from '@/lib/haptics'
 
 interface LeaderboardProps {
   entries: LeaderboardEntry[]
@@ -20,6 +21,7 @@ export function Leaderboard({ entries, currentUserId, currentUser, onAddFriendsC
   const [allUsers] = useKV<Record<string, UserProfile>>('all-users', {})
   const [allPortfolios] = useKV<Record<string, Portfolio>>('all-portfolios', {})
   const [relationshipFilter, setRelationshipFilter] = useState<RelationshipStatus | 'all'>('all')
+  const previousRankRef = useRef<number | null>(null)
 
   const getFilteredEntries = (): LeaderboardEntry[] => {
     const friendEntries: LeaderboardEntry[] = currentUser.friendIds
@@ -63,6 +65,16 @@ export function Leaderboard({ entries, currentUserId, currentUser, onAddFriendsC
   }
 
   const filteredEntries = getFilteredEntries()
+
+  useEffect(() => {
+    const currentEntry = filteredEntries.find(e => e.userId === currentUserId)
+    if (currentEntry && previousRankRef.current !== null && previousRankRef.current !== currentEntry.rank) {
+      HapticFeedback.rankChanged()
+    }
+    if (currentEntry) {
+      previousRankRef.current = currentEntry.rank
+    }
+  }, [filteredEntries, currentUserId])
 
   const getRankIcon = (rank: number) => {
     if (rank === 1) return <CrownSimple size={24} weight="fill" className="text-yellow-400" />

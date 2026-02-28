@@ -16,6 +16,7 @@ import { Group, UserProfile, GroupInvite, Asset, ChatMessage, Portfolio } from '
 import { generateInviteCode } from '@/lib/helpers'
 import { Users, Plus, Copy, UserPlus, Check, X, ChatCircle, ArrowLeft, Flame, CurrencyDollar, Lightning } from '@phosphor-icons/react'
 import { toast } from 'sonner'
+import { HapticFeedback } from '@/lib/haptics'
 
 interface GroupsProps {
   currentUser: UserProfile
@@ -109,6 +110,8 @@ export function Groups({ currentUser, onUserUpdate, marketData = [], allPortfoli
         groupIds: [...currentUser.groupIds, newGroup.id]
       }
     }))
+
+    HapticFeedback.groupAction()
 
     toast.success(`Group "${newGroup.name}" created! 🎉`, {
       description: `Share code ${newGroup.inviteCode} with your friends`

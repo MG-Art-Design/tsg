@@ -35,6 +35,7 @@ import {
   INITIAL_PORTFOLIO_VALUE,
   calculatePortfolioValue
 } from '@/lib/helpers'
+import { HapticFeedback } from '@/lib/haptics'
 import { useActivityTracker } from '@/hooks/use-activity-tracker'
 import { ChartLine, Lightning, Trophy, Notebook, User, Users, SignOut, ArrowsLeftRight, FolderOpen } from '@phosphor-icons/react'
 import { toast } from 'sonner'
@@ -303,6 +304,7 @@ function App() {
     setPortfolio(null)
     setIsAuthenticated(false)
     setNeedsOnboarding(false)
+    HapticFeedback.buttonPress()
     toast.info('Signed out successfully')
   }
 
@@ -389,6 +391,8 @@ function App() {
       )
     }
 
+    HapticFeedback.portfolioSave()
+
     const newInsight: Insight = {
       id: Date.now().toString(),
       userId: profile!.id,
@@ -427,6 +431,7 @@ function App() {
         setPortfolio(null)
       }
     }
+    HapticFeedback.portfolioDelete()
   }
 
   const handleRenamePortfolio = (portfolioId: string, newName: string) => {

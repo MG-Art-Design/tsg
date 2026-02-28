@@ -3,6 +3,7 @@ import { useKV } from '@github/spark/hooks'
 import { UserProfile, Portfolio } from '@/lib/types'
 import { toast } from 'sonner'
 import { TrendUp, TrendDown, UserPlus, Trophy, Users } from '@phosphor-icons/react'
+import { HapticFeedback } from '@/lib/haptics'
 
 interface NotificationCenterProps {
   profile: UserProfile
@@ -50,6 +51,8 @@ export function NotificationCenter({ profile, allUsers, allPortfolios }: Notific
               const relationship = profile.relationshipStatuses?.[friend.id] || 'friend'
               const isPositive = percentChange > 0
 
+              HapticFeedback.notificationReceived()
+
               toast(
                 `${friend.username} (${relationship}) ${isPositive ? 'surging' : 'dropping'}!`,
                 {
@@ -76,6 +79,8 @@ export function NotificationCenter({ profile, allUsers, allPortfolios }: Notific
             const relationship = profile.relationshipStatuses?.[friend.id] || 'friend'
 
             if (rankChange > 0) {
+              HapticFeedback.leaderboardUpdate()
+              
               toast(
                 `${friend.username} climbed to #${currentRank}!`,
                 {

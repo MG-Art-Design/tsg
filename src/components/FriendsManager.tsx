@@ -9,6 +9,7 @@ import { UserProfile } from '@/lib/types'
 import { UserPlus, X, Copy, Check } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { motion, AnimatePresence } from 'framer-motion'
+import { HapticFeedback } from '@/lib/haptics'
 
 interface FriendsManagerProps {
   profile: UserProfile
@@ -28,6 +29,7 @@ export function FriendsManager({ profile, onUpdate }: FriendsManagerProps) {
   const handleCopyCode = () => {
     navigator.clipboard.writeText(profile.friendCode)
     setCopied(true)
+    HapticFeedback.buttonPress()
     toast.success('Friend code copied!', {
       description: 'Share this code with friends to add them to your leaderboard.'
     })
@@ -94,6 +96,8 @@ export function FriendsManager({ profile, onUpdate }: FriendsManagerProps) {
         [friendUser.id]: updatedFriend
       })
     }, 100)
+
+    HapticFeedback.friendAdded()
 
     toast.success(`Added ${friendUser.username}!`, {
       description: `${friendUser.avatar} ${friendUser.username} is now on your leaderboard.`

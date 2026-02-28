@@ -13,6 +13,7 @@ import {
   disableBiometric,
   type BiometricSupport
 } from '@/lib/biometric'
+import { HapticFeedback } from '@/lib/haptics'
 
 interface BiometricSettingsProps {
   profile: UserProfile
@@ -48,6 +49,7 @@ export function BiometricSettings({ profile }: BiometricSettingsProps) {
         
         if (success) {
           setIsEnabled(true)
+          HapticFeedback.biometricAuth()
           toast.success('Biometric authentication enabled', {
             description: `You can now sign in with ${biometricSupport.type === 'face' ? 'Face ID' : 'your fingerprint'}.`
           })
@@ -59,6 +61,7 @@ export function BiometricSettings({ profile }: BiometricSettingsProps) {
       } else {
         await disableBiometric(profile.id)
         setIsEnabled(false)
+        HapticFeedback.settingChanged()
         toast.success('Biometric authentication disabled', {
           description: 'You will need to use your password to sign in.'
         })

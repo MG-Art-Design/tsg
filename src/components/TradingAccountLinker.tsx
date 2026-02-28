@@ -24,6 +24,7 @@ import {
   Lightning
 } from '@phosphor-icons/react'
 import { toast } from 'sonner'
+import { HapticFeedback } from '@/lib/haptics'
 
 interface TradingAccountLinkerProps {
   profile: UserProfile
@@ -78,6 +79,8 @@ export function TradingAccountLinker({ profile, onUpdate }: TradingAccountLinker
       }
 
       onUpdate(updatedProfile)
+
+      HapticFeedback.tradeExecuted()
 
       toast.success('Account linked successfully!', {
         description: `${accountName} has been connected. Sync to import your positions.`
