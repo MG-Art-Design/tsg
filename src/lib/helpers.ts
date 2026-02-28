@@ -170,6 +170,7 @@ export function getSubscriptionFeatures(tier: SubscriptionTier): SubscriptionFea
       groupChat: true,
       emailNotifications: true,
       maxGroups: -1,
+      maxPortfolios: -1,
       historicalData: true,
       advancedAnalytics: true,
       prioritySupport: true
@@ -181,6 +182,7 @@ export function getSubscriptionFeatures(tier: SubscriptionTier): SubscriptionFea
     groupChat: false,
     emailNotifications: false,
     maxGroups: 1,
+    maxPortfolios: 3,
     historicalData: false,
     advancedAnalytics: false,
     prioritySupport: false

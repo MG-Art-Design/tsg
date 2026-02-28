@@ -65,7 +65,9 @@ export interface PortfolioPosition {
 }
 
 export interface Portfolio {
+  id: string
   userId: string
+  name: string
   quarter: string
   positions: PortfolioPosition[]
   initialValue: number
@@ -73,6 +75,9 @@ export interface Portfolio {
   totalReturn: number
   totalReturnPercent: number
   lastUpdated: number
+  createdAt: number
+  isLinkedAccount?: boolean
+  linkedAccountId?: string
 }
 
 export interface Trade {
@@ -302,6 +307,7 @@ export interface SubscriptionFeatures {
   groupChat: boolean
   emailNotifications: boolean
   maxGroups: number
+  maxPortfolios: number
   historicalData: boolean
   advancedAnalytics: boolean
   prioritySupport: boolean

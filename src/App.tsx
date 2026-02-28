@@ -6,6 +6,8 @@ import { Auth } from '@/components/Auth'
 import { Onboarding } from '@/components/Onboarding'
 import { Dashboard } from '@/components/Dashboard'
 import { PortfolioManager } from '@/components/PortfolioManager'
+import { MultiPortfolioManager } from '@/components/MultiPortfolioManager'
+import { PortfolioComparisonView } from '@/components/PortfolioComparisonView'
 import { Leaderboard } from '@/components/Leaderboard'
 import { Insights } from '@/components/Insights'
 import { Groups } from '@/components/Groups'
@@ -34,13 +36,15 @@ import {
   calculatePortfolioValue
 } from '@/lib/helpers'
 import { useActivityTracker } from '@/hooks/use-activity-tracker'
-import { ChartLine, Lightning, Trophy, Notebook, User, Users, SignOut } from '@phosphor-icons/react'
+import { ChartLine, Lightning, Trophy, Notebook, User, Users, SignOut, ArrowsLeftRight, FolderOpen } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 
 function App() {
   const [currentUserId, setCurrentUserId] = useKV<string | null>('currentUserId', null)
   const [profile, setProfile] = useKV<UserProfile | null>('user-profile', null)
   const [portfolio, setPortfolio] = useKV<Portfolio | null>('user-portfolio', null)
+  const [userPortfolios, setUserPortfolios] = useKV<Portfolio[]>('user-portfolios', [])
+  const [activePortfolioId, setActivePortfolioId] = useKV<string | null>('active-portfolio-id', null)
   const [insights, setInsights] = useKV<Insight[]>('user-insights', [])
   const [allPortfolios, setAllPortfolios] = useKV<Record<string, Portfolio>>('all-portfolios', {})
   const [allUsers, setAllUsers] = useKV<Record<string, UserProfile>>('all-users', {})
@@ -53,6 +57,25 @@ function App() {
   const [isLoading, setIsLoading] = useState(true)
 
   const activityTracker = useActivityTracker(profile?.id || '')
+
+  useEffect(() => {
+    const migrateOldPortfolio = () => {
+      if (portfolio && (!userPortfolios || userPortfolios.length === 0) && profile) {
+        const migratedPortfolio: Portfolio = {
+          ...portfolio,
+          id: portfolio.id || `portfolio-${Date.now()}`,
+          name: portfolio.name || `${portfolio.quarter} Portfolio`,
+          createdAt: portfolio.createdAt || portfolio.lastUpdated
+        }
+        setUserPortfolios([migratedPortfolio])
+        setActivePortfolioId(migratedPortfolio.id)
+      }
+    }
+    
+    if (profile && portfolio) {
+      migrateOldPortfolio()
+    }
+  }, [profile?.id])
 
   useEffect(() => {
     const initAuth = async () => {
@@ -165,49 +188,60 @@ function App() {
   }, [])
 
   useEffect(() => {
-    if (portfolio && marketData.length > 0) {
-      const updatedPositions: PortfolioPosition[] = portfolio.positions.map(pos => {
-        const currentAsset = marketData.find(a => a.symbol === pos.symbol)
-        if (!currentAsset) return pos
+    if (userPortfolios && userPortfolios.length > 0 && marketData.length > 0) {
+      const updatedPortfolios = userPortfolios.map(portfolio => {
+        const updatedPositions: PortfolioPosition[] = portfolio.positions.map(pos => {
+          const currentAsset = marketData.find(a => a.symbol === pos.symbol)
+          if (!currentAsset) return pos
 
-        const shares = (pos.allocation / 100) * INITIAL_PORTFOLIO_VALUE / pos.entryPrice
-        const value = shares * currentAsset.currentPrice
-        const returnValue = value - (pos.allocation / 100) * INITIAL_PORTFOLIO_VALUE
-        const returnPercent = (returnValue / ((pos.allocation / 100) * INITIAL_PORTFOLIO_VALUE)) * 100
+          const shares = (pos.allocation / 100) * portfolio.initialValue / pos.entryPrice
+          const value = shares * currentAsset.currentPrice
+          const returnValue = value - (pos.allocation / 100) * portfolio.initialValue
+          const returnPercent = (returnValue / ((pos.allocation / 100) * portfolio.initialValue)) * 100
+
+          return {
+            ...pos,
+            currentPrice: currentAsset.currentPrice,
+            shares,
+            value,
+            returnValue,
+            returnPercent
+          }
+        })
+
+        const { currentValue, totalReturn, totalReturnPercent } = calculatePortfolioValue(
+          updatedPositions,
+          portfolio.initialValue
+        )
 
         return {
-          ...pos,
-          currentPrice: currentAsset.currentPrice,
-          shares,
-          value,
-          returnValue,
-          returnPercent
+          ...portfolio,
+          positions: updatedPositions,
+          currentValue,
+          totalReturn,
+          totalReturnPercent,
+          lastUpdated: Date.now()
         }
       })
 
-      const { currentValue, totalReturn, totalReturnPercent } = calculatePortfolioValue(
-        updatedPositions,
-        INITIAL_PORTFOLIO_VALUE
-      )
+      setUserPortfolios(updatedPortfolios)
 
-      setPortfolio(current => current ? {
-        ...current,
-        positions: updatedPositions,
-        currentValue,
-        totalReturn,
-        totalReturnPercent,
-        lastUpdated: Date.now()
-      } : null)
-
-      if (activityTracker && portfolio && profile) {
-        activityTracker.updateQuarterSummary(
-          portfolio.quarter,
-          currentValue,
-          INITIAL_PORTFOLIO_VALUE
-        )
+      if (activePortfolioId) {
+        const activePortfolio = updatedPortfolios.find(p => p.id === activePortfolioId)
+        if (activePortfolio) {
+          setPortfolio(activePortfolio)
+          
+          if (activityTracker && profile) {
+            activityTracker.updateQuarterSummary(
+              activePortfolio.quarter,
+              activePortfolio.currentValue,
+              activePortfolio.initialValue
+            )
+          }
+        }
       }
     }
-  }, [marketData, portfolio?.positions.length])
+  }, [marketData, userPortfolios?.length])
 
   useEffect(() => {
     if (profile && insights && insights.length === 0) {
@@ -273,7 +307,9 @@ function App() {
   }
 
   const handlePortfolioSave = (
-    positions: Array<{ symbol: string; name: string; type: 'stock' | 'crypto'; allocation: number }>
+    positions: Array<{ symbol: string; name: string; type: 'stock' | 'crypto'; allocation: number }>,
+    portfolioName?: string,
+    portfolioId?: string
   ) => {
     const currentQuarter = getCurrentQuarter()
     
@@ -296,18 +332,31 @@ function App() {
       }
     })
 
+    const existingPortfolio = portfolioId ? userPortfolios?.find(p => p.id === portfolioId) : null
+    const isUpdate = !!existingPortfolio
+
     const newPortfolio: Portfolio = {
+      id: portfolioId || `portfolio-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       userId: profile!.id,
+      name: portfolioName || existingPortfolio?.name || `${currentQuarter} Portfolio`,
       quarter: currentQuarter,
       positions: portfolioPositions,
       initialValue: INITIAL_PORTFOLIO_VALUE,
       currentValue: INITIAL_PORTFOLIO_VALUE,
       totalReturn: 0,
       totalReturnPercent: 0,
-      lastUpdated: Date.now()
+      lastUpdated: Date.now(),
+      createdAt: existingPortfolio?.createdAt || Date.now()
     }
 
-    const isNewPortfolio = !portfolio || portfolio.quarter !== currentQuarter
+    if (isUpdate) {
+      setUserPortfolios((current) => 
+        (current || []).map(p => p.id === portfolioId ? newPortfolio : p)
+      )
+    } else {
+      setUserPortfolios((current) => [...(current || []), newPortfolio])
+      setActivePortfolioId(newPortfolio.id)
+    }
 
     setPortfolio(newPortfolio)
     setActiveTab('dashboard')
@@ -319,10 +368,11 @@ function App() {
 
     if (activityTracker && profile) {
       activityTracker.recordEvent({
-        type: isNewPortfolio ? 'portfolio_created' : 'portfolio_updated',
+        type: isUpdate ? 'portfolio_updated' : 'portfolio_created',
         quarter: currentQuarter,
         data: {
-          action: isNewPortfolio ? 'Created new portfolio' : 'Updated portfolio allocation',
+          action: isUpdate ? 'Updated portfolio allocation' : 'Created new portfolio',
+          portfolioName: newPortfolio.name,
           positionsCount: positions.length,
           stocksCount: positions.filter(p => p.type === 'stock').length,
           cryptoCount: positions.filter(p => p.type === 'crypto').length
@@ -342,7 +392,7 @@ function App() {
     const newInsight: Insight = {
       id: Date.now().toString(),
       userId: profile!.id,
-      content: `Portfolio locked in! You're holding ${positions.length} positions across ${positions.filter(p => p.type === 'stock').length} stocks and ${positions.filter(p => p.type === 'crypto').length} crypto. Bold moves. Let's see if they pay off! 💰`,
+      content: `Portfolio "${newPortfolio.name}" ${isUpdate ? 'updated' : 'created'}! You're holding ${positions.length} positions across ${positions.filter(p => p.type === 'stock').length} stocks and ${positions.filter(p => p.type === 'crypto').length} crypto. Bold moves. Let's see if they pay off! 💰`,
       category: 'portfolio-tip',
       timestamp: Date.now(),
       read: false
@@ -364,6 +414,36 @@ function App() {
       ...(allUsers || {}),
       [friendId]: updatedFriend
     })
+  }
+
+  const handleDeletePortfolio = (portfolioId: string) => {
+    setUserPortfolios((current) => (current || []).filter(p => p.id !== portfolioId))
+    if (activePortfolioId === portfolioId) {
+      const remaining = (userPortfolios || []).filter(p => p.id !== portfolioId)
+      setActivePortfolioId(remaining.length > 0 ? remaining[0].id : null)
+      if (remaining.length > 0) {
+        setPortfolio(remaining[0])
+      } else {
+        setPortfolio(null)
+      }
+    }
+  }
+
+  const handleRenamePortfolio = (portfolioId: string, newName: string) => {
+    setUserPortfolios((current) =>
+      (current || []).map(p => p.id === portfolioId ? { ...p, name: newName } : p)
+    )
+    if (portfolio?.id === portfolioId) {
+      setPortfolio((current) => current ? { ...current, name: newName } : null)
+    }
+  }
+
+  const handleSelectPortfolio = (portfolioId: string) => {
+    const selected = userPortfolios?.find(p => p.id === portfolioId)
+    if (selected) {
+      setActivePortfolioId(portfolioId)
+      setPortfolio(selected)
+    }
   }
 
   useEffect(() => {
@@ -460,18 +540,26 @@ function App() {
 
       <main className="container mx-auto px-4 py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-6 mb-6 bg-gradient-to-r from-[oklch(0.10_0.005_60)] to-[oklch(0.08_0.006_70)] border-2 border-[oklch(0.70_0.14_75)] p-1 h-auto shadow-[0_0_20px_oklch(0.65_0.12_75_/_0.2)]">
+          <TabsList className="grid w-full grid-cols-8 mb-6 bg-gradient-to-r from-[oklch(0.10_0.005_60)] to-[oklch(0.08_0.006_70)] border-2 border-[oklch(0.70_0.14_75)] p-1 h-auto shadow-[0_0_20px_oklch(0.65_0.12_75_/_0.2)]">
             <TabsTrigger value="dashboard" className="flex items-center gap-2 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold">
               <ChartLine size={18} />
               <span className="hidden sm:inline">Dashboard</span>
             </TabsTrigger>
+            <TabsTrigger value="portfolios" className="flex items-center gap-2 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold">
+              <FolderOpen size={18} weight="fill" />
+              <span className="hidden sm:inline">Portfolios</span>
+            </TabsTrigger>
             <TabsTrigger value="portfolio" className="flex items-center gap-2 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold">
               <Lightning size={18} weight="fill" />
-              <span className="hidden sm:inline">Portfolio</span>
+              <span className="hidden sm:inline">Edit</span>
+            </TabsTrigger>
+            <TabsTrigger value="compare" className="flex items-center gap-2 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold">
+              <ArrowsLeftRight size={18} />
+              <span className="hidden sm:inline">Compare</span>
             </TabsTrigger>
             <TabsTrigger value="leaderboard" className="flex items-center gap-2 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold">
               <Trophy size={18} weight="fill" />
-              <span className="hidden sm:inline">Leaderboard</span>
+              <span className="hidden sm:inline">Leaders</span>
             </TabsTrigger>
             <TabsTrigger value="groups" className="flex items-center gap-2 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold">
               <Users size={18} weight="fill" />
@@ -491,11 +579,39 @@ function App() {
             <Dashboard portfolio={portfolio ?? null} marketData={marketData} userProfile={profile} onUpgradeClick={handleUpgradeClick} />
           </TabsContent>
 
+          <TabsContent value="portfolios">
+            <MultiPortfolioManager
+              portfolios={userPortfolios || []}
+              userProfile={profile}
+              marketData={marketData}
+              onCreatePortfolio={handlePortfolioSave}
+              onDeletePortfolio={handleDeletePortfolio}
+              onRenamePortfolio={handleRenamePortfolio}
+              onSelectPortfolio={(portfolioId) => {
+                handleSelectPortfolio(portfolioId)
+                setActiveTab('portfolio')
+              }}
+              onUpgradeClick={handleUpgradeClick}
+            />
+          </TabsContent>
+
           <TabsContent value="portfolio">
             <PortfolioManager
               currentPortfolio={portfolio ?? null}
               marketData={marketData}
               onSave={handlePortfolioSave}
+            />
+          </TabsContent>
+
+          <TabsContent value="compare">
+            <PortfolioComparisonView
+              portfolios={userPortfolios || []}
+              userProfile={profile}
+              marketData={marketData}
+              onSelectPortfolio={(portfolioId) => {
+                handleSelectPortfolio(portfolioId)
+                setActiveTab('portfolio')
+              }}
             />
           </TabsContent>
 
@@ -514,6 +630,14 @@ function App() {
               onUserUpdate={handleUserUpdate} 
               marketData={marketData}
               allPortfolios={allPortfolios || {}}
+            />
+          </TabsContent>
+
+          <TabsContent value="insights">
+            <Insights 
+              insights={insights ?? []} 
+              userProfile={profile}
+              onUpgradeClick={handleUpgradeClick}
             />
           </TabsContent>
 
