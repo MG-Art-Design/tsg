@@ -138,6 +138,14 @@ export interface BettingPeriod {
   payout: number
   payoutStatus: 'pending' | 'notified' | 'completed'
   payoutNotifiedAt?: number
+  winnerPayouts?: Array<{
+    userId: string
+    username: string
+    avatar: string
+    rank: number
+    payout: number
+    percentage: number
+  }>
   standings: Array<{
     userId: string
     username: string
@@ -145,6 +153,7 @@ export interface BettingPeriod {
     returnPercent: number
     returnValue: number
     amountOwed?: number
+    rank?: number
   }>
 }
 
@@ -353,6 +362,46 @@ export interface PaymentAccount {
   accountIdentifier?: string
 }
 
+export interface BettingHistoryEntry {
+  id: string
+  userId: string
+  groupId: string
+  groupName: string
+  periodId: string
+  periodType: 'weekly' | 'monthly' | 'season'
+  timestamp: number
+  rank: number
+  totalParticipants: number
+  amountWon?: number
+  amountLost?: number
+  returnPercent: number
+  returnValue: number
+}
+
+export interface UserBettingStats {
+  totalWinnings: number
+  totalLosses: number
+  netProfit: number
+  totalGames: number
+  gamesWon: number
+  winRate: number
+  averageRank: number
+  bestRank: number
+  byPeriodType: {
+    weekly: { wins: number; losses: number; net: number }
+    monthly: { wins: number; losses: number; net: number }
+    season: { wins: number; losses: number; net: number }
+  }
+  byGroup: Record<string, {
+    groupName: string
+    wins: number
+    losses: number
+    net: number
+    gamesPlayed: number
+  }>
+  history: BettingHistoryEntry[]
+}
+
 export interface UserProfile {
   id: string
   email: string
@@ -371,4 +420,5 @@ export interface UserProfile {
   notificationPreferences: NotificationPreferences
   sharingPreferences?: SharingPreferences
   paymentAccounts?: PaymentAccount[]
+  bettingHistory?: BettingHistoryEntry[]
 }

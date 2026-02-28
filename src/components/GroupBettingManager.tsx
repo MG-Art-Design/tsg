@@ -10,7 +10,8 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
 import { Group, UserProfile, BettingSettings, BettingPeriod, PayoutNotification } from '@/lib/types'
-import { CurrencyDollar, Trophy, CalendarBlank, Bell, CheckCircle, ArrowsClockwise } from '@phosphor-icons/react'
+import { calculateTieredPayouts } from '@/lib/bettingHelpers'
+import { CurrencyDollar, Trophy, CalendarBlank, Bell, CheckCircle, ArrowsClockwise, Medal } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 
 interface GroupBettingManagerProps {
@@ -169,7 +170,13 @@ export function GroupBettingManager({ group, currentUser, isAdmin, onGroupUpdate
                   <div className="text-2xl font-bold text-[oklch(0.70_0.14_75)]">
                     ${bettingSettings.weeklyPayout || 0}
                   </div>
-                  <p className="text-xs text-muted-foreground mt-1">Top scorer wins</p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {bettingSettings.payoutStructure === 'winner-take-all' 
+                      ? 'Winner takes all'
+                      : bettingSettings.payoutStructure === 'top-3'
+                      ? 'Split among top 3'
+                      : 'Split among top 5'}
+                  </p>
                 </CardContent>
               </Card>
             )}
@@ -182,7 +189,13 @@ export function GroupBettingManager({ group, currentUser, isAdmin, onGroupUpdate
                   <div className="text-2xl font-bold text-[oklch(0.70_0.14_75)]">
                     ${bettingSettings.monthlyPayout || 0}
                   </div>
-                  <p className="text-xs text-muted-foreground mt-1">Top scorer wins</p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {bettingSettings.payoutStructure === 'winner-take-all' 
+                      ? 'Winner takes all'
+                      : bettingSettings.payoutStructure === 'top-3'
+                      ? 'Split among top 3'
+                      : 'Split among top 5'}
+                  </p>
                 </CardContent>
               </Card>
             )}
@@ -195,11 +208,47 @@ export function GroupBettingManager({ group, currentUser, isAdmin, onGroupUpdate
                   <div className="text-2xl font-bold text-[oklch(0.70_0.14_75)]">
                     ${bettingSettings.seasonPayout || 0}
                   </div>
-                  <p className="text-xs text-muted-foreground mt-1">Top scorer wins</p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {bettingSettings.payoutStructure === 'winner-take-all' 
+                      ? 'Winner takes all'
+                      : bettingSettings.payoutStructure === 'top-3'
+                      ? 'Split among top 3'
+                      : 'Split among top 5'}
+                  </p>
                 </CardContent>
               </Card>
             )}
           </div>
+
+          {bettingSettings.payoutStructure !== 'winner-take-all' && (
+            <Card className="bg-accent/5 border-accent/20">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm flex items-center gap-2">
+                  <Medal size={18} weight="fill" />
+                  Payout Breakdown
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  {calculateTieredPayouts(
+                    bettingSettings.entryFee * group.memberIds.length,
+                    bettingSettings.payoutStructure,
+                    group.memberIds.length
+                  ).map((tier) => (
+                    <div key={tier.rank} className="flex items-center justify-between text-sm">
+                      <div className="flex items-center gap-2">
+                        <Badge variant={tier.rank === 1 ? 'default' : 'secondary'}>
+                          #{tier.rank}
+                        </Badge>
+                        <span className="text-muted-foreground">{tier.percentage}%</span>
+                      </div>
+                      <span className="font-semibold">${tier.payout.toFixed(2)}</span>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           {userPayments.length > 0 && (
             <>
@@ -270,30 +319,75 @@ export function GroupBettingManager({ group, currentUser, isAdmin, onGroupUpdate
                   <Trophy size={18} weight="fill" />
                   Past Winners
                 </h3>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {completedPeriods.slice(0, 5).map((period) => (
-                    <div
-                      key={period.id}
-                      className="flex items-center justify-between p-3 border border-border rounded-lg bg-card/50"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="text-2xl">{period.winnerAvatar}</div>
-                        <div>
-                          <p className="font-semibold">{period.winnerUsername}</p>
-                          <p className="text-sm text-muted-foreground">
-                            {period.type} • {new Date(period.endDate).toLocaleDateString()}
-                          </p>
+                    <Card key={period.id} className="border">
+                      <CardContent className="pt-4">
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <Badge variant="outline" className="mb-2 capitalize">
+                                {period.type}
+                              </Badge>
+                              <p className="text-xs text-muted-foreground">
+                                {new Date(period.endDate).toLocaleDateString()}
+                              </p>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-xs text-muted-foreground">Total Pot</p>
+                              <p className="text-lg font-bold text-[oklch(0.70_0.14_75)]">
+                                ${period.totalPot}
+                              </p>
+                            </div>
+                          </div>
+                          
+                          {period.winnerPayouts && period.winnerPayouts.length > 0 ? (
+                            <div className="space-y-2">
+                              {period.winnerPayouts.map((winner) => (
+                                <div
+                                  key={winner.userId}
+                                  className="flex items-center justify-between p-2 bg-accent/5 rounded-lg border border-accent/20"
+                                >
+                                  <div className="flex items-center gap-3">
+                                    <Badge variant={winner.rank === 1 ? 'default' : 'secondary'}>
+                                      #{winner.rank}
+                                    </Badge>
+                                    <div className="text-2xl">{winner.avatar}</div>
+                                    <div>
+                                      <p className="font-semibold">{winner.username}</p>
+                                      <p className="text-xs text-muted-foreground">
+                                        {winner.percentage}% of pot
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <div className="text-right">
+                                    <p className="font-bold text-success">
+                                      ${winner.payout.toFixed(2)}
+                                    </p>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <div className="flex items-center justify-between p-2 bg-accent/5 rounded-lg">
+                              <div className="flex items-center gap-3">
+                                <div className="text-2xl">{period.winnerAvatar}</div>
+                                <div>
+                                  <p className="font-semibold">{period.winnerUsername}</p>
+                                  <p className="text-xs text-muted-foreground">Winner takes all</p>
+                                </div>
+                              </div>
+                              <div className="text-right">
+                                <p className="font-bold text-success">${period.payout.toFixed(2)}</p>
+                                <Badge variant="secondary" className="text-xs mt-1">
+                                  {period.payoutStatus}
+                                </Badge>
+                              </div>
+                            </div>
+                          )}
                         </div>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-lg font-bold text-[oklch(0.70_0.14_75)]">
-                          ${period.payout}
-                        </div>
-                        <Badge variant="secondary" className="text-xs">
-                          {period.payoutStatus}
-                        </Badge>
-                      </div>
-                    </div>
+                      </CardContent>
+                    </Card>
                   ))}
                 </div>
               </div>
@@ -341,11 +435,18 @@ export function GroupBettingManager({ group, currentUser, isAdmin, onGroupUpdate
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="winner-take-all">Winner Take All</SelectItem>
-                      <SelectItem value="top-3">Top 3 Split</SelectItem>
-                      <SelectItem value="top-5">Top 5 Split</SelectItem>
+                      <SelectItem value="winner-take-all">Winner Take All (100%)</SelectItem>
+                      <SelectItem value="top-3">Top 3 Split (60% / 25% / 15%)</SelectItem>
+                      <SelectItem value="top-5">Top 5 Split (40% / 25% / 15% / 12% / 8%)</SelectItem>
                     </SelectContent>
                   </Select>
+                  <p className="text-xs text-muted-foreground">
+                    {payoutStructure === 'winner-take-all' 
+                      ? 'All winnings go to first place'
+                      : payoutStructure === 'top-3'
+                      ? 'Prize pool split among top 3 performers'
+                      : 'Prize pool split among top 5 performers'}
+                  </p>
                 </div>
 
                 <Separator />

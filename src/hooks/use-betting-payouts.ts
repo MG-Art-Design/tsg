@@ -6,9 +6,10 @@ import {
   GroupGame, 
   GroupGameLeaderboardEntry,
   BettingPeriod,
-  PayoutNotification
+  PayoutNotification,
+  BettingHistoryEntry
 } from '@/lib/types'
-import { calculateGameWinner, createPayoutNotification } from '@/lib/bettingHelpers'
+import { calculateGameWinner, createPayoutNotification, recordBettingHistory } from '@/lib/bettingHelpers'
 import { toast } from 'sonner'
 
 export function useBettingPayouts(
@@ -20,6 +21,7 @@ export function useBettingPayouts(
   const [groups, setGroups] = useKV<Record<string, Group>>('all-groups', {})
   const [payoutNotifications, setPayoutNotifications] = useKV<PayoutNotification[]>('payout-notifications', [])
   const [processedGames, setProcessedGames] = useKV<string[]>('processed-betting-games', [])
+  const [bettingHistory, setBettingHistory] = useKV<BettingHistoryEntry[]>('betting-history', [])
 
   useEffect(() => {
     if (!group || !activeGame || !group.bettingSettings?.enabled) return
@@ -56,6 +58,10 @@ export function useBettingPayouts(
 
     const notification = createPayoutNotification(bettingPeriod, group, winner)
 
+    const historyEntries = recordBettingHistory(bettingPeriod, group)
+    
+    setBettingHistory((current) => [...(current || []), ...historyEntries])
+
     setGroups((current) => ({
       ...(current || {}),
       [group.id]: {
@@ -68,8 +74,15 @@ export function useBettingPayouts(
 
     setProcessedGames((current) => [...(current || []), activeGame.id])
 
-    toast.success(`🏆 ${winner.username} won the ${periodType} pot!`, {
-      description: `$${bettingPeriod.payout} payout ready • Check Betting tab`
-    })
+    const winnerPayouts = bettingPeriod.winnerPayouts || []
+    if (winnerPayouts.length > 1) {
+      toast.success(`🏆 Top ${winnerPayouts.length} split the ${periodType} pot!`, {
+        description: `${winnerPayouts.map(w => `${w.username}: $${w.payout.toFixed(2)}`).join(' • ')}`
+      })
+    } else {
+      toast.success(`🏆 ${winner.username} won the ${periodType} pot!`, {
+        description: `$${bettingPeriod.payout.toFixed(2)} payout ready • Check Betting tab`
+      })
+    }
   }, [activeGame?.id, activeGame?.endDate, leaderboard.length, processedGames?.length])
 }
