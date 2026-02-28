@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Portfolio, UserProfile, Asset, PortfolioPosition } from '@/lib/types'
+import { Portfolio, UserProfile, Asset } from '@/lib/types'
 import { 
   formatCurrency, 
   formatPercent, 
