@@ -156,10 +156,10 @@ export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick }
             </CardHeader>
             <CardContent>
               <div className="text-2xl sm:text-3xl font-bold tracking-tight">
-                {portfolio?.positions.length || 0}
+                {portfolio?.positions.length ?? 0}
               </div>
               <div className="text-sm text-muted-foreground mt-2">
-                {portfolio ? 'Positions held' : 'Build your portfolio'}
+                {(portfolio?.positions.length ?? 0) > 0 ? 'Positions held' : 'Build your portfolio'}
               </div>
             </CardContent>
           </Card>
