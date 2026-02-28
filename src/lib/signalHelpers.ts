@@ -235,7 +235,7 @@ export async function generateSignalExportInstructions(
 4. Paste and send
 
 Or use Signal CLI if configured:
-signal-cli -u +${sanitizedNumber} send -g <groupId> -m "${formattedExport.replace(/"/g, '\\"')}"
+signal-cli -u +${sanitizedNumber} send -g <groupId> -m "${formattedExport.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"
 
 📋 Message ready to copy:`
 }
