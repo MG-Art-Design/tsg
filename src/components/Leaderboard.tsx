@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button'
 import { Trophy, Medal, CrownSimple, UserPlus } from '@phosphor-icons/react'
 import { LeaderboardEntry, UserProfile, Portfolio } from '@/lib/types'
 import { formatPercent, formatCurrency } from '@/lib/helpers'
