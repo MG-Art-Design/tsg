@@ -5,7 +5,6 @@ import {
   UserProfile, 
   GroupGame, 
   GroupGameLeaderboardEntry,
-  BettingPeriod,
   PayoutNotification,
   BettingHistoryEntry
 } from '@/lib/types'
