@@ -30,7 +30,7 @@ export function OrganizationManager({ currentUser, onUserUpdate }: OrganizationM
   const [newOrgDescription, setNewOrgDescription] = useState('')
   const [inviteEmail, setInviteEmail] = useState('')
   const [inviteRole, setInviteRole] = useState<'admin' | 'member'>('member')
-  const [selectedOrg, setSelectedOrg] = useState<Organization | null>(null)
+  const [selectedOrg] = useState<Organization | null>(null)
 
   const userOrganization = currentUser.organizationId ? organizations?.[currentUser.organizationId] : null
 
