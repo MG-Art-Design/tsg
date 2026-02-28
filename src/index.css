@@ -76,6 +76,88 @@
     }
   }
 
+  .auth-pool-container {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .auth-pool-ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      oklch(0.70 0.14 75 / 0.12) 0%,
+      oklch(0.65 0.12 75 / 0.08) 20%,
+      oklch(0.60 0.10 75 / 0.04) 40%,
+      transparent 70%
+    );
+    animation: pool-reverberate 12s ease-in-out infinite;
+    pointer-events: none;
+    filter: blur(60px);
+  }
+
+  .auth-pool-ripple-1 {
+    width: 600px;
+    height: 600px;
+    top: -10%;
+    left: -5%;
+    animation-delay: 0s;
+  }
+
+  .auth-pool-ripple-2 {
+    width: 500px;
+    height: 500px;
+    top: 30%;
+    right: -10%;
+    animation-delay: 3s;
+  }
+
+  .auth-pool-ripple-3 {
+    width: 450px;
+    height: 450px;
+    bottom: -5%;
+    left: 20%;
+    animation-delay: 6s;
+  }
+
+  .auth-pool-ripple-4 {
+    width: 550px;
+    height: 550px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: 9s;
+  }
+
+  @keyframes pool-reverberate {
+    0% {
+      transform: translate(0, 0) scale(0.8);
+      opacity: 0;
+    }
+    5% {
+      opacity: 0.5;
+    }
+    25% {
+      transform: translate(30px, -20px) scale(1);
+      opacity: 0.8;
+    }
+    50% {
+      transform: translate(-20px, 30px) scale(1.1);
+      opacity: 0.6;
+    }
+    75% {
+      transform: translate(25px, 15px) scale(0.95);
+      opacity: 0.4;
+    }
+    95% {
+      opacity: 0.2;
+    }
+    100% {
+      transform: translate(0, 0) scale(0.8);
+      opacity: 0;
+    }
+  }
+
   @media (hover: hover) and (pointer: fine) {
     a:not(.no-hover-effect),
     button:not(.no-hover-effect):not(:disabled),

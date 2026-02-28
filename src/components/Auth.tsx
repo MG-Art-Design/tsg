@@ -197,45 +197,47 @@ export function Auth({ onAuthenticated, existingUsers }: AuthProps) {
   }
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <div className="ripple-container fixed inset-0 pointer-events-none">
-        <div className="ripple ripple-1" />
-        <div className="ripple ripple-2" />
-        <div className="ripple ripple-3" />
+    <div className="min-h-screen bg-[oklch(0.05_0.008_70)] flex items-center justify-center p-4 relative overflow-hidden">
+      <div className="auth-pool-container fixed inset-0 pointer-events-none">
+        <div className="auth-pool-ripple auth-pool-ripple-1" />
+        <div className="auth-pool-ripple auth-pool-ripple-2" />
+        <div className="auth-pool-ripple auth-pool-ripple-3" />
+        <div className="auth-pool-ripple auth-pool-ripple-4" />
       </div>
 
       <div className="w-full max-w-md relative z-10">
         <div className="text-center mb-8">
           <Logo size="lg" animated />
-          <p className="text-muted-foreground mt-4 text-lg">
+          <p className="text-[oklch(0.70_0.14_75)] mt-4 text-lg font-semibold tracking-wide">
             Compete with friends in quarterly trading competitions
           </p>
         </div>
 
-        <Card className="border-primary/20 shadow-xl">
-          <CardHeader>
-            <CardTitle className="text-2xl">
+        <Card className="border-2 border-[oklch(0.70_0.14_75)] bg-[oklch(0.03_0.006_70)] shadow-[0_0_40px_oklch(0.65_0.12_75_/_0.25),0_0_80px_oklch(0.65_0.12_75_/_0.15)] backdrop-blur-sm relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-[oklch(0.70_0.14_75_/_0.05)] via-transparent to-[oklch(0.70_0.14_75_/_0.03)] pointer-events-none" />
+          <CardHeader className="relative z-10">
+            <CardTitle className="text-2xl text-[oklch(0.70_0.14_75)]">
               {isSignUp ? 'Create Account' : 'Welcome Back'}
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-[oklch(0.58_0.02_240)]">
               {isSignUp 
                 ? 'Enter your email to get started' 
                 : 'Sign in to continue competing'
               }
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="relative z-10">
             {showBiometricPrompt && !isSignUp && biometricUsers.length > 0 && (
               <div className="mb-6 space-y-3">
                 <div className="text-center">
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-3">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[oklch(0.70_0.14_75_/_0.15)] border-2 border-[oklch(0.70_0.14_75_/_0.4)] mb-3 shadow-[0_0_20px_oklch(0.65_0.12_75_/_0.3)]">
                     {biometricSupport.type === 'face' ? (
-                      <Fingerprint size={32} weight="duotone" className="text-primary" />
+                      <Fingerprint size={32} weight="duotone" className="text-[oklch(0.70_0.14_75)]" />
                     ) : (
-                      <FingerprintSimple size={32} weight="duotone" className="text-primary" />
+                      <FingerprintSimple size={32} weight="duotone" className="text-[oklch(0.70_0.14_75)]" />
                     )}
                   </div>
-                  <p className="text-sm text-muted-foreground mb-4">
+                  <p className="text-sm text-[oklch(0.58_0.02_240)] mb-4">
                     Sign in quickly with {biometricSupport.type === 'face' ? 'Face ID' : 'biometrics'}
                   </p>
                 </div>
@@ -248,7 +250,7 @@ export function Auth({ onAuthenticated, existingUsers }: AuthProps) {
                       onClick={() => handleBiometricSignIn(user)}
                       disabled={isLoading}
                       variant="outline"
-                      className="w-full border-primary/30 hover:border-primary hover:bg-primary/5"
+                      className="w-full border-2 border-[oklch(0.70_0.14_75_/_0.4)] hover:border-[oklch(0.70_0.14_75)] hover:bg-[oklch(0.70_0.14_75_/_0.1)] bg-[oklch(0.05_0.008_70)] hover:shadow-[0_0_20px_oklch(0.65_0.12_75_/_0.3)] transition-all duration-300 text-[oklch(0.70_0.14_75)]"
                       size="lg"
                     >
                       <div className="flex items-center gap-3 w-full">
@@ -259,7 +261,7 @@ export function Auth({ onAuthenticated, existingUsers }: AuthProps) {
                         )}
                         <div className="flex-1 text-left">
                           <div className="font-semibold">{existingUser?.username || user.email}</div>
-                          <div className="text-xs text-muted-foreground">{user.email}</div>
+                          <div className="text-xs text-[oklch(0.58_0.02_240)]">{user.email}</div>
                         </div>
                       </div>
                     </Button>
@@ -268,10 +270,10 @@ export function Auth({ onAuthenticated, existingUsers }: AuthProps) {
 
                 <div className="relative">
                   <div className="absolute inset-0 flex items-center">
-                    <span className="w-full border-t border-border" />
+                    <span className="w-full border-t border-[oklch(0.28_0.02_240)]" />
                   </div>
                   <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-card px-2 text-muted-foreground">Or continue with password</span>
+                    <span className="bg-[oklch(0.03_0.006_70)] px-2 text-[oklch(0.58_0.02_240)]">Or continue with password</span>
                   </div>
                 </div>
               </div>
@@ -279,7 +281,7 @@ export function Auth({ onAuthenticated, existingUsers }: AuthProps) {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email" className="flex items-center gap-2">
+                <Label htmlFor="email" className="flex items-center gap-2 text-[oklch(0.70_0.14_75)]">
                   <Envelope size={16} />
                   Email
                 </Label>
@@ -291,11 +293,12 @@ export function Auth({ onAuthenticated, existingUsers }: AuthProps) {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   autoComplete="email"
+                  className="border-2 border-[oklch(0.70_0.14_75_/_0.3)] bg-[oklch(0.05_0.008_70)] text-[oklch(0.92_0.01_240)] focus:border-[oklch(0.70_0.14_75)] focus:shadow-[0_0_15px_oklch(0.65_0.12_75_/_0.3)] transition-all duration-300"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password" className="flex items-center gap-2">
+                <Label htmlFor="password" className="flex items-center gap-2 text-[oklch(0.70_0.14_75)]">
                   <Key size={16} />
                   Password
                 </Label>
@@ -308,9 +311,10 @@ export function Auth({ onAuthenticated, existingUsers }: AuthProps) {
                   required
                   autoComplete={isSignUp ? 'new-password' : 'current-password'}
                   minLength={6}
+                  className="border-2 border-[oklch(0.70_0.14_75_/_0.3)] bg-[oklch(0.05_0.008_70)] text-[oklch(0.92_0.01_240)] focus:border-[oklch(0.70_0.14_75)] focus:shadow-[0_0_15px_oklch(0.65_0.12_75_/_0.3)] transition-all duration-300"
                 />
                 {isSignUp && (
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-[oklch(0.58_0.02_240)]">
                     Minimum 6 characters
                   </p>
                 )}
@@ -322,10 +326,11 @@ export function Auth({ onAuthenticated, existingUsers }: AuthProps) {
                     id="remember-me" 
                     checked={rememberMe}
                     onCheckedChange={(checked) => setRememberMe(checked === true)}
+                    className="border-[oklch(0.70_0.14_75_/_0.5)] data-[state=checked]:bg-[oklch(0.70_0.14_75)] data-[state=checked]:border-[oklch(0.70_0.14_75)]"
                   />
                   <Label 
                     htmlFor="remember-me" 
-                    className="text-sm font-normal cursor-pointer text-muted-foreground hover:text-foreground transition-colors"
+                    className="text-sm font-normal cursor-pointer text-[oklch(0.58_0.02_240)] hover:text-[oklch(0.70_0.14_75)] transition-colors"
                   >
                     Keep me signed in
                   </Label>
@@ -334,7 +339,7 @@ export function Auth({ onAuthenticated, existingUsers }: AuthProps) {
 
               <Button 
                 type="submit" 
-                className="w-full" 
+                className="w-full bg-[oklch(0.70_0.14_75)] hover:bg-[oklch(0.75_0.16_75)] text-[oklch(0.05_0.008_70)] font-bold shadow-[0_0_30px_oklch(0.65_0.12_75_/_0.4)] hover:shadow-[0_0_40px_oklch(0.65_0.12_75_/_0.6)] transition-all duration-300 border-2 border-[oklch(0.70_0.14_75)]" 
                 size="lg"
                 disabled={isLoading}
               >
@@ -348,16 +353,16 @@ export function Auth({ onAuthenticated, existingUsers }: AuthProps) {
                 )}
               </Button>
 
-              <div className="text-center pt-4 border-t border-border">
+              <div className="text-center pt-4 border-t border-[oklch(0.28_0.02_240)]">
                 <button
                   type="button"
                   onClick={() => setIsSignUp(!isSignUp)}
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-sm text-[oklch(0.58_0.02_240)] hover:text-[oklch(0.70_0.14_75)] transition-colors"
                 >
                   {isSignUp ? (
-                    <>Already have an account? <span className="text-primary font-semibold">Sign In</span></>
+                    <>Already have an account? <span className="text-[oklch(0.70_0.14_75)] font-semibold">Sign In</span></>
                   ) : (
-                    <>Don't have an account? <span className="text-primary font-semibold">Sign Up</span></>
+                    <>Don't have an account? <span className="text-[oklch(0.70_0.14_75)] font-semibold">Sign Up</span></>
                   )}
                 </button>
               </div>
