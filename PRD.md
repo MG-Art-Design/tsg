@@ -222,6 +222,21 @@ Typography should feel sophisticated, classical, and authoritative—like the vo
 
 Animations should feel electric and responsive—quick snaps for interactions, smooth flows for transitions, and celebratory flourishes for wins. Think arcade game feedback mixed with premium app polish: buttons pulse on hover, numbers count up dramatically when gains appear, cards slide in with subtle parallax, and winning positions get a brief neon glow. Avoid sluggishness—everything should feel instantaneous and energetic, matching the pace of market movements.
 
+### Haptic Hover Effects (Desktop)
+All clickable elements feature sophisticated hover interactions that create a forward-pulling, haptic-feeling experience designed to encourage engagement and build user confidence:
+
+- **Universal Button Behavior**: Scale up (1.02x), font-weight increase to 600, subtle glow effect with blue-gold shadow, brightness increase, and spring back on press (0.98x scale)
+- **Navigation Tabs**: Vertical lift (-2px), 1.03x scale, enhanced gold shadow effect mimicking the insider trading aesthetic
+- **Icon Buttons**: 1.15x scale with 5° rotation, enhanced brightness with drop-shadow, rotate back (2°) on press
+- **Text Links**: Font-weight increase to 600, subtle horizontal shift (2px), animated underline growing from left, slight letter-spacing increase, and blue glow
+- **Dropdown/Select Items**: Font-weight increase to semibold, subtle horizontal shift (0.5px right)
+- **Dialog/Sheet Close Buttons**: Icon rotation (90°) on hover combined with 1.1x scale for playful dismissal feedback
+- **Card Links** (when applicable): Vertical lift (-4px), 1.01x scale, enhanced box-shadow with layered blue glow
+- **Timing**: All transitions use `cubic-bezier(0.4, 0, 0.2, 1)` easing at 0.2-0.3s for smooth, responsive feel
+- **Accessibility**: Effects only apply on desktop with fine pointer input (`@media (hover: hover) and (pointer: fine)`); touch devices get simpler interactions
+
+These hover effects create a consistent language of "pull-forward" interaction across the entire app, making every clickable element feel inviting and tactile, reducing hesitation and increasing engagement confidence.
+
 ## Component Selection
 
 - **Components**: 

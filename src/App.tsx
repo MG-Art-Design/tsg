@@ -448,7 +448,7 @@ function App() {
                 onClick={handleLogout}
                 variant="ghost"
                 size="sm"
-                className="text-muted-foreground hover:text-foreground"
+                className="text-muted-foreground hover:text-foreground icon-button"
               >
                 <SignOut size={18} weight="bold" />
               </Button>
