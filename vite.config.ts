@@ -17,6 +17,7 @@ export default defineConfig({
     createIconImportProxy() as PluginOption,
     sparkPlugin() as PluginOption,
   ],
+  base: process.env.GITHUB_PAGES === 'true' ? '/tsg/' : '/',
   resolve: {
     alias: {
       '@': resolve(projectRoot, 'src')
