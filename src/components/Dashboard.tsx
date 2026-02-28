@@ -261,7 +261,7 @@ export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick }
 
       <StrategicInsightsEnhanced trades={insiderTrades} userTier={userTier} onUpgradeClick={onUpgradeClick} />
 
-      {portfolio && portfolio.positions.length > 0 && (
+      {portfolio?.positions.length > 0 && (
         <Card className="border-2 border-[oklch(0.70_0.14_75)]">
           <CardHeader>
             <CardTitle className="text-base sm:text-lg">Your Top Holdings</CardTitle>
