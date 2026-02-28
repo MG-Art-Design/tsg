@@ -1,7 +1,93 @@
 # Enhanced Premium Features: "Stonk: Omg It's In"
 
 ## Overview
-The insider trading intelligence system has been significantly enhanced with 2x research depth and a sophisticated two-part vetting system that provides deep strategic analysis for premium subscribers.
+The insider trading intelligence system has been significantly enhanced with 2x research depth, a sophisticated two-part vetting system, and now includes **real trading account integration with daily position recommendations**.
+
+## Latest Addition: Trading Account Integration & Daily Recommendations
+
+### Trading Account Linking (Premium Feature)
+Premium users can now link their real brokerage accounts to:
+- **Import live positions** from Robinhood, SoFi, Webull, E*TRADE, Fidelity, TD Ameritrade, and other platforms
+- **Auto-sync portfolio data** including stock prices, position sizes, and total portfolio value
+- **Track real performance** alongside virtual TSG competitions
+- **Store options history** (sheltered until full options functionality is built)
+
+#### Supported Platforms
+- 🏹 Robinhood
+- 🏦 SoFi  
+- 🐂 Webull
+- 📊 E*TRADE
+- 💼 Fidelity
+- 🎯 TD Ameritrade
+- 🔗 Other platforms (custom integration)
+
+#### Security Features
+- Read-only API access (credentials never stored)
+- Secure OAuth authentication flow
+- On-device encryption for sensitive data
+- Manual unlinking available anytime
+
+#### Data Imported
+- **Stock positions**: Symbol, quantity, average cost, current price, P&L
+- **Crypto holdings**: Real-time crypto positions and valuations
+- **Portfolio totals**: Current value, total return, return percentage
+- **Options history**: Complete options trade history (stored securely for future feature)
+
+### "Stink: OMG It's In" - Daily Position Recommendations
+
+Premium users with linked accounts receive personalized daily recommendations based on:
+
+#### AI Analysis Components
+1. **Portfolio Context**: Your current positions and performance
+2. **Insider Activity**: Real-time analysis of 35+ insider trades  
+3. **Pattern Recognition**: Coordinated moves by key players
+4. **Future Gains Potential**: Extrapolated from insider positioning
+
+#### Daily Recommendation Structure
+Each daily report includes:
+
+**3-5 Position Changes** with:
+- **Action**: BUY, SELL, or HOLD
+- **Allocation**: Specific percentage (for buys)
+- **Reasoning**: Detailed explanation tied to specific insider moves
+- **Confidence**: 60-95% confidence score with visual indicator
+- **Expected Return**: Projected gain/loss range (e.g., "+15-25%")
+- **Time Horizon**: 1-week, 2-week, 1-month, or 3-month outlook
+
+**Market Summary**: Bold 2-3 sentence take on overall market from insider lens
+
+**Insider Activity Highlights**: What insiders are doing RIGHT NOW - the key moves to watch
+
+**Risk Assessment**: What could derail these plays (honest, practical warnings)
+
+#### Generation Flow
+1. User clicks "Generate Today" button
+2. AI analyzes: 
+   - User's imported portfolio positions
+   - 15 most recent insider trades
+   - Buy/sell patterns across Congress, Trump family, White House
+3. Stink generates sassy but smart recommendations
+4. Results cached for 24 hours (one generation per day)
+
+#### Example Recommendation Output
+```
+NVDA (NVIDIA Corp) - BUY
+Allocation: 15%
+Action: buy
+Type: stock
+
+Reasoning: "Three Congress members just loaded up on NVDA in the past 
+week, including a $500K buy from someone on the tech oversight committee. 
+This isn't random - chip demand is about to explode and they know it. 
+Trump Jr. also quietly added to his position. When both sides of the 
+aisle agree, pay attention."
+
+Confidence: 87%
+Expected Return: +20-30%
+Time Horizon: 1-month
+```
+
+## Original Enhancement: Two-Part Vetting System
 
 ## Key Enhancements
 

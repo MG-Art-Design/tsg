@@ -402,6 +402,70 @@ export interface UserBettingStats {
   history: BettingHistoryEntry[]
 }
 
+export interface LinkedTradingAccount {
+  id: string
+  platform: 'robinhood' | 'sofi' | 'webull' | 'etrade' | 'fidelity' | 'tdameritrade' | 'other'
+  accountName: string
+  linkedAt: number
+  lastSyncedAt?: number
+  isActive: boolean
+  currentValue?: number
+  totalReturn?: number
+  totalReturnPercent?: number
+}
+
+export interface ImportedPosition {
+  symbol: string
+  name: string
+  type: 'stock' | 'crypto' | 'option'
+  quantity: number
+  averageCost: number
+  currentPrice: number
+  marketValue: number
+  totalReturn: number
+  totalReturnPercent: number
+  importedFrom: string
+  lastUpdated: number
+}
+
+export interface OptionsHistory {
+  id: string
+  symbol: string
+  type: 'call' | 'put'
+  strikePrice: number
+  expirationDate: number
+  action: 'buy' | 'sell'
+  contracts: number
+  premium: number
+  totalCost: number
+  status: 'open' | 'closed' | 'expired' | 'exercised'
+  openedAt: number
+  closedAt?: number
+  profit?: number
+  profitPercent?: number
+  importedFrom: string
+}
+
+export interface DailyInsiderRecommendation {
+  id: string
+  date: number
+  positions: {
+    symbol: string
+    name: string
+    type: 'stock' | 'crypto'
+    action: 'buy' | 'sell' | 'hold'
+    allocation: number
+    reasoning: string
+    confidence: number
+    expectedReturn: string
+    timeHorizon: '1-week' | '2-week' | '1-month' | '3-month'
+  }[]
+  marketSummary: string
+  insiderActivity: string
+  riskAssessment: string
+  generatedAt: number
+}
+
 export interface UserProfile {
   id: string
   email: string
@@ -421,4 +485,7 @@ export interface UserProfile {
   sharingPreferences?: SharingPreferences
   paymentAccounts?: PaymentAccount[]
   bettingHistory?: BettingHistoryEntry[]
+  linkedAccounts?: LinkedTradingAccount[]
+  importedPositions?: ImportedPosition[]
+  optionsHistory?: OptionsHistory[]
 }

@@ -23,6 +23,7 @@ import { PaymentAccountManager } from '@/components/PaymentAccountManager'
 import { BettingPayoutNotifier } from '@/components/BettingPayoutNotifier'
 import { BettingHistoryAnalytics } from '@/components/BettingHistoryAnalytics'
 import { BiometricSettings } from '@/components/BiometricSettings'
+import { TradingAccountLinker } from '@/components/TradingAccountLinker'
 import { Logo } from '@/components/Logo'
 import { Button } from '@/components/ui/button'
 import { UserProfile, Portfolio, Asset, PortfolioPosition, LeaderboardEntry, Insight, Group } from '@/lib/types'
@@ -519,6 +520,8 @@ function App() {
           <TabsContent value="profile">
             <div className="max-w-2xl mx-auto space-y-6">
               <ProfileCustomization profile={profile} onUpdate={handleUserUpdate} />
+
+              <TradingAccountLinker profile={profile} onUpdate={handleUserUpdate} />
 
               <BiometricSettings profile={profile} />
 

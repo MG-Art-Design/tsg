@@ -1,11 +1,18 @@
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Lightning, TrendUp, ChartLine, Warning, Trophy } from '@phosphor-icons/react'
-import { Insight } from '@/lib/types'
+import { Insight, UserProfile, InsiderTrade } from '@/lib/types'
 import { motion } from 'framer-motion'
+import { InsiderTrades } from '@/components/InsiderTrades'
+import { StrategicInsightsEnhanced } from '@/components/StrategicInsightsEnhanced'
+import { DailyInsiderRecommendations } from '@/components/DailyInsiderRecommendations'
+import { generateMockInsiderTrades } from '@/lib/insiderHelpers'
 
 interface InsightsProps {
   insights: Insight[]
+  userProfile: UserProfile
+  onUpgradeClick: () => void
 }
 
 const categoryConfig = {
@@ -39,8 +46,14 @@ const categoryConfig = {
   }
 }
 
-export function Insights({ insights }: InsightsProps) {
+export function Insights({ insights, userProfile, onUpgradeClick }: InsightsProps) {
+  const [insiderTrades, setInsiderTrades] = useState<InsiderTrade[]>([])
   const sortedInsights = [...insights].sort((a, b) => b.timestamp - a.timestamp)
+
+  useEffect(() => {
+    const trades = generateMockInsiderTrades()
+    setInsiderTrades(trades)
+  }, [])
 
   const formatTime = (timestamp: number) => {
     const now = Date.now()
@@ -56,7 +69,7 @@ export function Insights({ insights }: InsightsProps) {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <Card className="border-2 border-[oklch(0.70_0.14_75)]">
         <CardHeader>
           <CardTitle className="text-xl sm:text-2xl flex items-center gap-2">
@@ -68,6 +81,24 @@ export function Insights({ insights }: InsightsProps) {
           </p>
         </CardHeader>
       </Card>
+
+      <DailyInsiderRecommendations 
+        profile={userProfile}
+        insiderTrades={insiderTrades}
+        onUpgradeClick={onUpgradeClick}
+      />
+
+      <InsiderTrades 
+        trades={insiderTrades}
+        userTier={userProfile.subscription.tier}
+        onUpgradeClick={onUpgradeClick}
+      />
+
+      <StrategicInsightsEnhanced 
+        trades={insiderTrades}
+        userTier={userProfile.subscription.tier}
+        onUpgradeClick={onUpgradeClick}
+      />
 
       {sortedInsights.length === 0 ? (
         <Card className="border-2 border-[oklch(0.70_0.14_75)]">
