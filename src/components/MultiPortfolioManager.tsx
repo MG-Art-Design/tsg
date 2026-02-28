@@ -136,7 +136,7 @@ export function MultiPortfolioManager({
           <p className="text-sm text-muted-foreground mt-1">
             {isPremium ? (
               <span className="flex items-center gap-1">
-                <Crown className="w-4 h-4 text-[oklch(0.70_0.14_75)]" weight="fill" />
+                <Crown className="w-4 h-4 text-[oklch(0.70_0.14_75)] inline-block relative" weight="fill" style={{ filter: 'drop-shadow(0 0 4px oklch(0.70 0.14 75 / 0.5))' }} />
                 Premium: Unlimited portfolios
               </span>
             ) : (
@@ -157,10 +157,10 @@ export function MultiPortfolioManager({
       </div>
 
       {!isPremium && !canCreateMore && (
-        <Card className="border-2 border-[oklch(0.70_0.14_75)] bg-gradient-to-br from-[oklch(0.08_0.006_70)] to-[oklch(0.05_0.008_70)]">
+        <Card className="border-2 border-[oklch(0.70_0.14_75)] bg-gradient-to-br from-[oklch(0.08_0.006_70)] to-[oklch(0.05_0.008_70)] premium-border-shimmer premium-glow">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-[oklch(0.70_0.14_75)]">
-              <Crown weight="fill" />
+              <Crown weight="fill" className="gold-shimmer-fast" />
               Upgrade to Premium for Unlimited Portfolios
             </CardTitle>
             <CardDescription>
@@ -168,7 +168,7 @@ export function MultiPortfolioManager({
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button onClick={onUpgradeClick} className="w-full">
+            <Button onClick={onUpgradeClick} className="w-full gold-shimmer">
               <Lightning weight="fill" className="mr-2" />
               Upgrade Now
             </Button>

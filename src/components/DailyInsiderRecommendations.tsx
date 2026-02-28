@@ -159,7 +159,7 @@ Return ONLY valid JSON:
         </div>
         <CardHeader className="relative z-10 pb-4 border-b border-[oklch(0.65_0.12_75_/_0.2)]">
           <div className="flex items-start gap-3">
-            <div className="p-2 rounded-lg bg-[oklch(0.65_0.12_75_/_0.2)] border border-[oklch(0.65_0.12_75_/_0.5)]">
+            <div className="p-2 rounded-lg bg-[oklch(0.65_0.12_75_/_0.2)] border border-[oklch(0.65_0.12_75_/_0.5)] gold-shimmer-fast">
               <Lightning size={20} weight="fill" className="text-[oklch(0.70_0.14_75)]" />
             </div>
             <div className="flex-1">
@@ -167,7 +167,7 @@ Return ONLY valid JSON:
                 <CardTitle className="text-lg font-playfair text-[oklch(0.70_0.14_75)]">
                   Stink: OMG It's In
                 </CardTitle>
-                <Badge className="bg-gradient-to-r from-[oklch(0.65_0.12_75)] to-[oklch(0.70_0.14_75)] text-[oklch(0.15_0.01_240)] border-0">
+                <Badge className="bg-gradient-to-r from-[oklch(0.65_0.12_75)] to-[oklch(0.70_0.14_75)] text-[oklch(0.15_0.01_240)] border-0 gold-shimmer">
                   <Sparkle size={12} weight="fill" className="mr-1" />
                   Premium
                 </Badge>
@@ -181,7 +181,7 @@ Return ONLY valid JSON:
         <CardContent className="relative z-10 pt-6">
           <div className="text-center py-8 space-y-4">
             <div className="flex justify-center">
-              <div className="p-4 rounded-full bg-[oklch(0.65_0.12_75_/_0.15)] border-2 border-[oklch(0.65_0.12_75_/_0.5)]">
+              <div className="p-4 rounded-full bg-[oklch(0.65_0.12_75_/_0.15)] border-2 border-[oklch(0.65_0.12_75_/_0.5)] gold-shimmer-fast">
                 <LockKey size={32} weight="fill" className="text-[oklch(0.70_0.14_75)]" />
               </div>
             </div>
@@ -196,7 +196,7 @@ Return ONLY valid JSON:
             {onUpgradeClick && (
               <Button
                 onClick={onUpgradeClick}
-                className="bg-gradient-to-r from-[oklch(0.65_0.12_75)] to-[oklch(0.70_0.14_75)] text-[oklch(0.15_0.01_240)] border border-[oklch(0.70_0.14_75)]"
+                className="bg-gradient-to-r from-[oklch(0.65_0.12_75)] to-[oklch(0.70_0.14_75)] text-[oklch(0.15_0.01_240)] border border-[oklch(0.70_0.14_75)] gold-shimmer"
               >
                 <Sparkle size={16} weight="fill" className="mr-2" />
                 Upgrade to Premium
@@ -245,11 +245,11 @@ Return ONLY valid JSON:
   const isToday = dailyRecs && new Date(dailyRecs.date).toDateString() === today
 
   return (
-    <Card className="border-2 border-[oklch(0.65_0.12_75_/_0.3)] bg-gradient-to-br from-[oklch(0.08_0.005_60)] to-[oklch(0.05_0.008_70)]">
+    <Card className="border-2 border-[oklch(0.65_0.12_75_/_0.3)] bg-gradient-to-br from-[oklch(0.08_0.005_60)] to-[oklch(0.05_0.008_70)] premium-glow">
       <CardHeader className="pb-4 border-b border-[oklch(0.65_0.12_75_/_0.2)]">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-start gap-3">
-            <div className="p-2 rounded-lg bg-[oklch(0.65_0.12_75_/_0.2)] border border-[oklch(0.65_0.12_75_/_0.5)]">
+            <div className="p-2 rounded-lg bg-[oklch(0.65_0.12_75_/_0.2)] border border-[oklch(0.65_0.12_75_/_0.5)] gold-shimmer-slow">
               <Lightning size={20} weight="fill" className="text-[oklch(0.70_0.14_75)]" />
             </div>
             <div>

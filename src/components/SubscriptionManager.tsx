@@ -214,7 +214,7 @@ export function SubscriptionManager({ profile, onUpdate }: SubscriptionManagerPr
                 </ul>
               </div>
 
-              <div className="space-y-3 p-4 border-2 border-[var(--insider-gold)]/40 rounded-lg bg-gradient-to-br from-[var(--insider-bg)] to-card relative overflow-hidden">
+              <div className="space-y-3 p-4 border-2 border-[var(--insider-gold)]/40 rounded-lg bg-gradient-to-br from-[var(--insider-bg)] to-card relative overflow-hidden gold-shimmer premium-glow">
                 <div className="absolute top-2 right-2">
                   <Crown size={20} weight="fill" className="text-[var(--insider-gold)]" />
                 </div>

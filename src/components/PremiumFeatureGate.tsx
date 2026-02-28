@@ -24,11 +24,11 @@ export function PremiumFeatureGate({
   }
 
   return (
-    <Card className="border-2 border-[var(--insider-gold)]/20 relative overflow-hidden">
+    <Card className="border-2 border-[var(--insider-gold)]/20 relative overflow-hidden premium-border-shimmer">
       <div className="absolute inset-0 bg-gradient-to-br from-[var(--insider-bg)]/60 to-transparent backdrop-blur-sm z-10 flex items-center justify-center">
         <div className="text-center p-6 space-y-4">
           <div className="flex justify-center">
-            <div className="p-4 bg-[var(--insider-bg)] rounded-full border-2 border-[var(--insider-gold)]">
+            <div className="p-4 bg-[var(--insider-bg)] rounded-full border-2 border-[var(--insider-gold)] gold-shimmer-fast">
               <Crown size={32} weight="fill" className="text-[var(--insider-gold)]" />
             </div>
           </div>
@@ -41,7 +41,7 @@ export function PremiumFeatureGate({
           <Button
             onClick={onUpgradeClick}
             size="lg"
-            className="bg-[var(--insider-gold)] text-[var(--insider-bg)] hover:bg-[var(--insider-gold-glow)] font-semibold shadow-lg"
+            className="bg-[var(--insider-gold)] text-[var(--insider-bg)] hover:bg-[var(--insider-gold-glow)] font-semibold shadow-lg gold-shimmer-slow"
           >
             <Crown size={20} weight="fill" className="mr-2" />
             Upgrade to Access
@@ -66,7 +66,7 @@ export function InlineFeatureGate({ userTier, onUpgradeClick }: InlineFeatureGat
   }
 
   return (
-    <div className="flex items-center justify-between p-4 bg-[var(--insider-bg)] border-2 border-[var(--insider-gold)]/30 rounded-lg">
+    <div className="flex items-center justify-between p-4 bg-[var(--insider-bg)] border-2 border-[var(--insider-gold)]/30 rounded-lg gold-shimmer-slow">
       <div className="flex items-center gap-3">
         <Lock size={24} className="text-[var(--insider-gold)]" weight="fill" />
         <div>
@@ -77,7 +77,7 @@ export function InlineFeatureGate({ userTier, onUpgradeClick }: InlineFeatureGat
       <Button
         onClick={onUpgradeClick}
         size="sm"
-        className="bg-[var(--insider-gold)] text-[var(--insider-bg)] hover:bg-[var(--insider-gold-glow)]"
+        className="bg-[var(--insider-gold)] text-[var(--insider-bg)] hover:bg-[var(--insider-gold-glow)] gold-shimmer-fast"
       >
         <Crown size={16} weight="fill" className="mr-1" />
         Upgrade
