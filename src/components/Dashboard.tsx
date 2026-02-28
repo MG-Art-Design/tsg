@@ -132,14 +132,12 @@ export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick }
 
   return (
     <div className="space-y-6">
-      {portfolio && (
-        <AnimatedPortfolioCounter
-          currentValue={portfolio.currentValue}
-          previousValue={previousValueRef.current}
-          totalReturn={portfolio.totalReturn}
-          totalReturnPercent={portfolio.totalReturnPercent}
-        />
-      )}
+      <AnimatedPortfolioCounter
+        currentValue={portfolio.currentValue}
+        previousValue={previousValueRef.current}
+        totalReturn={portfolio.totalReturn}
+        totalReturnPercent={portfolio.totalReturnPercent}
+      />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <motion.div
