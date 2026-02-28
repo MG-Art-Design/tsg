@@ -46,7 +46,7 @@ function App() {
   const [tempAuthData, setTempAuthData] = useState<Partial<UserProfile> | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
-  const activityTracker = profile ? useActivityTracker(profile.id) : null
+  const activityTracker = useActivityTracker(profile?.id || '')
 
   useEffect(() => {
     const initAuth = async () => {
@@ -182,7 +182,7 @@ function App() {
         lastUpdated: Date.now()
       } : null)
 
-      if (activityTracker && portfolio) {
+      if (activityTracker && portfolio && profile) {
         activityTracker.updateQuarterSummary(
           portfolio.quarter,
           currentValue,
@@ -298,7 +298,7 @@ function App() {
       [profile!.id]: newPortfolio
     }))
 
-    if (activityTracker) {
+    if (activityTracker && profile) {
       activityTracker.recordEvent({
         type: isNewPortfolio ? 'portfolio_created' : 'portfolio_updated',
         quarter: currentQuarter,
