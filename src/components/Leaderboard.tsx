@@ -1,4 +1,3 @@
-  entries: LeaderboardEntry[]
   currentUserId: string
   currentUser: UserProfile
   onAddFriendsClick: () => void
