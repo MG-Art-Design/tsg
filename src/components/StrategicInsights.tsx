@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Brain, Sparkle, TrendUp, TrendDown, Warning, Target, Lightbulb, ChartLineUp, CheckCircle, ShieldCheck, Crown } from '@phosphor-icons/react'
+import { Brain, Sparkle, TrendUp, Warning, Target, Lightbulb } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 
 interface GeneratedInsight {
