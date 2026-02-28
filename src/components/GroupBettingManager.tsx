@@ -22,7 +22,7 @@ interface GroupBettingManagerProps {
 }
 
 export function GroupBettingManager({ group, currentUser, isAdmin, onGroupUpdate }: GroupBettingManagerProps) {
-  const [allUsers] = useKV<Record<string, UserProfile>>('all-users', {})
+  useKV<Record<string, UserProfile>>('all-users', {})
   const [payoutNotifications, setPayoutNotifications] = useKV<PayoutNotification[]>('payout-notifications', [])
   
   const [settingsDialogOpen, setSettingsDialogOpen] = useState(false)

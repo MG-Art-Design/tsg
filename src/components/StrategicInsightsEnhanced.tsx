@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { InsiderTrade, SubscriptionTier } from '@/lib/types'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Brain, Sparkle, TrendUp, TrendDown, Warning, Target, Lightbulb, ChartLineUp, CheckCircle, ShieldCheck, Crown } from '@phosphor-icons/react'
+import { Brain, Sparkle, TrendUp, TrendDown, Warning, Target, ChartLineUp, CheckCircle, ShieldCheck, Crown } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { generateVettedInsight, VettedInsight } from '@/lib/insiderHelpers'
 
