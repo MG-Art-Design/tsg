@@ -21,6 +21,7 @@ import { NotificationCenter } from '@/components/NotificationCenter'
 import { NotificationPreferences } from '@/components/NotificationPreferences'
 import { ActivityHistoryManager } from '@/components/ActivityHistoryManager'
 import { PaymentAccountManager } from '@/components/PaymentAccountManager'
+import { DataRetentionSettings } from '@/components/DataRetentionSettings'
 import { BettingPayoutNotifier } from '@/components/BettingPayoutNotifier'
 import { BettingHistoryAnalytics } from '@/components/BettingHistoryAnalytics'
 import { BiometricSettings } from '@/components/BiometricSettings'
@@ -788,6 +789,8 @@ function App() {
                 onUpdate={handleUserUpdate}
                 userGroups={Object.values(allGroups || {}).filter(g => g.memberIds.includes(profile.id))}
               />
+
+              <DataRetentionSettings profile={profile} onUpdate={handleUserUpdate} />
 
               <PaymentAccountManager profile={profile} onUpdate={handleUserUpdate} />
 

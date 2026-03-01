@@ -362,6 +362,14 @@ export interface SharingPreferences {
   sharePerformanceMetrics: boolean
 }
 
+export interface DataRetentionSettings {
+  keepPortfolioHistoryIndefinitely: boolean
+  consentGiven: boolean
+  consentGivenAt?: number
+  allowAutomaticDeletion: boolean
+  retentionPeriodDays?: number
+}
+
 export interface PaymentAccount {
   type: 'venmo' | 'zelle'
   qrCodeDataUrl?: string
@@ -489,6 +497,7 @@ export interface UserProfile {
   relationshipStatuses: Record<string, RelationshipStatus>
   notificationPreferences: NotificationPreferences
   sharingPreferences?: SharingPreferences
+  dataRetentionSettings?: DataRetentionSettings
   paymentAccounts?: PaymentAccount[]
   bettingHistory?: BettingHistoryEntry[]
   linkedAccounts?: LinkedTradingAccount[]
