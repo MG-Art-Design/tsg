@@ -714,23 +714,12 @@ function App() {
             <MultiPortfolioManager
               portfolios={userPortfolios || []}
               userProfile={profile}
-              <FriendsManager profile={profile} onUpdate={handleUserUpdate} />
-
-              <RelationshipManager 
-                profile={profile} 
-                friends={friends}
-                onUpdate={handleUserUpdate}
-                onUpdateFriend={handleFriendUpdate}
-              }}
+              onSelectPortfolio={handleSelectPortfolio}
+              onDeletePortfolio={handleDeletePortfolio}
+              onRenamePortfolio={handleRenamePortfolio}
               onUpgradeClick={handleUpgradeClick}
-              <ActivityHistoryManager
-                currentUser={profile}
-                onUpdate={handleUserUpdate}
-                userGroups={Object.values(allGroups || {}).filter(g => g.memberIds.includes(profile.id))}
-              />
-
               marketData={marketData}
-              onSave={handlePortfolioSave}
+              onCreatePortfolio={handlePortfolioSave}
             />
           </TabsContent>
 
