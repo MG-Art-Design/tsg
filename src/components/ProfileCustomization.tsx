@@ -280,10 +280,3 @@ export function ProfileCustomization({ profile, onUpdate }: ProfileCustomization
     </Card>
   )
 }
-            </Button>
-          </DialogContent>
-        </Dialog>
-      </CardContent>
-    </Card>
-  )
-}
