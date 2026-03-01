@@ -714,21 +714,21 @@ function App() {
             <MultiPortfolioManager
               portfolios={userPortfolios || []}
               userProfile={profile}
-              marketData={marketData}
-              onCreatePortfolio={handlePortfolioSave}
-              onDeletePortfolio={handleDeletePortfolio}
-              onRenamePortfolio={handleRenamePortfolio}
-              onSelectPortfolio={(portfolioId) => {
-                handleSelectPortfolio(portfolioId)
-                setActiveTab('portfolio')
+              <FriendsManager profile={profile} onUpdate={handleUserUpdate} />
+
+              <RelationshipManager 
+                profile={profile} 
+                friends={friends}
+                onUpdate={handleUserUpdate}
+                onUpdateFriend={handleFriendUpdate}
               }}
               onUpgradeClick={handleUpgradeClick}
-            />
-          </TabsContent>
+              <ActivityHistoryManager
+                currentUser={profile}
+                onUpdate={handleUserUpdate}
+                userGroups={Object.values(allGroups || {}).filter(g => g.memberIds.includes(profile.id))}
+              />
 
-          <TabsContent value="portfolio">
-            <PortfolioManager
-              currentPortfolio={portfolio ?? null}
               marketData={marketData}
               onSave={handlePortfolioSave}
             />
