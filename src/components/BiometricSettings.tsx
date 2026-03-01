@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
+import { Switch } from '@/components/ui/switch'
 import { UserProfile } from '@/lib/types'
 import { toast } from 'sonner'
 import { Fingerprint, FingerprintSimple, Check, Warning } from '@phosphor-icons/react'

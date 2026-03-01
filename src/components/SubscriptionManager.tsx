@@ -29,6 +29,7 @@ export function SubscriptionManager({ profile, onUpdate }: SubscriptionManagerPr
   const [processing, setProcessing] = useState(false)
 
   const daysRemaining = profile.subscription.endDate ? getSubscriptionDaysRemaining(profile.subscription.endDate) : 0
+  const isActive = profile.subscription.tier === 'premium' && (!profile.subscription.endDate || profile.subscription.endDate > Date.now())
 
   const handleUpgrade = () => {
     setProcessing(true)

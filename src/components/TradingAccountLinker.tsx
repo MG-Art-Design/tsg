@@ -11,6 +11,7 @@ import { formatCurrency, formatPercent } from '@/lib/helpers'
 import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'sonner'
 import { HapticFeedback } from '@/lib/haptics'
+import { Link, Sparkle, LockKey, CheckCircle, Bank, ArrowsClockwise, LinkBreak, Lightning, Plus, TrendUp, TrendDown } from '@phosphor-icons/react'
 
 interface TradingAccountLinkerProps {
   profile: UserProfile
