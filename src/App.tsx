@@ -29,6 +29,7 @@ import { TradingAccountLinker } from '@/components/TradingAccountLinker'
 import { Logo } from '@/components/Logo'
 import { ScrollToTop } from '@/components/ScrollToTop'
 import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { UserProfile, Portfolio, Asset, PortfolioPosition, LeaderboardEntry, Insight, Group } from '@/lib/types'
 import { 
   generateMockMarketData, 
@@ -38,7 +39,8 @@ import {
 } from '@/lib/helpers'
 import { HapticFeedback } from '@/lib/haptics'
 import { useActivityTracker } from '@/hooks/use-activity-tracker'
-import { ChartLine, Lightning, Trophy, Notebook, User, Users, SignOut, ArrowsLeftRight, FolderOpen } from '@phosphor-icons/react'
+import { isAdminSession, clearAdminSession } from '@/lib/admin'
+import { ChartLine, Lightning, Trophy, Notebook, User, Users, SignOut, ArrowsLeftRight, FolderOpen, ShieldCheck } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 
 function App() {
@@ -57,8 +59,13 @@ function App() {
   const [needsOnboarding, setNeedsOnboarding] = useState(false)
   const [tempAuthData, setTempAuthData] = useState<Partial<UserProfile> | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [adminMode, setAdminMode] = useState(false)
 
   const activityTracker = useActivityTracker(profile?.id || '')
+
+  useEffect(() => {
+    setAdminMode(isAdminSession())
+  }, [isAuthenticated])
 
   useEffect(() => {
     const migrateOldPortfolio = () => {
@@ -283,6 +290,78 @@ function App() {
       setCurrentUserId(authenticatedProfile.id)
       setIsAuthenticated(true)
       setNeedsOnboarding(false)
+      
+      if (isAdminSession()) {
+        setAdminMode(true)
+        const demoPositions: PortfolioPosition[] = [
+          {
+            symbol: 'AAPL',
+            name: 'Apple Inc.',
+            type: 'stock',
+            allocation: 30,
+            entryPrice: 180.5,
+            currentPrice: 185.2,
+            shares: 166.2,
+            value: 30798,
+            returnPercent: 2.6,
+            returnValue: 780
+          },
+          {
+            symbol: 'TSLA',
+            name: 'Tesla Inc.',
+            type: 'stock',
+            allocation: 25,
+            entryPrice: 242.8,
+            currentPrice: 251.3,
+            shares: 102.9,
+            value: 25854,
+            returnPercent: 3.5,
+            returnValue: 874
+          },
+          {
+            symbol: 'BTC',
+            name: 'Bitcoin',
+            type: 'crypto',
+            allocation: 25,
+            entryPrice: 62100,
+            currentPrice: 64500,
+            shares: 0.402,
+            value: 25950,
+            returnPercent: 3.9,
+            returnValue: 965
+          },
+          {
+            symbol: 'ETH',
+            name: 'Ethereum',
+            type: 'crypto',
+            allocation: 20,
+            entryPrice: 3420,
+            currentPrice: 3580,
+            shares: 5.85,
+            value: 20943,
+            returnPercent: 4.7,
+            returnValue: 936
+          }
+        ]
+        
+        const demoPortfolio: Portfolio = {
+          id: 'demo-portfolio',
+          userId: authenticatedProfile.id,
+          name: 'Q1 2024 Demo Portfolio',
+          quarter: getCurrentQuarter(),
+          positions: demoPositions,
+          initialValue: 100000,
+          currentValue: 103545,
+          totalReturn: 3545,
+          totalReturnPercent: 3.545,
+          lastUpdated: Date.now(),
+          createdAt: Date.now() - 30 * 24 * 60 * 60 * 1000
+        }
+        
+        setPortfolio(demoPortfolio)
+        setUserPortfolios([demoPortfolio])
+        setActivePortfolioId(demoPortfolio.id)
+      }
     }
   }
 
@@ -297,6 +376,15 @@ function App() {
   }
 
   const handleLogout = async () => {
+    if (adminMode) {
+      clearAdminSession()
+      setAdminMode(false)
+      setProfile(null)
+      setIsAuthenticated(false)
+      toast.info('Exited admin preview mode')
+      return
+    }
+
     await window.spark.kv.set('currentUserId', null)
     await window.spark.kv.delete('rememberMe')
     await window.spark.kv.delete('rememberedUserId')
@@ -314,6 +402,13 @@ function App() {
     portfolioName?: string,
     portfolioId?: string
   ) => {
+    if (adminMode) {
+      toast.info('Preview Mode', {
+        description: 'Changes are not saved in admin mode.'
+      })
+      return
+    }
+
     if (!positions || positions.length === 0) {
       toast.error('Cannot save empty portfolio', {
         description: 'Add at least one position before saving.'
@@ -422,6 +517,12 @@ function App() {
   }
 
   const handleUserUpdate = (updatedUser: UserProfile) => {
+    if (adminMode) {
+      toast.info('Preview Mode', {
+        description: 'Changes are not saved in admin mode.'
+      })
+      return
+    }
     setProfile(updatedUser)
     setAllUsers(current => ({
       ...(current || {}),
@@ -537,6 +638,15 @@ function App() {
 
   return (
     <div className="min-h-screen bg-background">
+      {adminMode && (
+        <Alert className="rounded-none border-x-0 border-t-0 border-b-2 border-[oklch(0.70_0.14_75)] bg-gradient-to-r from-[oklch(0.08_0.006_70)] to-[oklch(0.10_0.005_60)] shadow-[0_2px_20px_oklch(0.65_0.12_75_/_0.15)]">
+          <ShieldCheck size={20} weight="fill" className="text-[oklch(0.70_0.14_75)]" />
+          <AlertDescription className="text-[oklch(0.70_0.14_75)] font-semibold">
+            Admin Preview Mode - All changes are temporary and won't affect the actual application
+          </AlertDescription>
+        </Alert>
+      )}
+
       <header className="border-b-2 border-[oklch(0.70_0.14_75)] bg-gradient-to-r from-card to-[oklch(0.08_0.006_70)] backdrop-blur-sm sticky top-0 z-50 shadow-[0_2px_20px_oklch(0.65_0.12_75_/_0.15)]">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">

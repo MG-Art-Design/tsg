@@ -7,13 +7,14 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Logo } from '@/components/Logo'
 import { toast } from 'sonner'
 import { UserProfile } from '@/lib/types'
-import { Envelope, Key, ArrowRight, Fingerprint, FingerprintSimple } from '@phosphor-icons/react'
+import { Envelope, Key, ArrowRight, Fingerprint, FingerprintSimple, ShieldCheck } from '@phosphor-icons/react'
 import { 
   checkBiometricSupport, 
   authenticateWithBiometric, 
   getBiometricUsers,
   type BiometricSupport 
 } from '@/lib/biometric'
+import { validateAdminCredentials, setAdminSession } from '@/lib/admin'
 
 function generateSecureRandomString(length: number): string {
   // Generate a random base-36 string using a cryptographically secure RNG
@@ -137,6 +138,59 @@ export function Auth({ onAuthenticated, existingUsers }: AuthProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
+
+    if (validateAdminCredentials(email, password)) {
+      setAdminSession(true)
+      toast.success('Admin Mode Activated', {
+        description: 'You\'re in read-only preview mode with demo data.'
+      })
+      
+      const adminProfile: UserProfile = {
+        id: 'admin-demo-user',
+        email: 'admin@thestonkgame.com',
+        username: 'Admin Preview',
+        avatar: '👑',
+        friendCode: 'ADMIN-000',
+        friendIds: [],
+        relationshipStatuses: {},
+        subscription: {
+          tier: 'premium',
+          autoRenew: true,
+          startDate: Date.now(),
+          endDate: Date.now() + 365 * 24 * 60 * 60 * 1000
+        },
+        notificationPreferences: {
+          relationshipChanges: true,
+          friendPortfolioUpdates: true,
+          leaderboardChanges: true,
+          groupActivity: true,
+          groupGameInvites: true
+        },
+        sharingPreferences: {
+          shareWithFriends: true,
+          shareWithGroups: [],
+          shareActivityHistory: true,
+          shareGameSummaries: true,
+          sharePerformanceMetrics: true
+        },
+        bio: 'Admin Preview Mode',
+        insightFrequency: 'daily',
+        emailNotifications: {
+          enabled: true,
+          email: 'admin@thestonkgame.com',
+          frequency: 'daily',
+          includeLeaderboard: true,
+          includeMarketPerformance: true,
+          includeInsights: true
+        },
+        createdAt: Date.now(),
+        groupIds: []
+      }
+      
+      onAuthenticated(adminProfile)
+      setIsLoading(false)
+      return
+    }
 
     if (!validateEmail(email)) {
       toast.error('Invalid email address')
