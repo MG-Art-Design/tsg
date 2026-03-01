@@ -1,71 +1,27 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { UserProfile } from '@/lib/types'
-import { Camera, User, Palette } from '@phosphor-icons/react'
+import { User, ShareNetwork, ChatCircleText, Copy } from '@phosphor-icons/react'
 import { toast } from 'sonner'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion } from 'framer-motion'
 
 interface ProfileCustomizationProps {
   profile: UserProfile
   onUpdate: (updatedProfile: UserProfile) => void
 }
 
-const AVATAR_OPTIONS = ['🦁', '🐯', '🐻', '🦊', '🐺', '🦅', '🦈', '🐉', '🦖', '🦏', '🐘', '🦒', '🦌', '🐎', '🦓', '🦍', '🐆', '🐅', '🦘', '🦙', '🐪', '🦫', '🦦', '🦨']
-
-const COVER_PHOTO_GRADIENTS = [
-  'linear-gradient(135deg, oklch(0.45 0.15 240) 0%, oklch(0.30 0.12 280) 100%)',
-  'linear-gradient(135deg, oklch(0.50 0.18 30) 0%, oklch(0.35 0.15 350) 100%)',
-  'linear-gradient(135deg, oklch(0.42 0.14 140) 0%, oklch(0.28 0.12 180) 100%)',
-  'linear-gradient(135deg, oklch(0.48 0.16 75) 0%, oklch(0.32 0.14 45) 100%)',
-  'linear-gradient(135deg, oklch(0.40 0.13 300) 0%, oklch(0.25 0.10 260) 100%)',
-  'linear-gradient(135deg, oklch(0.55 0.12 190) 0%, oklch(0.38 0.10 210) 100%)',
-  'linear-gradient(135deg, oklch(0.22 0.05 240) 0%, oklch(0.12 0.02 260) 100%)',
-  'linear-gradient(135deg, oklch(0.35 0.08 15) 0%, oklch(0.18 0.04 340) 100%)',
-  'linear-gradient(135deg, oklch(0.65 0.20 50) 0%, oklch(0.45 0.16 80) 100%)',
-  'linear-gradient(135deg, oklch(0.38 0.11 160) 0%, oklch(0.22 0.08 200) 100%)',
-  'linear-gradient(135deg, oklch(0.70 0.14 75) 0%, oklch(0.15 0.01 240) 100%)',
-  'linear-gradient(135deg, oklch(0.28 0.06 280) 0%, oklch(0.15 0.03 240) 100%)',
-]
+const AVATAR_OPTIONS = ['🦁', '🐯', '🐻', '🦊', '🐺', '🦅', '🦈', '🐉', '🦖', '🦏', '🐘', '🦒', '🦌', '🐎', '🦓', '🦍', '🐆', '🐅', '🦘', '🦙', '🐪', '🦫', '🦦', '🦨', '🎯', '🎮', '🎲', '🎪', '🎨', '🎭', '🎸', '🎺', '🎻', '🎹', '🚀', '✈️', '🚁', '🛸', '⚡', '🔥', '💎', '👑', '🏆', '⭐', '🌟', '💫', '🌈', '🌊', '🌋', '🗻']
 
 export function ProfileCustomization({ profile, onUpdate }: ProfileCustomizationProps) {
   const [avatarDialogOpen, setAvatarDialogOpen] = useState(false)
-  const [coverDialogOpen, setCoverDialogOpen] = useState(false)
   const [bioDialogOpen, setBioDialogOpen] = useState(false)
+  const [shareDialogOpen, setShareDialogOpen] = useState(false)
   const [selectedAvatar, setSelectedAvatar] = useState(profile.avatar)
-  const [selectedCover, setSelectedCover] = useState(profile.coverPhoto || COVER_PHOTO_GRADIENTS[0])
   const [bioText, setBioText] = useState(profile.bio || '')
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
-  
-  const bannerRef = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll({
-    target: bannerRef,
-    offset: ["start start", "end start"]
-  })
-  
-  const y = useTransform(scrollYProgress, [0, 1], [0, 100])
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.2])
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0.3])
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (bannerRef.current) {
-        const rect = bannerRef.current.getBoundingClientRect()
-        const x = (e.clientX - rect.left) / rect.width
-        const y = (e.clientY - rect.top) / rect.height
-        setMousePosition({ x, y })
-      }
-    }
-
-    const banner = bannerRef.current
-    if (banner) {
-      banner.addEventListener('mousemove', handleMouseMove)
-      return () => banner.removeEventListener('mousemove', handleMouseMove)
-    }
-  }, [])
 
   const handleAvatarSave = () => {
     onUpdate({ ...profile, avatar: selectedAvatar })
@@ -73,16 +29,29 @@ export function ProfileCustomization({ profile, onUpdate }: ProfileCustomization
     toast.success('Avatar updated!')
   }
 
-  const handleCoverSave = () => {
-    onUpdate({ ...profile, coverPhoto: selectedCover })
-    setCoverDialogOpen(false)
-    toast.success('Cover photo updated!')
-  }
-
   const handleBioSave = () => {
     onUpdate({ ...profile, bio: bioText.trim() })
     setBioDialogOpen(false)
     toast.success('Bio updated!')
+  }
+
+  const shareViaMessaging = (platform: 'imessage' | 'signal') => {
+    const shareMessage = `Join me on TSG: The Stonk Game! Use my friend code: ${profile.friendCode}`
+    
+    if (platform === 'imessage') {
+      window.open(`sms:&body=${encodeURIComponent(shareMessage)}`, '_blank')
+      toast.success('Opening Messages app...')
+    } else if (platform === 'signal') {
+      navigator.clipboard.writeText(shareMessage)
+      window.open('https://signal.org/download/', '_blank')
+      toast.success('Message copied! Opening Signal...')
+    }
+    setShareDialogOpen(false)
+  }
+
+  const copyFriendCode = () => {
+    navigator.clipboard.writeText(profile.friendCode)
+    toast.success('Friend code copied to clipboard!')
   }
 
   return (
@@ -93,153 +62,51 @@ export function ProfileCustomization({ profile, onUpdate }: ProfileCustomization
           Profile Customization
         </CardTitle>
         <CardDescription>
-          Personalize your profile with custom avatar and cover photo
+          Personalize your profile with custom avatar and bio
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <motion.div 
-          ref={bannerRef}
-          className="relative w-full h-48 rounded-lg overflow-hidden cursor-pointer group"
-          onClick={() => setCoverDialogOpen(true)}
-          whileHover={{ scale: 1.02 }}
-          transition={{ duration: 0.3 }}
-        >
-          <motion.div
-            className="absolute inset-0"
-            style={{ 
-              background: profile.coverPhoto || COVER_PHOTO_GRADIENTS[0],
-              y,
-              scale
-            }}
-          />
-          
+        <div className="flex flex-col items-center gap-6">
           <motion.div 
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: `radial-gradient(circle at ${mousePosition.x * 100}% ${mousePosition.y * 100}%, oklch(0.75 0.15 75 / 0.15) 0%, transparent 50%)`
-            }}
-          />
-
-          <motion.div
-            className="absolute top-4 left-4 w-32 h-32 rounded-full"
-            style={{
-              background: 'radial-gradient(circle, oklch(0.70 0.14 75 / 0.2) 0%, transparent 70%)',
-              x: useTransform(scrollYProgress, [0, 1], [0, 50]),
-              y: useTransform(scrollYProgress, [0, 1], [0, 30]),
-            }}
-            animate={{
-              scale: [1, 1.2, 1],
-              opacity: [0.3, 0.6, 0.3]
-            }}
-            transition={{
-              duration: 4,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          />
-
-          <motion.div
-            className="absolute bottom-6 right-8 w-24 h-24 rounded-full"
-            style={{
-              background: 'radial-gradient(circle, oklch(0.65 0.12 75 / 0.25) 0%, transparent 70%)',
-              x: useTransform(scrollYProgress, [0, 1], [0, -30]),
-              y: useTransform(scrollYProgress, [0, 1], [0, 20]),
-            }}
-            animate={{
-              scale: [1, 1.3, 1],
-              opacity: [0.2, 0.5, 0.2]
-            }}
-            transition={{
-              duration: 5,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: 1
-            }}
-          />
-
-          <motion.div
-            className="absolute top-1/2 left-1/2 w-48 h-48 rounded-full blur-xl"
-            style={{
-              background: 'radial-gradient(circle, oklch(0.70 0.14 75 / 0.15) 0%, transparent 70%)',
-              x: useTransform(scrollYProgress, [0, 1], [-100, -50]),
-              y: useTransform(scrollYProgress, [0, 1], [-100, -50]),
-            }}
-            animate={{
-              rotate: [0, 360],
-              scale: [1, 1.5, 1]
-            }}
-            transition={{
-              duration: 8,
-              repeat: Infinity,
-              ease: "linear"
-            }}
-          />
-
-          <motion.div 
-            className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
-            style={{ opacity }}
-          >
-            <motion.div 
-              className="text-white text-center"
-              initial={{ y: 10, opacity: 0 }}
-              whileHover={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.2 }}
-            >
-              <Camera size={32} weight="bold" />
-              <p className="text-sm mt-2">Change Cover Photo</p>
-            </motion.div>
-          </motion.div>
-
-          <motion.div 
-            className="absolute -bottom-12 left-6"
-            whileHover={{ scale: 1.1 }}
+            className="relative w-48 h-48 aspect-square rounded-lg bg-gradient-to-br from-[oklch(0.19_0.015_240)] to-[oklch(0.10_0.005_60)] border-2 border-[oklch(0.70_0.14_75)] flex items-center justify-center cursor-pointer shadow-[0_0_30px_oklch(0.65_0.12_75_/_0.3)] overflow-hidden group"
+            onClick={() => setAvatarDialogOpen(true)}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             transition={{ type: "spring", stiffness: 300 }}
           >
-            <motion.div 
-              className="w-24 h-24 rounded-full bg-card border-4 border-card flex items-center justify-center text-5xl cursor-pointer shadow-lg relative overflow-hidden"
-              onClick={(e) => {
-                e.stopPropagation()
-                setAvatarDialogOpen(true)
-              }}
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-br from-[oklch(0.70_0.14_75_/_0.2)] to-transparent"
               animate={{
-                boxShadow: [
-                  '0 0 20px oklch(0.70 0.14 75 / 0.3)',
-                  '0 0 30px oklch(0.70 0.14 75 / 0.5)',
-                  '0 0 20px oklch(0.70 0.14 75 / 0.3)'
-                ]
+                rotate: [0, 360]
               }}
               transition={{
-                duration: 2,
+                duration: 8,
                 repeat: Infinity,
-                ease: "easeInOut"
+                ease: "linear"
               }}
+            />
+            
+            <motion.div
+              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 flex items-center justify-center"
             >
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-br from-[oklch(0.70_0.14_75_/_0.2)] to-transparent"
-                animate={{
-                  rotate: [0, 360]
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "linear"
-                }}
-              />
-              <span className="relative z-10">{profile.avatar}</span>
+              <div className="text-white text-center">
+                <User size={32} weight="bold" />
+                <p className="text-sm mt-2">Change Avatar</p>
+              </div>
             </motion.div>
-          </motion.div>
-        </motion.div>
 
-        <div className="pt-16 space-y-4">
+            <span className="relative z-10 text-8xl">{profile.avatar}</span>
+          </motion.div>
+
           <motion.div 
-            className="flex justify-between items-start"
+            className="w-full max-w-md space-y-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <div>
+            <div className="text-center">
               <motion.h3 
-                className="text-xl font-bold"
+                className="text-2xl font-bold"
                 animate={{
                   textShadow: [
                     '0 0 10px oklch(0.70 0.14 75 / 0)',
@@ -255,15 +122,27 @@ export function ProfileCustomization({ profile, onUpdate }: ProfileCustomization
               >
                 {profile.username}
               </motion.h3>
-              <p className="text-muted-foreground text-sm">Friend Code: {profile.friendCode}</p>
             </div>
+
+            <div className="w-full aspect-square rounded-lg bg-gradient-to-br from-[oklch(0.19_0.015_240)] to-[oklch(0.10_0.005_60)] border-2 border-[oklch(0.70_0.14_75)] p-6 flex items-center justify-center shadow-[0_0_20px_oklch(0.65_0.12_75_/_0.2)]">
+              {profile.bio ? (
+                <p className="text-center text-muted-foreground break-words">{profile.bio}</p>
+              ) : (
+                <p className="text-center text-muted-foreground/50 italic">No bio yet</p>
+              )}
+            </div>
+
             <Dialog open={bioDialogOpen} onOpenChange={setBioDialogOpen}>
               <DialogTrigger asChild>
-                <Button variant="outline" size="sm" onClick={() => setBioText(profile.bio || '')}>
+                <Button 
+                  variant="outline" 
+                  className="w-full border-[oklch(0.70_0.14_75)] hover:bg-[oklch(0.65_0.12_75_/_0.15)]"
+                  onClick={() => setBioText(profile.bio || '')}
+                >
                   Edit Bio
                 </Button>
               </DialogTrigger>
-              <DialogContent>
+              <DialogContent className="max-w-md">
                 <DialogHeader>
                   <DialogTitle>Edit Bio</DialogTitle>
                   <DialogDescription>
@@ -278,8 +157,9 @@ export function ProfileCustomization({ profile, onUpdate }: ProfileCustomization
                       value={bioText}
                       onChange={(e) => setBioText(e.target.value)}
                       placeholder="Master of the markets..."
-                      rows={4}
+                      rows={6}
                       maxLength={200}
+                      className="resize-none"
                     />
                     <p className="text-xs text-muted-foreground mt-1">
                       {bioText.length}/200 characters
@@ -291,17 +171,76 @@ export function ProfileCustomization({ profile, onUpdate }: ProfileCustomization
                 </div>
               </DialogContent>
             </Dialog>
+
+            <div className="w-full aspect-square rounded-lg bg-gradient-to-br from-[oklch(0.19_0.015_240)] to-[oklch(0.10_0.005_60)] border-2 border-[oklch(0.70_0.14_75)] p-6 flex flex-col items-center justify-center gap-4 shadow-[0_0_20px_oklch(0.65_0.12_75_/_0.2)]">
+              <div className="text-center">
+                <p className="text-sm text-muted-foreground mb-2">Friend Code</p>
+                <p className="text-2xl font-bold text-[oklch(0.70_0.14_75)]">{profile.friendCode}</p>
+              </div>
+              
+              <div className="flex flex-col gap-2 w-full">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={copyFriendCode}
+                  className="w-full border-[oklch(0.70_0.14_75)] hover:bg-[oklch(0.65_0.12_75_/_0.15)]"
+                >
+                  <Copy size={16} weight="bold" className="mr-2" />
+                  Copy Code
+                </Button>
+                
+                <Dialog open={shareDialogOpen} onOpenChange={setShareDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full border-[oklch(0.70_0.14_75)] hover:bg-[oklch(0.65_0.12_75_/_0.15)]"
+                    >
+                      <ShareNetwork size={16} weight="bold" className="mr-2" />
+                      Share via Message
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-sm">
+                    <DialogHeader>
+                      <DialogTitle className="flex items-center gap-2">
+                        <ShareNetwork size={24} weight="bold" />
+                        Share Friend Code
+                      </DialogTitle>
+                      <DialogDescription>
+                        Choose how you'd like to share your friend code
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-3">
+                      <Button
+                        onClick={() => shareViaMessaging('imessage')}
+                        className="w-full bg-gradient-to-r from-[oklch(0.65_0.12_75)] to-[oklch(0.70_0.14_75)] hover:from-[oklch(0.70_0.14_75)] hover:to-[oklch(0.75_0.14_75)]"
+                      >
+                        <ChatCircleText size={20} weight="bold" className="mr-2" />
+                        Share via iMessage
+                      </Button>
+                      
+                      <Button
+                        onClick={() => shareViaMessaging('signal')}
+                        className="w-full bg-gradient-to-r from-[oklch(0.45_0.15_240)] to-[oklch(0.50_0.18_220)] hover:from-[oklch(0.50_0.18_220)] hover:to-[oklch(0.55_0.20_240)]"
+                      >
+                        <ChatCircleText size={20} weight="bold" className="mr-2" />
+                        Share via Signal
+                      </Button>
+                      
+                      <Button
+                        onClick={copyFriendCode}
+                        variant="outline"
+                        className="w-full border-[oklch(0.70_0.14_75)] hover:bg-[oklch(0.65_0.12_75_/_0.15)]"
+                      >
+                        <Copy size={20} weight="bold" className="mr-2" />
+                        Copy to Clipboard
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
+            </div>
           </motion.div>
-          {profile.bio && (
-            <motion.p 
-              className="text-sm text-muted-foreground"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-            >
-              {profile.bio}
-            </motion.p>
-          )}
         </div>
 
         <Dialog open={avatarDialogOpen} onOpenChange={setAvatarDialogOpen}>
@@ -312,76 +251,28 @@ export function ProfileCustomization({ profile, onUpdate }: ProfileCustomization
                 Select an emoji that represents your trading spirit
               </DialogDescription>
             </DialogHeader>
-            <div className="grid grid-cols-6 gap-3">
+            <div className="grid grid-cols-6 gap-3 max-h-96 overflow-y-auto">
               {AVATAR_OPTIONS.map((emoji) => (
-                <button
+                <motion.button
                   key={emoji}
                   onClick={() => setSelectedAvatar(emoji)}
-                  className={`text-4xl p-3 rounded-lg transition-all hover:scale-110 ${
+                  className={`text-4xl p-3 rounded-lg transition-all ${
                     selectedAvatar === emoji
-                      ? 'bg-primary/20 border-2 border-primary scale-110'
-                      : 'bg-muted border-2 border-transparent'
+                      ? 'bg-[oklch(0.65_0.12_75_/_0.3)] border-2 border-[oklch(0.70_0.14_75)] scale-110'
+                      : 'bg-muted border-2 border-transparent hover:border-[oklch(0.70_0.14_75_/_0.5)]'
                   }`}
+                  whileHover={{ scale: selectedAvatar === emoji ? 1.1 : 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
                   {emoji}
-                </button>
-              ))}
-            </div>
-            <Button onClick={handleAvatarSave} className="w-full">
-              Save Avatar
-            </Button>
-          </DialogContent>
-        </Dialog>
-
-        <Dialog open={coverDialogOpen} onOpenChange={setCoverDialogOpen}>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-2">
-                <Palette size={24} weight="bold" />
-                Choose Cover Photo
-              </DialogTitle>
-              <DialogDescription>
-                Select a gradient background for your profile
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid grid-cols-3 gap-4">
-              {COVER_PHOTO_GRADIENTS.map((gradient, index) => (
-                <motion.button
-                  key={index}
-                  onClick={() => setSelectedCover(gradient)}
-                  className={`h-24 rounded-lg transition-all relative overflow-hidden ${
-                    selectedCover === gradient
-                      ? 'ring-4 ring-primary scale-105'
-                      : 'ring-2 ring-border'
-                  }`}
-                  style={{ background: gradient }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                >
-                  <motion.div
-                    className="absolute inset-0"
-                    style={{
-                      background: 'radial-gradient(circle at 50% 50%, oklch(1 0 0 / 0.2) 0%, transparent 60%)'
-                    }}
-                    animate={{
-                      scale: [1, 1.5, 1],
-                      opacity: [0, 0.5, 0]
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                      delay: index * 0.1
-                    }}
-                  />
                 </motion.button>
               ))}
             </div>
-            <Button onClick={handleCoverSave} className="w-full">
-              Save Cover Photo
+            <Button 
+              onClick={handleAvatarSave} 
+              className="w-full bg-gradient-to-r from-[oklch(0.65_0.12_75)] to-[oklch(0.70_0.14_75)] hover:from-[oklch(0.70_0.14_75)] hover:to-[oklch(0.75_0.14_75)]"
+            >
+              Save Avatar
             </Button>
           </DialogContent>
         </Dialog>
