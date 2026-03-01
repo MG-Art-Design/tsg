@@ -1,13 +1,14 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { UserProfile } from '@/lib/types'
-import { User, ShareNetwork, ChatCircleText, Copy } from '@phosphor-icons/react'
+import { User, ShareNetwork, ChatCircleText, Copy, Shuffle } from '@phosphor-icons/react'
 import { toast } from 'sonner'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
+import { getReversedAvatar } from '@/lib/helpers'
 
 interface ProfileCustomizationProps {
   profile: UserProfile
@@ -22,12 +23,41 @@ export function ProfileCustomization({ profile, onUpdate }: ProfileCustomization
   const [shareDialogOpen, setShareDialogOpen] = useState(false)
   const [selectedAvatar, setSelectedAvatar] = useState(profile.avatar)
   const [bioText, setBioText] = useState(profile.bio || '')
+  const [showSassyMessage, setShowSassyMessage] = useState(false)
+  const [sassyMessage, setSassyMessage] = useState('')
 
   const handleAvatarSave = () => {
-    onUpdate({ ...profile, avatar: selectedAvatar })
+    const updatedProfile = { 
+      ...profile, 
+      avatar: selectedAvatar,
+      originalAvatar: profile.originalAvatar || profile.avatar
+    }
+    onUpdate(updatedProfile)
     setAvatarDialogOpen(false)
     toast.success('Avatar updated!')
   }
+
+  const handleReverseAvatar = () => {
+    const reversed = getReversedAvatar(profile.email)
+    const updatedProfile = {
+      ...profile,
+      avatar: reversed.emoji,
+      originalAvatar: profile.originalAvatar || profile.avatar
+    }
+    onUpdate(updatedProfile)
+    setSassyMessage(reversed.message)
+    setShowSassyMessage(true)
+    
+    setTimeout(() => {
+      setShowSassyMessage(false)
+    }, 5000)
+  }
+
+  useEffect(() => {
+    if (profile.avatar && !profile.originalAvatar) {
+      onUpdate({ ...profile, originalAvatar: profile.avatar })
+    }
+  }, [])
 
   const handleBioSave = () => {
     onUpdate({ ...profile, bio: bioText.trim() })
@@ -97,6 +127,31 @@ export function ProfileCustomization({ profile, onUpdate }: ProfileCustomization
 
             <span className="relative z-10 text-8xl">{profile.avatar}</span>
           </motion.div>
+
+          <Button
+            onClick={handleReverseAvatar}
+            variant="outline"
+            className="border-[oklch(0.70_0.14_75)] hover:bg-[oklch(0.65_0.12_75_/_0.15)] text-[oklch(0.70_0.14_75)]"
+          >
+            <Shuffle size={18} weight="bold" className="mr-2" />
+            Reverse Avatar Logic
+          </Button>
+
+          <AnimatePresence>
+            {showSassyMessage && (
+              <motion.div
+                initial={{ opacity: 0, y: -20, scale: 0.9 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -20, scale: 0.9 }}
+                transition={{ duration: 0.3 }}
+                className="bg-gradient-to-r from-[oklch(0.19_0.015_240)] to-[oklch(0.10_0.005_60)] border-2 border-[oklch(0.70_0.14_75)] rounded-lg p-4 shadow-[0_0_30px_oklch(0.65_0.12_75_/_0.3)]"
+              >
+                <p className="text-[oklch(0.70_0.14_75)] text-center font-medium">
+                  {sassyMessage}
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <motion.div 
             className="w-full max-w-md space-y-4"

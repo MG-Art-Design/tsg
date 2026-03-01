@@ -843,6 +843,61 @@ export function calculatePortfolioValue(
   return { currentValue, totalReturn, totalReturnPercent }
 }
 
+export function getReversedAvatar(email: string): { emoji: string; concept: string; message: string } {
+  if (!email || email.length < 2) {
+    return {
+      emoji: '🦄',
+      concept: 'Mysterious Unicorn',
+      message: "No email? Fine, you're a unicorn now. Mysterious and slightly mythical. Don't ask questions."
+    }
+  }
+
+  const cleanEmail = email.toLowerCase().replace(/[^a-z0-9]/g, '')
+  if (cleanEmail.length < 2) {
+    return {
+      emoji: '🦄',
+      concept: 'Mysterious Unicorn',
+      message: "Your email's too weird to decode. Unicorn it is! 🦄"
+    }
+  }
+
+  const firstChar = cleanEmail[cleanEmail.length - 1]
+  const lastChar = cleanEmail[0]
+  const reversedCombo = firstChar + lastChar
+
+  const emojiMap: Record<string, { concept: string; emoji: string }> = {
+    sg: { concept: 'Snorkeling Gecko', emoji: '🦎' },
+    dt: { concept: 'Desert Tortoise', emoji: '🐢' },
+  }
+
+  const reverseMap: Record<string, { concept: string; emoji: string }> = {}
+  Object.entries(emojiMap).forEach(([key, value]) => {
+    const reversed = key.split('').reverse().join('')
+    reverseMap[reversed] = value
+  })
+
+  const allAnimals = ['🦎', '🐢', '🦀', '🦑', '🐙', '🦐', '🐡', '🐠', '🦞', '🐚', '🦗', '🕷️', '🦂', '🐛', '🦋', '🐌', '🐞', '🦆', '🦢', '🦩', '🦚']
+  
+  const charSum = reversedCombo.charCodeAt(0) + reversedCombo.charCodeAt(1)
+  const selectedEmoji = allAnimals[charSum % allAnimals.length]
+  
+  const messages = [
+    `Plot twist! Instead of ${reversedCombo.toUpperCase()}, you got the complete opposite. Bet you didn't see that coming! 😏`,
+    `We flipped your email logic backwards and this is what the universe gave you. Don't blame us, blame math! 🎲`,
+    `Your original avatar was too mainstream. We reversed the algorithm and now you're this. You're welcome. 😎`,
+    `Surprise! We took your email, flipped it, and boom - totally different vibe. Living your best backwards life! 🔄`,
+    `The cosmos decided your email backwards made more sense. Who are we to argue with the universe? ✨`
+  ]
+  
+  const selectedMessage = messages[charSum % messages.length]
+
+  return {
+    emoji: selectedEmoji,
+    concept: `Reversed ${reversedCombo.toUpperCase()}`,
+    message: selectedMessage
+  }
+}
+
 export function generateInviteCode(): string {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
   let code = ''

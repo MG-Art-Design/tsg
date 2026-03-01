@@ -3,6 +3,7 @@ export interface UserProfile {
   email: string
   username: string
   avatar: string
+  originalAvatar?: string
   coverPhoto?: string
   bio: string
   insightFrequency: 'daily' | 'weekly' | 'monthly'
