@@ -6,7 +6,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { InsiderTrade } from '@/lib/types'
 import { formatCurrency } from '@/lib/helpers'
 import { motion } from 'framer-motion'
-import { Sparkle, TrendUp, TrendDown, Gavel, Buildings, User, LockKey } from '@phosphor-icons/react'
+import { Sparkle, TrendUp, TrendDown, Gavel, Buildings, User } from '@phosphor-icons/react'
 import { formatDistanceToNow } from 'date-fns'
 interface InsiderTradesProps {
   trades: InsiderTrade[]
@@ -21,9 +21,9 @@ export function InsiderTrades({ trades, userTier = 'free', onUpgradeClick }: Ins
     ? trades 
     : trades.filter(t => t.category === filter)
 
-  const isPremium = userTier === 'premium' || userTier === 'insider'
-  const visibleTrades = isPremium ? filteredTrades : filteredTrades.slice(0, 2)
-  const hiddenTradesCount = filteredTrades.length - visibleTrades.length
+  const isPremium = true
+  const visibleTrades = filteredTrades
+  const hiddenTradesCount = 0
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
@@ -187,35 +187,6 @@ export function InsiderTrades({ trades, userTier = 'free', onUpgradeClick }: Ins
                       </div>
                     </motion.div>
                   ))}
-                  
-                  {!isPremium && hiddenTradesCount > 0 && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.4, delay: 0.2 }}
-                      className="relative"
-                    >
-                      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[oklch(0.08_0.006_70_/_0.5)] to-[oklch(0.08_0.006_70)] pointer-events-none -mt-16 rounded-lg" />
-                      <div className="relative p-6 rounded-lg bg-gradient-to-r from-[oklch(0.10_0.005_60)] to-[oklch(0.08_0.006_70)] border-2 border-[oklch(0.65_0.12_75_/_0.5)] text-center">
-                        <div className="mb-4">
-                          <LockKey size={48} weight="fill" className="mx-auto text-[oklch(0.70_0.14_75)] opacity-60" />
-                        </div>
-                        <h3 className="text-xl font-playfair text-[oklch(0.70_0.14_75)] mb-2">
-                          {hiddenTradesCount} More {hiddenTradesCount === 1 ? 'Trade' : 'Trades'} Available
-                        </h3>
-                        <p className="text-[oklch(0.60_0.10_75)] mb-4 text-sm">
-                          Upgrade to Premium to unlock all insider trades and get the full picture of what's happening in the market.
-                        </p>
-                        <Button
-                          onClick={onUpgradeClick}
-                          className="bg-gradient-to-r from-[oklch(0.65_0.12_75)] to-[oklch(0.70_0.14_75)] text-[oklch(0.15_0.01_240)] hover:shadow-[0_0_30px_oklch(0.70_0.14_75_/_0.4)] transition-all border border-[oklch(0.70_0.14_75)]"
-                        >
-                          <Sparkle size={18} weight="fill" className="mr-2" />
-                          Upgrade to Premium
-                        </Button>
-                      </div>
-                    </motion.div>
-                  )}
                 </>
               )}
             </TabsContent>

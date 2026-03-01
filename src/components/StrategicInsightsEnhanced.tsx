@@ -22,49 +22,6 @@ export function StrategicInsightsEnhanced({ trades, userTier, onUpgradeClick }: 
   const [phase1Complete, setPhase1Complete] = useState(false)
   const [phase2Complete, setPhase2Complete] = useState(false)
 
-  if (userTier !== 'premium') {
-    return (
-      <Card className="border-2 border-[oklch(0.65_0.12_75_/_0.5)] relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[oklch(0.05_0.008_70)]/90 to-[oklch(0.08_0.006_70)]/90 backdrop-blur-sm z-10 flex items-center justify-center">
-          <div className="text-center p-6 space-y-4">
-            <div className="flex justify-center">
-              <div className="p-4 bg-[oklch(0.05_0.008_70)] rounded-full border-2 border-[oklch(0.70_0.14_75)]">
-                <Brain size={32} weight="fill" className="text-[oklch(0.70_0.14_75)]" />
-              </div>
-            </div>
-            <div>
-              <h3 className="text-xl font-bold text-[oklch(0.70_0.14_75)] mb-2">Premium Feature Locked</h3>
-              <p className="text-sm text-[oklch(0.60_0.10_75)] max-w-sm">
-                Unlock 2x research depth with two-part AI vetting system, strategic asset categorization, and quiet hand analysis of key players.
-              </p>
-            </div>
-            <Button
-              onClick={onUpgradeClick}
-              size="lg"
-              className="bg-gradient-to-r from-[oklch(0.65_0.12_75)] to-[oklch(0.70_0.14_75)] text-[oklch(0.15_0.01_240)] hover:shadow-[0_0_30px_oklch(0.70_0.14_75_/_0.4)] font-semibold"
-            >
-              <Crown size={20} weight="fill" className="mr-2" />
-              Upgrade to Premium
-            </Button>
-          </div>
-        </div>
-        <div className="blur-sm pointer-events-none select-none opacity-40">
-          <CardHeader className="pb-4">
-            <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
-              <Brain size={22} weight="fill" className="text-[oklch(0.70_0.14_75)]" />
-              Strategic Positioning AI - Enhanced
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <p className="text-sm text-muted-foreground">
-              Sample insight content...
-            </p>
-          </CardContent>
-        </div>
-      </Card>
-    )
-  }
-
   const generateEnhancedInsight = async () => {
     if (trades.length === 0) {
       toast.error('No insider trades available', {
