@@ -1,4 +1,4 @@
-export const ADMIN_USERNAME = 'admin@thestonkgame.com'
+export const ADMIN_USERNAME = 'MG2026fuckya'
 export const ADMIN_PASSWORD = 'Administerdeeznutz!'
 
 export function validateAdminCredentials(username: string, password: string): boolean {

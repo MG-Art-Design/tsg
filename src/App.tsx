@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { Toaster } from '@/components/ui/sonner'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { Auth } from '@/components/Auth'
 import { Onboarding } from '@/components/Onboarding'
 import { Dashboard } from '@/components/Dashboard'
@@ -40,7 +41,7 @@ import {
 import { HapticFeedback } from '@/lib/haptics'
 import { useActivityTracker } from '@/hooks/use-activity-tracker'
 import { isAdminSession, clearAdminSession } from '@/lib/admin'
-import { ChartLine, Lightning, Trophy, Notebook, User, Users, SignOut, ArrowsLeftRight, FolderOpen, ShieldCheck } from '@phosphor-icons/react'
+import { ChartLine, Lightning, Trophy, Notebook, User, Users, SignOut, SignIn, ArrowsLeftRight, FolderOpen, ShieldCheck } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 
 function App() {
@@ -55,11 +56,12 @@ function App() {
   const [allGroups] = useKV<Record<string, Group>>('all-groups', {})
   const [marketData, setMarketData] = useState<Asset[]>([])
   const [activeTab, setActiveTab] = useState('dashboard')
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [isAuthenticated, setIsAuthenticated] = useState(true)
   const [needsOnboarding, setNeedsOnboarding] = useState(false)
   const [tempAuthData, setTempAuthData] = useState<Partial<UserProfile> | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [adminMode, setAdminMode] = useState(false)
+  const [showAuthModal, setShowAuthModal] = useState(false)
 
   const activityTracker = useActivityTracker(profile?.id || '')
 
@@ -88,6 +90,51 @@ function App() {
 
   useEffect(() => {
     const initAuth = async () => {
+      const isAdmin = isAdminSession()
+      setAdminMode(isAdmin)
+
+      if (isAdmin) {
+        const adminProfile: UserProfile = {
+          id: 'admin-preview-user',
+          email: 'admin@preview.com',
+          username: 'AdminPreview',
+          avatar: '👑',
+          bio: 'Admin Preview Account',
+          insightFrequency: 'daily',
+          emailNotifications: {
+            enabled: false,
+            email: 'admin@preview.com',
+            frequency: 'daily',
+            includeLeaderboard: true,
+            includeMarketPerformance: true,
+            includeInsights: true
+          },
+          createdAt: Date.now(),
+          groupIds: [],
+          subscription: {
+            tier: 'premium',
+            autoRenew: true,
+            startDate: Date.now(),
+            endDate: Date.now() + 365 * 24 * 60 * 60 * 1000
+          },
+          friendIds: [],
+          friendCode: 'TSG-ADMIN',
+          relationshipStatuses: {},
+          notificationPreferences: {
+            relationshipChanges: true,
+            friendPortfolioUpdates: true,
+            leaderboardChanges: true,
+            groupActivity: true,
+            groupGameInvites: true
+          }
+        }
+        setProfile(adminProfile)
+        setIsAuthenticated(true)
+        setNeedsOnboarding(false)
+        setIsLoading(false)
+        return
+      }
+
       if (currentUserId && allUsers?.[currentUserId]) {
         const user = allUsers[currentUserId]
         setProfile(user)
@@ -101,6 +148,42 @@ function App() {
           const user = allUsers[rememberedUserId]
           setCurrentUserId(rememberedUserId)
           setProfile(user)
+          setIsAuthenticated(true)
+          setNeedsOnboarding(false)
+        } else {
+          const guestProfile: UserProfile = {
+            id: 'guest-user',
+            email: 'guest@thestonkgame.com',
+            username: 'Guest',
+            avatar: '👤',
+            bio: 'Guest User',
+            insightFrequency: 'daily',
+            emailNotifications: {
+              enabled: false,
+              email: 'guest@thestonkgame.com',
+              frequency: 'daily',
+              includeLeaderboard: false,
+              includeMarketPerformance: false,
+              includeInsights: false
+            },
+            createdAt: Date.now(),
+            groupIds: [],
+            subscription: {
+              tier: 'free',
+              autoRenew: false
+            },
+            friendIds: [],
+            friendCode: 'TSG-GUEST',
+            relationshipStatuses: {},
+            notificationPreferences: {
+              relationshipChanges: true,
+              friendPortfolioUpdates: true,
+              leaderboardChanges: true,
+              groupActivity: true,
+              groupGameInvites: true
+            }
+          }
+          setProfile(guestProfile)
           setIsAuthenticated(true)
           setNeedsOnboarding(false)
         }
@@ -288,8 +371,7 @@ function App() {
     } else {
       setProfile(authenticatedProfile)
       setCurrentUserId(authenticatedProfile.id)
-      setIsAuthenticated(true)
-      setNeedsOnboarding(false)
+      setShowAuthModal(false)
       
       if (isAdminSession()) {
         setAdminMode(true)
@@ -379,8 +461,42 @@ function App() {
     if (adminMode) {
       clearAdminSession()
       setAdminMode(false)
-      setProfile(null)
-      setIsAuthenticated(false)
+      
+      const guestProfile: UserProfile = {
+        id: 'guest-user',
+        email: 'guest@thestonkgame.com',
+        username: 'Guest',
+        avatar: '👤',
+        bio: 'Guest User',
+        insightFrequency: 'daily',
+        emailNotifications: {
+          enabled: false,
+          email: 'guest@thestonkgame.com',
+          frequency: 'daily',
+          includeLeaderboard: false,
+          includeMarketPerformance: false,
+          includeInsights: false
+        },
+        createdAt: Date.now(),
+        groupIds: [],
+        subscription: {
+          tier: 'free',
+          autoRenew: false
+        },
+        friendIds: [],
+        friendCode: 'TSG-GUEST',
+        relationshipStatuses: {},
+        notificationPreferences: {
+          relationshipChanges: true,
+          friendPortfolioUpdates: true,
+          leaderboardChanges: true,
+          groupActivity: true,
+          groupGameInvites: true
+        }
+      }
+      setProfile(guestProfile)
+      setPortfolio(null)
+      setUserPortfolios([])
       toast.info('Exited admin preview mode')
       return
     }
@@ -389,10 +505,42 @@ function App() {
     await window.spark.kv.delete('rememberMe')
     await window.spark.kv.delete('rememberedUserId')
     setCurrentUserId(null)
-    setProfile(null)
+    
+    const guestProfile: UserProfile = {
+      id: 'guest-user',
+      email: 'guest@thestonkgame.com',
+      username: 'Guest',
+      avatar: '👤',
+      bio: 'Guest User',
+      insightFrequency: 'daily',
+      emailNotifications: {
+        enabled: false,
+        email: 'guest@thestonkgame.com',
+        frequency: 'daily',
+        includeLeaderboard: false,
+        includeMarketPerformance: false,
+        includeInsights: false
+      },
+      createdAt: Date.now(),
+      groupIds: [],
+      subscription: {
+        tier: 'free',
+        autoRenew: false
+      },
+      friendIds: [],
+      friendCode: 'TSG-GUEST',
+      relationshipStatuses: {},
+      notificationPreferences: {
+        relationshipChanges: true,
+        friendPortfolioUpdates: true,
+        leaderboardChanges: true,
+        groupActivity: true,
+        groupGameInvites: true
+      }
+    }
+    setProfile(guestProfile)
     setPortfolio(null)
-    setIsAuthenticated(false)
-    setNeedsOnboarding(false)
+    setUserPortfolios([])
     HapticFeedback.buttonPress()
     toast.info('Signed out successfully')
   }
@@ -609,15 +757,6 @@ function App() {
     )
   }
 
-  if (!isAuthenticated) {
-    return (
-      <>
-        <Auth onAuthenticated={handleAuthenticated} existingUsers={allUsers || {}} />
-        <Toaster richColors position="top-right" />
-      </>
-    )
-  }
-
   if (needsOnboarding || !profile?.username) {
     return (
       <>
@@ -656,14 +795,25 @@ function App() {
                 {getCurrentQuarter()} • {profile.username}
               </div>
               <div className="text-4xl">{profile.avatar}</div>
-              <Button
-                onClick={handleLogout}
-                variant="ghost"
-                size="sm"
-                className="text-muted-foreground hover:text-foreground icon-button"
-              >
-                <SignOut size={18} weight="bold" />
-              </Button>
+              {profile.id !== 'guest-user' && profile.id !== 'admin-preview-user' ? (
+                <Button
+                  onClick={handleLogout}
+                  variant="ghost"
+                  size="sm"
+                  className="text-muted-foreground hover:text-foreground icon-button"
+                >
+                  <SignOut size={18} weight="bold" />
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => setShowAuthModal(true)}
+                  variant="ghost"
+                  size="sm"
+                  className="text-[oklch(0.70_0.14_75)] hover:text-[oklch(0.75_0.14_75)] icon-button"
+                >
+                  <SignIn size={18} weight="bold" />
+                </Button>
+              )}
             </div>
           </div>
         </div>
@@ -818,6 +968,12 @@ function App() {
       <BettingPayoutNotifier currentUser={profile} />
 
       <ScrollToTop />
+
+      <Dialog open={showAuthModal} onOpenChange={setShowAuthModal}>
+        <DialogContent className="max-w-md p-0 overflow-hidden">
+          <Auth onAuthenticated={handleAuthenticated} existingUsers={allUsers || {}} />
+        </DialogContent>
+      </Dialog>
 
       <Toaster richColors position="top-right" />
     </div>
