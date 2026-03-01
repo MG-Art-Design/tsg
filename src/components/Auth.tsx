@@ -8,7 +8,7 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp
 import { Logo } from '@/components/Logo'
 import { toast } from 'sonner'
 import { UserProfile } from '@/lib/types'
-import { Envelope, Key, ArrowRight, Fingerprint, FingerprintSimple } from '@phosphor-icons/react'
+import { Envelope, Key, ArrowRight, Fingerprint, FingerprintSimple, ShieldCheck } from '@phosphor-icons/react'
 import { 
   checkBiometricSupport, 
   authenticateWithBiometric, 
@@ -129,9 +129,9 @@ export function Auth({ onAuthenticated, existingUsers }: AuthProps) {
 
   const sendVerificationCode = (targetEmail: string, code: string, isSignUpFlow: boolean) => {
     toast.info(
-      isSignUpFlow ? 'Email Verification Code' : 'Login Verification Code',
+      isSignUpFlow ? '📧 Verification Email Sent' : '📧 Login Code Sent',
       {
-        description: `Your ${isSignUpFlow ? 'email verification' : 'login'} code is: ${code}`,
+        description: `A ${isSignUpFlow ? 'verification' : 'login'} code has been sent to ${targetEmail}. For this demo, your code is: ${code}`,
         duration: 30000,
       }
     )
@@ -452,9 +452,13 @@ export function Auth({ onAuthenticated, existingUsers }: AuthProps) {
           <CardContent className="relative z-10">
             {isVerifyStep ? (
               <div className="space-y-6">
-                <div className="flex justify-center">
+                <div className="flex flex-col items-center gap-3">
                   <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[oklch(0.70_0.14_75_/_0.15)] border-2 border-[oklch(0.70_0.14_75_/_0.4)] shadow-[0_0_20px_oklch(0.65_0.12_75_/_0.3)]">
                     <ShieldCheck size={32} weight="duotone" className="text-[oklch(0.70_0.14_75)]" />
+                  </div>
+                  <div className="text-center">
+                    <p className="text-xs text-[oklch(0.58_0.02_240)]">Email sent to</p>
+                    <p className="text-sm font-semibold text-[oklch(0.70_0.14_75)]">{pendingAuth?.email}</p>
                   </div>
                 </div>
 

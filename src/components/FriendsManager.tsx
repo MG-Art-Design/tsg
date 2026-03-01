@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { UserProfile } from '@/lib/types'
-import { UserPlus, X, Copy, Check } from '@phosphor-icons/react'
+import { UserPlus, X, Copy, Check, ShareNetwork, ChatCircleText } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { motion, AnimatePresence } from 'framer-motion'
 import { HapticFeedback } from '@/lib/haptics'
@@ -24,6 +24,56 @@ export function FriendsManager({ profile, onUpdate }: FriendsManagerProps) {
   const friends = profile.friendIds
     .map(id => allUsers?.[id])
     .filter(Boolean) as UserProfile[]
+
+  const getInviteMessage = () => {
+    const appUrl = typeof window !== 'undefined' ? window.location.origin : 'https://thestonkgame.com'
+    return `Join me on TSG: The Stonk Game! 📈 Use my friend code ${profile.friendCode} to add me as a friend and compete on the leaderboard. ${appUrl}`
+  }
+
+  const handleShareWhatsApp = () => {
+    const msg = encodeURIComponent(getInviteMessage())
+    window.open(`https://wa.me/?text=${msg}`, '_blank', 'noopener,noreferrer')
+    HapticFeedback.buttonPress()
+  }
+
+  const handleShareiMessage = () => {
+    const msg = encodeURIComponent(getInviteMessage())
+    window.location.href = `sms:?body=${msg}`
+    HapticFeedback.buttonPress()
+  }
+
+  const handleShareSignal = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: 'Join me on TSG: The Stonk Game!',
+        text: getInviteMessage()
+      }).catch(() => {
+        // user cancelled or share failed
+      })
+    } else {
+      // Fallback: copy to clipboard so they can paste into Signal
+      navigator.clipboard.writeText(getInviteMessage())
+      toast.success('Invite copied!', {
+        description: 'Paste this into Signal to invite your friend.'
+      })
+    }
+    HapticFeedback.buttonPress()
+  }
+
+  const handleNativeShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: 'Join me on TSG: The Stonk Game!',
+        text: getInviteMessage()
+      }).catch(() => {})
+    } else {
+      navigator.clipboard.writeText(getInviteMessage())
+      toast.success('Invite link copied!', {
+        description: 'Share this with friends to invite them.'
+      })
+    }
+    HapticFeedback.buttonPress()
+  }
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(profile.friendCode)
@@ -174,6 +224,54 @@ export function FriendsManager({ profile, onUpdate }: FriendsManagerProps) {
           </div>
           <p className="text-xs text-muted-foreground">
             Share this code with friends so they can add you to their leaderboard
+          </p>
+        </div>
+
+        <div className="space-y-3">
+          <Label className="text-sm font-medium flex items-center gap-2">
+            <ChatCircleText size={16} weight="fill" />
+            Invite Friends Directly
+          </Label>
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleShareiMessage}
+              className="flex items-center gap-1.5 text-xs"
+            >
+              <span className="text-base leading-none">💬</span>
+              iMessage
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleShareWhatsApp}
+              className="flex items-center gap-1.5 text-xs"
+            >
+              <span className="text-base leading-none">🟢</span>
+              WhatsApp
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleShareSignal}
+              className="flex items-center gap-1.5 text-xs"
+            >
+              <span className="text-base leading-none">🔵</span>
+              Signal
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleNativeShare}
+              className="flex items-center gap-1.5 text-xs"
+            >
+              <ShareNetwork size={14} weight="fill" />
+              Share
+            </Button>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Send your friend code directly via messaging apps
           </p>
         </div>
 
