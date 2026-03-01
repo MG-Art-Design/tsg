@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Brain, Sparkle, TrendUp, Warning, Target, Lightbulb } from '@phosphor-icons/react'
 import { toast } from 'sonner'
+import type { InsiderTrade, SubscriptionTier } from '@/lib/types'
 
 interface GeneratedInsight {
   id: string
