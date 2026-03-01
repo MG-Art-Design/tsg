@@ -8,7 +8,7 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp
 import { Logo } from '@/components/Logo'
 import { toast } from 'sonner'
 import { UserProfile } from '@/lib/types'
-import { Envelope, Key, ArrowRight, Fingerprint, FingerprintSimple, ShieldCheck } from '@phosphor-icons/react'
+import { Envelope, Key, ArrowRight, Fingerprint, FingerprintSimple } from '@phosphor-icons/react'
 import { 
   checkBiometricSupport, 
   authenticateWithBiometric, 
