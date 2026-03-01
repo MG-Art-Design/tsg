@@ -6,9 +6,9 @@ import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { Checkbox } from '@/components/ui/checkbox'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { UserProfile } from '@/lib/types'
-import { getRandomAvatar } from '@/lib/helpers'
+import { getEmailBasedAvatar } from '@/lib/helpers'
 import { Logo } from '@/components/Logo'
 
 interface OnboardingProps {
@@ -18,11 +18,19 @@ interface OnboardingProps {
   initialFriendCode?: string
 }
 
-const AVATAR_OPTIONS = ['🦁', '🐯', '🐻', '🦊', '🐺', '🦅', '🦈', '🐉', '🦖', '🦏', '🐘', '🦒', '🦌', '🐎', '🦓', '🦍', '🐆', '🐅']
+const AVATAR_OPTIONS = ['🦁', '🐯', '🐻', '🦊', '🐺', '🦅', '🦈', '🐉', '🦖', '🦏', '🐘', '🦒', '🦌', '🐎', '🦓', '🦍', '🐆', '🐅', '🐧', '🦣', '🐬', '🐼', '🦘', '🐨', '🦉', '🐏', '🐂', '🦬', '🦄', '🐍']
 
 export function Onboarding({ onComplete, initialEmail, initialUserId, initialFriendCode }: OnboardingProps) {
   const [username, setUsername] = useState('')
-  const [avatar, setAvatar] = useState(getRandomAvatar())
+  const [avatar, setAvatar] = useState(() => {
+    return initialEmail ? getEmailBasedAvatar(initialEmail) : getEmailBasedAvatar('')
+  })
+  
+  useEffect(() => {
+    if (initialEmail) {
+      setAvatar(getEmailBasedAvatar(initialEmail))
+    }
+  }, [initialEmail])
   const [bio, setBio] = useState('')
   const [insightFrequency, setInsightFrequency] = useState<'daily' | 'weekly' | 'monthly'>('daily')
   const [emailEnabled, setEmailEnabled] = useState(!!initialEmail)
