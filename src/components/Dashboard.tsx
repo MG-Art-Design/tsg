@@ -7,7 +7,6 @@ import { formatCurrency, formatPercent } from '@/lib/helpers'
 import { motion } from 'framer-motion'
 import { InsiderTrades } from './InsiderTrades'
 import { StrategicInsightsEnhanced } from './StrategicInsightsEnhanced'
-import { generateMockInsiderTrades } from '@/lib/insiderHelpers'
 import { AnimatedPortfolioCounter } from './AnimatedPortfolioCounter'
 
 interface DashboardProps {
@@ -15,13 +14,13 @@ interface DashboardProps {
   marketData: Asset[]
   userProfile: UserProfile
   onUpgradeClick: () => void
+  insiderTrades: InsiderTrade[]
 }
 
-export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick }: DashboardProps) {
+export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick, insiderTrades }: DashboardProps) {
   const topGainers = [...marketData].sort((a, b) => b.priceChangePercent24h - a.priceChangePercent24h).slice(0, 3)
   const topLosers = [...marketData].sort((a, b) => a.priceChangePercent24h - b.priceChangePercent24h).slice(0, 3)
   
-  const [insiderTrades, setInsiderTrades] = useState<InsiderTrade[]>([])
   const previousValueRef = useRef(portfolio?.currentValue || 10000)
 
   useEffect(() => {
@@ -29,18 +28,6 @@ export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick }
       previousValueRef.current = portfolio.currentValue
     }
   }, [portfolio?.currentValue])
-
-  useEffect(() => {
-    const initialTrades = generateMockInsiderTrades()
-    setInsiderTrades(initialTrades)
-
-    const interval = setInterval(() => {
-      const updatedTrades = generateMockInsiderTrades()
-      setInsiderTrades(updatedTrades)
-    }, 43200000)
-
-    return () => clearInterval(interval)
-  }, [])
 
   const userTier = userProfile.subscription?.tier || 'free'
 
@@ -122,7 +109,7 @@ export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick }
           </Card>
         </div>
 
-        <InsiderTrades trades={insiderTrades} userTier={userTier} onUpgradeClick={onUpgradeClick} />
+        <InsiderTrades trades={insiderTrades.slice(0, 2)} userTier={userTier} onUpgradeClick={onUpgradeClick} showLimited />
 
         <StrategicInsightsEnhanced trades={insiderTrades} userTier={userTier} onUpgradeClick={onUpgradeClick} />
       </div>
@@ -254,7 +241,7 @@ export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick }
         </div>
       </div>
 
-      <InsiderTrades trades={insiderTrades} userTier={userTier} onUpgradeClick={onUpgradeClick} />
+      <InsiderTrades trades={insiderTrades.slice(0, 2)} userTier={userTier} onUpgradeClick={onUpgradeClick} showLimited />
 
       <StrategicInsightsEnhanced trades={insiderTrades} userTier={userTier} onUpgradeClick={onUpgradeClick} />
 

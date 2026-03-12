@@ -12,18 +12,17 @@ interface InsiderTradesProps {
   trades: InsiderTrade[]
   userTier?: 'free' | 'premium' | 'insider'
   onUpgradeClick?: () => void
+  showLimited?: boolean
 }
 
-export function InsiderTrades({ trades, userTier = 'free', onUpgradeClick }: InsiderTradesProps) {
+export function InsiderTrades({ trades, userTier = 'free', onUpgradeClick, showLimited = false }: InsiderTradesProps) {
   const [filter, setFilter] = useState<'all' | 'congress' | 'whitehouse' | 'trump-family'>('all')
 
   const filteredTrades = filter === 'all' 
     ? trades 
     : trades.filter(t => t.category === filter)
 
-  const isPremium = true
   const visibleTrades = filteredTrades
-  const hiddenTradesCount = 0
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
@@ -74,7 +73,7 @@ export function InsiderTrades({ trades, userTier = 'free', onUpgradeClick }: Ins
               </div>
               <div className="min-w-0 flex-1">
                 <CardTitle className="text-base sm:text-xl md:text-2xl font-playfair text-[oklch(0.70_0.14_75)] flex items-center gap-2 truncate">
-                  Stonk: Omg It's In
+                  Stonk: OMG It's In
                 </CardTitle>
                 <p className="text-xs sm:text-sm text-[oklch(0.60_0.10_75)] mt-0.5 sm:mt-1 hidden sm:block">
                   Insider moves you need to know
@@ -85,8 +84,8 @@ export function InsiderTrades({ trades, userTier = 'free', onUpgradeClick }: Ins
               variant="outline" 
               className="border-[oklch(0.65_0.12_75_/_0.5)] text-[oklch(0.70_0.14_75)] bg-[oklch(0.65_0.12_75_/_0.15)] text-xs whitespace-nowrap flex-shrink-0"
             >
-              <span className="hidden sm:inline">{isPremium ? `${filteredTrades.length} Trades` : `2 of ${filteredTrades.length} Trades`}</span>
-              <span className="sm:hidden">{isPremium ? filteredTrades.length : `2/${filteredTrades.length}`}</span>
+              <span className="hidden sm:inline">{filteredTrades.length} Trades{showLimited ? ' (Last 2)' : ''}</span>
+              <span className="sm:hidden">{filteredTrades.length}{showLimited ? ' (2)' : ''}</span>
             </Badge>
           </div>
         </CardHeader>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { Toaster } from '@/components/ui/sonner'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -6,9 +6,7 @@ import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { Auth } from '@/components/Auth'
 import { Onboarding } from '@/components/Onboarding'
 import { Dashboard } from '@/components/Dashboard'
-import { PortfolioManager } from '@/components/PortfolioManager'
 import { MultiPortfolioManager } from '@/components/MultiPortfolioManager'
-import { PortfolioComparisonView } from '@/components/PortfolioComparisonView'
 import { Leaderboard } from '@/components/Leaderboard'
 import { Insights } from '@/components/Insights'
 import { Groups } from '@/components/Groups'
@@ -28,21 +26,23 @@ import { BettingPayoutNotifier } from '@/components/BettingPayoutNotifier'
 import { BettingHistoryAnalytics } from '@/components/BettingHistoryAnalytics'
 import { BiometricSettings } from '@/components/BiometricSettings'
 import { TradingAccountLinker } from '@/components/TradingAccountLinker'
+import { InsiderTrades } from '@/components/InsiderTrades'
 import { Logo } from '@/components/Logo'
 import { ScrollToTop } from '@/components/ScrollToTop'
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { UserProfile, Portfolio, Asset, PortfolioPosition, LeaderboardEntry, Insight, Group } from '@/lib/types'
+import { UserProfile, Portfolio, Asset, PortfolioPosition, LeaderboardEntry, Insight, Group, InsiderTrade } from '@/lib/types'
 import { 
   generateMockMarketData, 
   getCurrentQuarter, 
   INITIAL_PORTFOLIO_VALUE,
   calculatePortfolioValue
 } from '@/lib/helpers'
+import { generateMockInsiderTrades } from '@/lib/insiderHelpers'
 import { HapticFeedback } from '@/lib/haptics'
 import { useActivityTracker } from '@/hooks/use-activity-tracker'
 import { isAdminSession, clearAdminSession } from '@/lib/admin'
-import { ChartLine, Lightning, Trophy, Notebook, User, Users, SignOut, SignIn, ArrowsLeftRight, FolderOpen, ShieldCheck } from '@phosphor-icons/react'
+import { ChartLine, Lightning, Trophy, Notebook, User, Users, SignOut, SignIn, FolderOpen, ShieldCheck, Sparkle } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 
 function App() {
@@ -56,6 +56,7 @@ function App() {
   const [allUsers, setAllUsers] = useKV<Record<string, UserProfile>>('all-users', {})
   const [allGroups] = useKV<Record<string, Group>>('all-groups', {})
   const [marketData, setMarketData] = useState<Asset[]>([])
+  const [insiderTrades, setInsiderTrades] = useState<InsiderTrade[]>([])
   const [activeTab, setActiveTab] = useState('dashboard')
   const [isAuthenticated, setIsAuthenticated] = useState(true)
   const [needsOnboarding, setNeedsOnboarding] = useState(false)
@@ -65,6 +66,18 @@ function App() {
   const [showAuthModal, setShowAuthModal] = useState(false)
 
   const activityTracker = useActivityTracker(profile?.id || '')
+
+  useEffect(() => {
+    const initialTrades = generateMockInsiderTrades()
+    setInsiderTrades(initialTrades)
+
+    const interval = setInterval(() => {
+      const updatedTrades = generateMockInsiderTrades()
+      setInsiderTrades(updatedTrades)
+    }, 43200000)
+
+    return () => clearInterval(interval)
+  }, [])
 
   useEffect(() => {
     setAdminMode(isAdminSession())
@@ -824,7 +837,7 @@ function App() {
 
       <main className="container mx-auto px-4 py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-8 mb-6 bg-gradient-to-r from-[oklch(0.10_0.005_60)] to-[oklch(0.08_0.006_70)] border-2 border-[oklch(0.70_0.14_75)] p-1 h-auto shadow-[0_0_20px_oklch(0.65_0.12_75_/_0.2)]">
+          <TabsList className="grid w-full grid-cols-7 mb-6 bg-gradient-to-r from-[oklch(0.10_0.005_60)] to-[oklch(0.08_0.006_70)] border-2 border-[oklch(0.70_0.14_75)] p-1 h-auto shadow-[0_0_20px_oklch(0.65_0.12_75_/_0.2)]">
             <TabsTrigger value="dashboard" className="flex items-center gap-2 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold">
               <ChartLine size={18} />
               <span className="hidden sm:inline">Dashboard</span>
@@ -833,13 +846,9 @@ function App() {
               <FolderOpen size={18} weight="fill" />
               <span className="hidden sm:inline">Portfolios</span>
             </TabsTrigger>
-            <TabsTrigger value="portfolio" className="flex items-center gap-2 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold">
-              <Lightning size={18} weight="fill" />
-              <span className="hidden sm:inline">Edit</span>
-            </TabsTrigger>
-            <TabsTrigger value="compare" className="flex items-center gap-2 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold">
-              <ArrowsLeftRight size={18} />
-              <span className="hidden sm:inline">Compare</span>
+            <TabsTrigger value="insider-moves" className="flex items-center gap-2 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold">
+              <Sparkle size={18} weight="fill" />
+              <span className="hidden sm:inline">Insider Moves</span>
             </TabsTrigger>
             <TabsTrigger value="leaderboard" className="flex items-center gap-2 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold">
               <Trophy size={18} weight="fill" />
@@ -860,7 +869,7 @@ function App() {
           </TabsList>
 
           <TabsContent value="dashboard">
-            <Dashboard portfolio={portfolio ?? null} marketData={marketData} userProfile={profile} onUpgradeClick={handleUpgradeClick} />
+            <Dashboard portfolio={portfolio ?? null} marketData={marketData} userProfile={profile} onUpgradeClick={handleUpgradeClick} insiderTrades={insiderTrades} />
           </TabsContent>
 
           <TabsContent value="portfolios">
@@ -876,16 +885,8 @@ function App() {
             />
           </TabsContent>
 
-          <TabsContent value="compare">
-            <PortfolioComparisonView
-              portfolios={userPortfolios || []}
-              userProfile={profile}
-              marketData={marketData}
-              onSelectPortfolio={(portfolioId) => {
-                handleSelectPortfolio(portfolioId)
-                setActiveTab('portfolio')
-              }}
-            />
+          <TabsContent value="insider-moves">
+            <InsiderTrades trades={insiderTrades} userTier={profile.subscription?.tier || 'free'} onUpgradeClick={handleUpgradeClick} />
           </TabsContent>
 
           <TabsContent value="leaderboard">

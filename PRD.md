@@ -89,18 +89,18 @@ This app requires multiple interconnected features including user profiles, real
 - **Progression**: Enable in settings → Set email & frequency → Select content types (leaderboard/market/insights) → Receive scheduled updates → Email contains formatted HTML with portfolio performance, rankings, and AI insights
 - **Success criteria**: Emails sent at correct intervals, content respects user preferences, HTML formatting displays correctly, emails include current rankings and accurate portfolio data
 
-### Insider Trading Intelligence Feed ("Stonk: Omg It's In")
-- **Functionality**: Displays publicly disclosed insider trades from Congress members, White House officials, Trump family/partners, and affiliates, updated every 12 hours with filtering by category, featuring 2x the research depth with mock data representing 35+ trades
+### Insider Trading Intelligence Feed ("Stonk: OMG It's In")
+- **Functionality**: Displays publicly disclosed insider trades from Congress members, White House officials, Trump family/partners, and affiliates, updated every 12 hours with filtering by category, featuring full access to all trades with no limitations
 - **Purpose**: Provides competitive intelligence on high-profile trades to inform user investment strategies and add intrigue to the competition
-- **Trigger**: Automatically displayed on Dashboard; data refreshes every 12 hours
-- **Progression**: Load Dashboard → View "Stonk: Omg It's In" section → Filter by category (All/Congress/White House/Trump Family) → Review trade details (trader, asset, action, value, dates) → Free users see 2 trades per category, Premium users see all → Use intelligence for portfolio decisions
-- **Success criteria**: Data updates every 12 hours, displays accurate trade information with 35+ mock trades, filters work correctly, distinctive black-gold styling sets section apart visually, maintains monochromatic design consistency, free users see limited preview with upgrade prompt
+- **Trigger**: Automatically displayed on Dashboard (last 2 trades); full access available via dedicated "Insider Moves" tab at top navigation
+- **Progression**: Dashboard shows last 2 trades as preview → Click "Insider Moves" tab for full access → Filter by category (All/Congress/White House/Trump Family) → Review all trade details (trader, asset, action, value, dates) → Use intelligence for portfolio decisions
+- **Success criteria**: Data updates every 12 hours, displays accurate trade information with 35+ mock trades, filters work correctly, distinctive black-gold styling sets section apart visually, maintains monochromatic design consistency, Dashboard preview shows last 2 trades only, full "Insider Moves" tab provides complete access
 
-### Strategic Positioning AI - Enhanced ("Stonk: Omg It's In" Analysis)
-- **Functionality**: Premium-only feature with two-part AI vetting system that analyzes insider trading patterns at 2x research depth, identifying key Congress members, Trump family activities, Stephen Miller affiliates, and extrapolating quiet hand analysis to generate strategic asset categorizations and trading signals
+### Strategic Positioning AI - Enhanced ("Stonk: OMG It's In" Analysis)
+- **Functionality**: Two-part AI vetting system that analyzes insider trading patterns at 2x research depth, identifying key Congress members, Trump family activities, Stephen Miller affiliates, and extrapolating quiet hand analysis to generate strategic asset categorizations and trading signals
 - **Purpose**: Transforms raw insider trading data into deeply vetted actionable intelligence with strategic asset recommendations across five categories (highest growth, highest volatility, lowest volatility, consistent performers, underrated genius choices)
-- **Trigger**: Premium users click "Generate Vetted Insight" button in Strategic Positioning AI - Enhanced card on Dashboard; free users see locked premium feature with upgrade prompt
-- **Progression**: Premium user clicks Generate → Phase 1 vetting begins (pattern recognition, player analysis, anomaly detection) → Phase 1 completes with score → Phase 2 vetting begins (quiet hand extrapolation, strategic synthesis, asset categorization) → Phase 2 completes with score → Final synthesis creates comprehensive insight → Display across 4 tabs: Overview (analysis with vet scores), Assets (5 categories with 3-5 recommendations each), Signals (5-7 trading signals with strength/time horizon), Players (key insider profiles with influence scores)
+- **Trigger**: Users click "Generate Vetted Insight" button in Strategic Positioning AI - Enhanced card on Dashboard
+- **Progression**: User clicks Generate → Phase 1 vetting begins (pattern recognition, player analysis, anomaly detection) → Phase 1 completes with score → Phase 2 vetting begins (quiet hand extrapolation, strategic synthesis, asset categorization) → Phase 2 completes with score → Final synthesis creates comprehensive insight → Display across 4 tabs: Overview (analysis with vet scores), Assets (5 categories with 3-5 recommendations each), Signals (5-7 trading signals with strength/time horizon), Players (key insider profiles with influence scores)
 - **Success criteria**: Two-part vetting completes successfully with Phase 1 and Phase 2 scores, combined vet score (0-100) displayed prominently, analysis identifies key players by category (congress/whitehouse/trump-family/stephen-miller/affiliate), asset recommendations span all 5 strategic categories with ticker symbols, trading signals include bullish/bearish/neutral designation with reasoning, quiet hand analysis reveals non-obvious positioning, tabbed interface allows exploration of different intelligence aspects, maintains black-gold design theme
 
 ### Relationship-Based Notifications
@@ -255,10 +255,10 @@ These hover effects create a consistent language of "pull-forward" interaction a
   - Auth: Email/password authentication card with sign up/sign in toggle, form validation, loading states
   - Logo: Custom SVG component with animated ascending chart line and gradient text (variants: sm, md, lg, xl)
   - BrandElements: ChartPattern (decorative background motifs), BrandBadge (category/status indicators), StatCard (metrics display with trend patterns), BrandDivider (gradient section separators)
-  - Navigation: Tabs for main sections (Dashboard, Portfolio, Leaderboard, Groups, Insights, Profile) with sign out button
-  - Dashboard: Card components for portfolio summary, market movers, recent insights, and "Stonk: Omg It's In" insider trades section
-  - InsiderTrades: Distinctive black-gold themed card with category filters (All/Congress/White House/Trump Family), animated trade entries with buy/sell badges, trader details, asset information, and disclosure dates
-  - StrategicInsights: AI-powered analysis card with black-gold theme, brain icon, "Generate Insight" button, loading states with animated sparkle, displays generated insights with title, multi-paragraph analysis, key signals list, hypothesized moves, risk level badge, and confidence percentage
+  - Navigation: Tabs for main sections (Dashboard, Portfolios, Insider Moves, Leaderboard, Groups, Insights, Profile) with sign out button
+  - Dashboard: Card components for portfolio summary, market movers, recent insights, and preview of last 2 "Stonk: OMG It's In" insider trades
+  - InsiderTrades: Distinctive black-gold themed card with category filters (All/Congress/White House/Trump Family), animated trade entries with buy/sell badges, trader details, asset information, and disclosure dates. Full access to all trades with no paywall.
+  - StrategicInsights: AI-powered analysis card with black-gold theme, brain icon, "Generate Insight" button available to all users, loading states with animated sparkle, displays generated insights with title, multi-paragraph analysis, key signals list, hypothesized moves, risk level badge, and confidence percentage
   - Portfolio Manager: Table for holdings with editable percentage inputs, Dialog for trade confirmation
   - Leaderboard: Table with Avatar, ranking badges, relationship status badges (Friend/Rival/Mentor/etc), sortable columns
   - FriendsManager: Card for adding friends via code, displaying friend list with relationship indicators
