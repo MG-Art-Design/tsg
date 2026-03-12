@@ -876,14 +876,6 @@ function App() {
             />
           </TabsContent>
 
-          <TabsContent value="portfolio">
-            <PortfolioManager
-              currentPortfolio={portfolio ?? null}
-              marketData={marketData}
-              onSave={handlePortfolioSave}
-            />
-          </TabsContent>
-
           <TabsContent value="compare">
             <PortfolioComparisonView
               portfolios={userPortfolios || []}
