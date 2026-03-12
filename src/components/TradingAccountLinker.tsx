@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { UserProfile, LinkedTradingAccount, ImportedPosition } from '@/lib/types'
-import { formatCurrency, formatPercent } from '@/lib/helpers'
+import { formatCurrency, formatPercent, normalizePortfolioTo100k, INITIAL_PORTFOLIO_VALUE } from '@/lib/helpers'
 import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'sonner'
 import { HapticFeedback } from '@/lib/haptics'
@@ -102,6 +102,8 @@ export function TradingAccountLinker({ profile, onUpdate }: TradingAccountLinker
       const totalReturn = accountValue - totalCost
       const totalReturnPercent = (totalReturn / totalCost) * 100
 
+      const wasNormalized = accountValue > INITIAL_PORTFOLIO_VALUE
+
       const updatedAccounts = linkedAccounts.map(acc => 
         acc.id === accountId 
           ? {
@@ -125,9 +127,18 @@ export function TradingAccountLinker({ profile, onUpdate }: TradingAccountLinker
 
       onUpdate(updatedProfile)
 
-      toast.success('Account synced!', {
-        description: `Imported ${positions.length} positions from ${linkedAccounts.find(a => a.id === accountId)?.accountName}.`
-      })
+      const accountName = linkedAccounts.find(a => a.id === accountId)?.accountName
+
+      if (wasNormalized) {
+        toast.success('Account synced and normalized!', {
+          description: `Imported ${positions.length} positions from ${accountName}. Your ${formatCurrency(accountValue)} portfolio was proportionally scaled to ${formatCurrency(INITIAL_PORTFOLIO_VALUE)} to match TSG's standard portfolio size.`,
+          duration: 7000
+        })
+      } else {
+        toast.success('Account synced!', {
+          description: `Imported ${positions.length} positions from ${accountName}.`
+        })
+      }
 
     } catch (error) {
       toast.error('Sync failed', {

@@ -3,7 +3,8 @@ import { Portfolio, UserProfile, Asset } from '@/lib/types'
 import { 
   formatCurrency, 
   formatPercent, 
-  getSubscriptionFeatures 
+  getSubscriptionFeatures,
+  INITIAL_PORTFOLIO_VALUE
 } from '@/lib/helpers'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -12,8 +13,9 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog'
-import { TrendUp, TrendDown, Plus, Trash, PencilSimple, Crown, Lightning } from '@phosphor-icons/react'
+import { TrendUp, TrendDown, Plus, Trash, PencilSimple, Crown, Lightning, ArrowLeft } from '@phosphor-icons/react'
 import { toast } from 'sonner'
+import { PortfolioManager } from './PortfolioManager'
 
 interface MultiPortfolioManagerProps {
   portfolios: Portfolio[]
@@ -41,6 +43,7 @@ export function MultiPortfolioManager({
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [portfolioName, setPortfolioName] = useState('')
   const [selectedPortfolioId, setSelectedPortfolioId] = useState<string | null>(null)
+  const [editingPortfolioId, setEditingPortfolioId] = useState<string | null>(null)
   
   const features = getSubscriptionFeatures(userProfile.subscription.tier)
   const maxPortfolios = features.maxPortfolios
@@ -76,10 +79,15 @@ export function MultiPortfolioManager({
     }
 
     setShowCreateDialog(false)
-    onSelectPortfolio('create-new')
-    toast.success('Navigate to Portfolio tab to add positions', {
-      description: `Your new portfolio "${portfolioName}" is ready to be configured.`
+    
+    onCreatePortfolio([], portfolioName, `portfolio-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`)
+    
+    toast.success('Portfolio created!', {
+      description: `"${portfolioName}" is ready. Click on it to add positions.`,
+      duration: 5000
     })
+    
+    setPortfolioName('')
   }
 
   const handleRenameClick = (portfolioId: string) => {
@@ -125,6 +133,40 @@ export function MultiPortfolioManager({
 
   const gamePortfolios = portfolios.filter(p => !p.isLinkedAccount)
   const selectedPortfolio = selectedPortfolioId ? portfolios.find(p => p.id === selectedPortfolioId) : null
+  const editingPortfolio = editingPortfolioId ? portfolios.find(p => p.id === editingPortfolioId) : null
+
+  if (editingPortfolio) {
+    return (
+      <div className="space-y-4">
+        <Button
+          variant="outline"
+          onClick={() => setEditingPortfolioId(null)}
+          className="flex items-center gap-2"
+        >
+          <ArrowLeft weight="bold" />
+          Back to Portfolios
+        </Button>
+        <Card>
+          <CardHeader>
+            <CardTitle>{editingPortfolio.name}</CardTitle>
+            <CardDescription>
+              {editingPortfolio.quarter} • Total value: {formatCurrency(INITIAL_PORTFOLIO_VALUE)}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <PortfolioManager
+              currentPortfolio={editingPortfolio}
+              marketData={marketData}
+              onSave={(positions) => {
+                onCreatePortfolio(positions, editingPortfolio.name, editingPortfolio.id)
+                setEditingPortfolioId(null)
+              }}
+            />
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
@@ -182,7 +224,7 @@ export function MultiPortfolioManager({
             <Card
               key={portfolio.id}
               className="cursor-pointer transition-all hover:shadow-lg card-link"
-              onClick={() => onSelectPortfolio(portfolio.id)}
+              onClick={() => setEditingPortfolioId(portfolio.id)}
             >
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">

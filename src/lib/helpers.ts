@@ -826,7 +826,7 @@ export function getEmailBasedAvatar(email: string): string {
   return getRandomAvatar()
 }
 
-export const INITIAL_PORTFOLIO_VALUE = 10000
+export const INITIAL_PORTFOLIO_VALUE = 100000
 
 export function calculatePortfolioValue(
   positions: Array<{ allocation: number; currentPrice: number; entryPrice: number }>,
@@ -968,4 +968,54 @@ export function calculateSubscriptionEndDate(months: number = 1): number {
   const now = new Date()
   now.setMonth(now.getMonth() + months)
   return now.getTime()
+}
+
+export function normalizePortfolioTo100k(positions: Array<{
+  symbol: string
+  name: string
+  type: 'stock' | 'crypto'
+  quantity: number
+  averageCost: number
+  currentPrice: number
+  marketValue: number
+  totalReturn: number
+  totalReturnPercent: number
+}>): Array<{
+  symbol: string
+  name: string
+  type: 'stock' | 'crypto'
+  allocation: number
+  entryPrice: number
+  currentPrice: number
+  shares: number
+  value: number
+  returnPercent: number
+  returnValue: number
+}> {
+  const totalValue = positions.reduce((sum, p) => sum + p.marketValue, 0)
+  
+  if (totalValue === 0) {
+    return []
+  }
+
+  return positions.map(pos => {
+    const allocation = (pos.marketValue / totalValue) * 100
+    const normalizedValue = (allocation / 100) * INITIAL_PORTFOLIO_VALUE
+    const shares = normalizedValue / pos.currentPrice
+    const returnPercent = pos.totalReturnPercent
+    const returnValue = normalizedValue * (returnPercent / 100)
+
+    return {
+      symbol: pos.symbol,
+      name: pos.name,
+      type: pos.type,
+      allocation: parseFloat(allocation.toFixed(2)),
+      entryPrice: pos.averageCost,
+      currentPrice: pos.currentPrice,
+      shares,
+      value: normalizedValue,
+      returnPercent,
+      returnValue
+    }
+  })
 }

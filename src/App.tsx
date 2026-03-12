@@ -573,19 +573,16 @@ function App() {
       return
     }
 
-    if (!positions || positions.length === 0) {
-      toast.error('Cannot save empty portfolio', {
-        description: 'Add at least one position before saving.'
-      })
-      return
-    }
-
-    const totalAllocation = positions.reduce((sum, pos) => sum + pos.allocation, 0)
-    if (Math.abs(totalAllocation - 100) > 0.01) {
-      toast.error('Invalid allocation', {
-        description: `Total allocation is ${totalAllocation.toFixed(1)}%. Must equal 100%.`
-      })
-      return
+    const isCreatingEmpty = positions.length === 0
+    
+    if (!isCreatingEmpty) {
+      const totalAllocation = positions.reduce((sum, pos) => sum + pos.allocation, 0)
+      if (Math.abs(totalAllocation - 100) > 0.01) {
+        toast.error('Invalid allocation', {
+          description: `Total allocation is ${totalAllocation.toFixed(1)}%. Must equal 100%.`
+        })
+        return
+      }
     }
 
     const currentQuarter = getCurrentQuarter()
@@ -619,7 +616,7 @@ function App() {
       quarter: currentQuarter,
       positions: portfolioPositions,
       initialValue: INITIAL_PORTFOLIO_VALUE,
-      currentValue: INITIAL_PORTFOLIO_VALUE,
+      currentValue: isCreatingEmpty ? 0 : INITIAL_PORTFOLIO_VALUE,
       totalReturn: 0,
       totalReturnPercent: 0,
       lastUpdated: Date.now(),
@@ -636,48 +633,51 @@ function App() {
     }
 
     setPortfolio(newPortfolio)
-    setActiveTab('dashboard')
 
     setAllPortfolios(current => ({
       ...(current || {}),
       [profile!.id]: newPortfolio
     }))
 
-    if (activityTracker && profile) {
-      activityTracker.recordEvent({
-        type: isUpdate ? 'portfolio_updated' : 'portfolio_created',
-        quarter: currentQuarter,
-        data: {
-          action: isUpdate ? 'Updated portfolio allocation' : 'Created new portfolio',
-          portfolioName: newPortfolio.name,
-          positionsCount: positions.length,
-          stocksCount: positions.filter(p => p.type === 'stock').length,
-          cryptoCount: positions.filter(p => p.type === 'crypto').length
-        },
-        metadata: {
-          positions: portfolioPositions
-        }
-      })
+    if (!isCreatingEmpty) {
+      setActiveTab('dashboard')
       
-      activityTracker.updateQuarterSummary(
-        currentQuarter,
-        INITIAL_PORTFOLIO_VALUE,
-        INITIAL_PORTFOLIO_VALUE
-      )
+      if (activityTracker && profile) {
+        activityTracker.recordEvent({
+          type: isUpdate ? 'portfolio_updated' : 'portfolio_created',
+          quarter: currentQuarter,
+          data: {
+            action: isUpdate ? 'Updated portfolio allocation' : 'Created new portfolio',
+            portfolioName: newPortfolio.name,
+            positionsCount: positions.length,
+            stocksCount: positions.filter(p => p.type === 'stock').length,
+            cryptoCount: positions.filter(p => p.type === 'crypto').length
+          },
+          metadata: {
+            positions: portfolioPositions
+          }
+        })
+        
+        activityTracker.updateQuarterSummary(
+          currentQuarter,
+          INITIAL_PORTFOLIO_VALUE,
+          INITIAL_PORTFOLIO_VALUE
+        )
+      }
+
+      HapticFeedback.portfolioSave()
+
+      const newInsight: Insight = {
+        id: Date.now().toString(),
+        userId: profile!.id,
+        content: `Portfolio "${newPortfolio.name}" ${isUpdate ? 'updated' : 'created'}! You're holding ${positions.length} positions across ${positions.filter(p => p.type === 'stock').length} stocks and ${positions.filter(p => p.type === 'crypto').length} crypto. Bold moves. Let's see if they pay off! 💰`,
+        category: 'portfolio-tip',
+        timestamp: Date.now(),
+        read: false
+      }
+
+      setInsights((current) => [newInsight, ...(current || [])])
     }
-
-    HapticFeedback.portfolioSave()
-
-    const newInsight: Insight = {
-      id: Date.now().toString(),
-      userId: profile!.id,
-      content: `Portfolio "${newPortfolio.name}" ${isUpdate ? 'updated' : 'created'}! You're holding ${positions.length} positions across ${positions.filter(p => p.type === 'stock').length} stocks and ${positions.filter(p => p.type === 'crypto').length} crypto. Bold moves. Let's see if they pay off! 💰`,
-      category: 'portfolio-tip',
-      timestamp: Date.now(),
-      read: false
-    }
-
-    setInsights((current) => [newInsight, ...(current || [])])
   }
 
   const handleUserUpdate = (updatedUser: UserProfile) => {
