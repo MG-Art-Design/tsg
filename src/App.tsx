@@ -880,7 +880,6 @@ function App() {
               currentUser={profile}
               onAddFriendsClick={() => setActiveTab('profile')}
             />
-            />
           </TabsContent>
 
           <TabsContent value="portfolios">
@@ -894,27 +893,29 @@ function App() {
               marketData={marketData}
               onCreatePortfolio={handlePortfolioSave}
             />
+          </TabsContent>
+
+          <TabsContent value="groups">
             <Groups 
               currentUser={profile} 
               onUserUpdate={handleUserUpdate} 
               marketData={marketData}
               allPortfolios={allPortfolios || {}}
             />
-              marketData={marketData}
-              allPortfolios={allPortfolios || {}}
-            />
+          </TabsContent>
+
+          <TabsContent value="insights">
             <Insights 
               insights={insights ?? []} 
               userProfile={profile}
               onUpgradeClick={handleUpgradeClick}
               insiderTrades={insiderTrades}
-            />
               onInsightsUpdate={setInsights}
             />
           </TabsContent>
 
-              <ProfileCustomization profile={profile} onUpdate={handleUserUpdate} />
-
+          <TabsContent value="profile">
+            <div className="space-y-6">
               <ProfileCustomization profile={profile} onUpdate={handleUserUpdate} />
 
               <TradingAccountLinker profile={profile} onUpdate={handleUserUpdate} />
