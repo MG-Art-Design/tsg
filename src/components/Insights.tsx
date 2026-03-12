@@ -6,7 +6,7 @@ import { Lightning, ChartLine, Warning, Trophy, Users } from '@phosphor-icons/re
 import { Insight, UserProfile, InsiderTrade } from '@/lib/types'
 import { motion } from 'framer-motion'
 import { InsiderTrades } from '@/components/InsiderTrades'
-import { StrategicInsightsEnhanced } from '@/components/StrategicInsightsEnhanced'
+import { GeopoliticalStrategicInsights } from '@/components/GeopoliticalStrategicInsights'
 import { DailyInsiderRecommendations } from '@/components/DailyInsiderRecommendations'
 import { FriendInsights } from '@/components/FriendInsights'
 
@@ -188,8 +188,7 @@ export function Insights({ insights, userProfile, onUpgradeClick, insiderTrades,
         </TabsContent>
 
         <TabsContent value="strategic">
-          <StrategicInsightsEnhanced 
-            trades={insiderTrades}
+          <GeopoliticalStrategicInsights 
             userTier={userProfile.subscription.tier}
             onUpgradeClick={onUpgradeClick}
           />
