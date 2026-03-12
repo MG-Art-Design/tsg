@@ -18,8 +18,9 @@ interface DashboardProps {
 }
 
 export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick, insiderTrades }: DashboardProps) {
-  const topGainers = [...marketData].sort((a, b) => b.priceChangePercent24h - a.priceChangePercent24h).slice(0, 3)
-  const topLosers = [...marketData].sort((a, b) => a.priceChangePercent24h - b.priceChangePercent24h).slice(0, 3)
+  const safeMarketData = marketData || []
+  const topGainers = [...safeMarketData].sort((a, b) => b.priceChangePercent24h - a.priceChangePercent24h).slice(0, 3)
+  const topLosers = [...safeMarketData].sort((a, b) => a.priceChangePercent24h - b.priceChangePercent24h).slice(0, 3)
   
   const previousValueRef = useRef(portfolio?.currentValue || 10000)
 
