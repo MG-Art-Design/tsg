@@ -6,7 +6,7 @@ import { Portfolio, Asset, InsiderTrade, UserProfile } from '@/lib/types'
 import { formatCurrency, formatPercent } from '@/lib/helpers'
 import { motion } from 'framer-motion'
 import { InsiderTrades } from './InsiderTrades'
-import { StrategicInsightsEnhanced } from './StrategicInsightsEnhanced'
+import { InviteFriends } from './InviteFriends'
 import { AnimatedPortfolioCounter } from './AnimatedPortfolioCounter'
 
 interface DashboardProps {
@@ -112,7 +112,7 @@ export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick, 
 
         <InsiderTrades trades={insiderTrades.slice(0, 2)} userTier={userTier} onUpgradeClick={onUpgradeClick} showLimited />
 
-        <StrategicInsightsEnhanced trades={insiderTrades} userTier={userTier} onUpgradeClick={onUpgradeClick} />
+        <InviteFriends currentUserName={userProfile.username} currentUserEmail={userProfile.email} />
       </div>
     )
   }
@@ -244,7 +244,7 @@ export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick, 
 
       <InsiderTrades trades={insiderTrades.slice(0, 2)} userTier={userTier} onUpgradeClick={onUpgradeClick} showLimited />
 
-      <StrategicInsightsEnhanced trades={insiderTrades} userTier={userTier} onUpgradeClick={onUpgradeClick} />
+      <InviteFriends currentUserName={userProfile.username} currentUserEmail={userProfile.email} />
 
       {portfolio?.positions.length > 0 && (
         <Card className="border-2 border-[oklch(0.70_0.14_75)]">
