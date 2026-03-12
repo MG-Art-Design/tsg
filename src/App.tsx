@@ -874,15 +874,15 @@ function App() {
             />
           </TabsContent>
 
-          <TabsContent value="leaderboard">
-            <Leaderboard 
-              entries={mockLeaderboard} 
-              currentUserId={profile.id} 
               currentUser={profile}
               onAddFriendsClick={() => setActiveTab('profile')}
             />
           </TabsContent>
 
+          <TabsContent value="portfolios">
+            <MultiPortfolioManager
+              portfolios={userPortfolios || []}
+              userProfile={profile}
           <TabsContent value="portfolios">
             <MultiPortfolioManager
               portfolios={userPortfolios || []}
@@ -893,13 +893,13 @@ function App() {
               onUpgradeClick={handleUpgradeClick}
               marketData={marketData}
               onCreatePortfolio={handlePortfolioSave}
-            />
-          </TabsContent>
-
-          <TabsContent value="groups">
             <Groups 
               currentUser={profile} 
               onUserUpdate={handleUserUpdate} 
+              marketData={marketData}
+              allPortfolios={allPortfolios || {}}
+            />
+          </TabsContent>
               marketData={marketData}
               allPortfolios={allPortfolios || {}}
             />
@@ -909,10 +909,6 @@ function App() {
             <Insights 
               insights={insights ?? []} 
               userProfile={profile}
-              onUpgradeClick={handleUpgradeClick}
-              insiderTrades={insiderTrades}
-            />
-          </TabsContent>
 
           <TabsContent value="profile">
             <div className="max-w-2xl mx-auto space-y-6">
