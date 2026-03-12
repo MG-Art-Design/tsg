@@ -22,7 +22,7 @@ export function InsiderTrades({ trades, userTier = 'free', onUpgradeClick, showL
     ? trades 
     : trades.filter(t => t.category === filter)
 
-  const visibleTrades = filteredTrades
+  const visibleTrades = showLimited ? filteredTrades.slice(0, 2) : filteredTrades
 
   const getCategoryIcon = (category: string) => {
     switch (category) {

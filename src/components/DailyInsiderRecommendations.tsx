@@ -35,7 +35,6 @@ export function DailyInsiderRecommendations({
   const [dailyRecs, setDailyRecs] = useKV<DailyInsiderRecommendation | null>('daily-insider-recs', null)
   const [isGenerating, setIsGenerating] = useState(false)
 
-  const isPremium = profile.subscription.tier === 'premium'
   const hasLinkedAccounts = (profile.linkedAccounts || []).length > 0
   const importedPositions = profile.importedPositions || []
 
@@ -146,7 +145,7 @@ Return ONLY valid JSON:
     }
   }
 
-  if (!isPremium) {
+  if (!hasLinkedAccounts) {
     return (
       <Card className="border-2 border-[oklch(0.65_0.12_75_/_0.3)] bg-gradient-to-br from-[oklch(0.08_0.005_60)] to-[oklch(0.05_0.008_70)] relative overflow-hidden">
         <div className="absolute inset-0 opacity-20">

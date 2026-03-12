@@ -11,7 +11,6 @@ import { useKV } from '@github/spark/hooks'
 
 interface FriendInsightsProps {
   userProfile: UserProfile
-  onUpgradeClick: () => void
 }
 
 interface FriendActivity {
@@ -22,7 +21,7 @@ interface FriendActivity {
   portfolioSnapshot?: Portfolio
 }
 
-export function FriendInsights({ userProfile, onUpgradeClick }: FriendInsightsProps) {
+export function FriendInsights({ userProfile }: FriendInsightsProps) {
   const [allUsers] = useKV<Record<string, UserProfile>>('all-users', {})
   const [allPortfolios] = useKV<Record<string, Portfolio>>('all-portfolios', {})
   const [activityHistory] = useKV<Record<string, any>>('activity-history', {})
@@ -128,13 +127,6 @@ export function FriendInsights({ userProfile, onUpgradeClick }: FriendInsightsPr
           <p className="text-muted-foreground mb-6 max-w-md mx-auto">
             Add friends to see their portfolio activity and learn from their trading strategies. Competition makes everyone better!
           </p>
-          <Button 
-            onClick={onUpgradeClick}
-            className="bg-[oklch(0.65_0.12_75)] hover:bg-[oklch(0.70_0.14_75)] text-[oklch(0.15_0.01_240)]"
-          >
-            <Users size={16} weight="fill" />
-            Add Friends
-          </Button>
         </CardContent>
       </Card>
     )

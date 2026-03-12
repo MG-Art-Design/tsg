@@ -242,7 +242,7 @@ export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick, 
         </div>
       </div>
 
-      <InsiderTrades trades={insiderTrades.slice(0, 2)} userTier={userTier} onUpgradeClick={onUpgradeClick} showLimited />
+      <InsiderTrades trades={insiderTrades.slice(0, 2)} showLimited />
 
       <InviteFriends currentUserName={userProfile.username} currentUserEmail={userProfile.email} />
 

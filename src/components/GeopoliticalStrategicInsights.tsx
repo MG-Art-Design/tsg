@@ -31,12 +31,9 @@ interface GeopoliticalMove {
   timestamp: number
 }
 
-interface GeopoliticalStrategicInsightsProps {
-  userTier: SubscriptionTier
-  onUpgradeClick: () => void
-}
+interface GeopoliticalStrategicInsightsProps {}
 
-export function GeopoliticalStrategicInsights({ userTier, onUpgradeClick }: GeopoliticalStrategicInsightsProps) {
+export function GeopoliticalStrategicInsights({}: GeopoliticalStrategicInsightsProps) {
   const [moves, setMoves] = useState<GeopoliticalMove[]>([])
   const [isGenerating, setIsGenerating] = useState(false)
   const [selectedMove, setSelectedMove] = useState<GeopoliticalMove | null>(null)
