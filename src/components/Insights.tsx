@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Lightning, ChartLine, Warning, Trophy } from '@phosphor-icons/react'
@@ -7,12 +6,12 @@ import { motion } from 'framer-motion'
 import { InsiderTrades } from '@/components/InsiderTrades'
 import { StrategicInsightsEnhanced } from '@/components/StrategicInsightsEnhanced'
 import { DailyInsiderRecommendations } from '@/components/DailyInsiderRecommendations'
-import { generateMockInsiderTrades } from '@/lib/insiderHelpers'
 
 interface InsightsProps {
   insights: Insight[]
   userProfile: UserProfile
   onUpgradeClick: () => void
+  insiderTrades: InsiderTrade[]
 }
 
 const categoryConfig = {
@@ -46,14 +45,8 @@ const categoryConfig = {
   }
 }
 
-export function Insights({ insights, userProfile, onUpgradeClick }: InsightsProps) {
-  const [insiderTrades, setInsiderTrades] = useState<InsiderTrade[]>([])
+export function Insights({ insights, userProfile, onUpgradeClick, insiderTrades }: InsightsProps) {
   const sortedInsights = [...insights].sort((a, b) => b.timestamp - a.timestamp)
-
-  useEffect(() => {
-    const trades = generateMockInsiderTrades()
-    setInsiderTrades(trades)
-  }, [])
 
   const formatTime = (timestamp: number) => {
     const now = Date.now()

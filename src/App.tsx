@@ -42,7 +42,7 @@ import { generateMockInsiderTrades } from '@/lib/insiderHelpers'
 import { HapticFeedback } from '@/lib/haptics'
 import { useActivityTracker } from '@/hooks/use-activity-tracker'
 import { isAdminSession, clearAdminSession } from '@/lib/admin'
-import { ChartLine, Lightning, Trophy, Notebook, User, Users, SignOut, SignIn, FolderOpen, ShieldCheck, Sparkle } from '@phosphor-icons/react'
+import { ChartLine, Trophy, User, Users, SignOut, SignIn, FolderOpen, ShieldCheck, Sparkle } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 
 function App() {
@@ -837,7 +837,7 @@ function App() {
 
       <main className="container mx-auto px-4 py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-7 mb-6 bg-gradient-to-r from-[oklch(0.10_0.005_60)] to-[oklch(0.08_0.006_70)] border-2 border-[oklch(0.70_0.14_75)] p-1 h-auto shadow-[0_0_20px_oklch(0.65_0.12_75_/_0.2)]">
+          <TabsList className="grid w-full grid-cols-6 mb-6 bg-gradient-to-r from-[oklch(0.10_0.005_60)] to-[oklch(0.08_0.006_70)] border-2 border-[oklch(0.70_0.14_75)] p-1 h-auto shadow-[0_0_20px_oklch(0.65_0.12_75_/_0.2)]">
             <TabsTrigger value="dashboard" className="flex items-center gap-2 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold">
               <ChartLine size={18} />
               <span className="hidden sm:inline">Dashboard</span>
@@ -845,10 +845,6 @@ function App() {
             <TabsTrigger value="portfolios" className="flex items-center gap-2 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold">
               <FolderOpen size={18} weight="fill" />
               <span className="hidden sm:inline">Portfolios</span>
-            </TabsTrigger>
-            <TabsTrigger value="insider-moves" className="flex items-center gap-2 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold">
-              <Sparkle size={18} weight="fill" />
-              <span className="hidden sm:inline">Insider Moves</span>
             </TabsTrigger>
             <TabsTrigger value="leaderboard" className="flex items-center gap-2 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold">
               <Trophy size={18} weight="fill" />
@@ -859,7 +855,7 @@ function App() {
               <span className="hidden sm:inline">Groups</span>
             </TabsTrigger>
             <TabsTrigger value="insights" className="flex items-center gap-2 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold">
-              <Notebook size={18} />
+              <Sparkle size={18} weight="fill" />
               <span className="hidden sm:inline">Insights</span>
             </TabsTrigger>
             <TabsTrigger value="profile" className="flex items-center gap-2 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold">
@@ -885,10 +881,6 @@ function App() {
             />
           </TabsContent>
 
-          <TabsContent value="insider-moves">
-            <InsiderTrades trades={insiderTrades} userTier={profile.subscription?.tier || 'free'} onUpgradeClick={handleUpgradeClick} />
-          </TabsContent>
-
           <TabsContent value="leaderboard">
             <Leaderboard 
               entries={mockLeaderboard} 
@@ -912,6 +904,7 @@ function App() {
               insights={insights ?? []} 
               userProfile={profile}
               onUpgradeClick={handleUpgradeClick}
+              insiderTrades={insiderTrades}
             />
           </TabsContent>
 
