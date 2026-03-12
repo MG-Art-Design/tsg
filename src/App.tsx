@@ -862,11 +862,11 @@ function App() {
 
           <TabsContent value="dashboard">
             <Dashboard 
-              userProfile={profile}
-              portfolio={portfolio ?? null}
-              marketData={marketData}
+              profile={profile}
+              portfolio={portfolio}
+              leaderboardEntries={mockLeaderboard}
+              insights={insights ?? []}
               onUpgradeClick={handleUpgradeClick}
-              insiderTrades={insiderTrades}
             />
           </TabsContent>
 
