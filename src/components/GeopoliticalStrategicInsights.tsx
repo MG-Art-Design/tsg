@@ -49,7 +49,7 @@ export function GeopoliticalStrategicInsights({}: GeopoliticalStrategicInsightsP
 
       await new Promise(resolve => setTimeout(resolve, 2000))
 
-      const prompt = window.spark.llmPrompt`You are a geopolitical analyst focused on strategic moves that affect global markets, with the USA as the primary actor.
+      const promptText = `You are a geopolitical analyst focused on strategic moves that affect global markets, with the USA as the primary actor.
 
 Generate exactly 5 current geopolitical strategic moves/decisions from the perspective of countries with USA as the #1 choice in that grouping. Each move should be real-world relevant and plausible.
 
@@ -69,7 +69,7 @@ For each move, provide:
 
 Return the result as a JSON object with a single property "moves" containing an array of the 5 moves. Each move should have: headline, who, what, when, how, summary, fullAnalysis, aiReasoning, confidenceScore, geopoliticalImpact, marketSectors properties.`
 
-      const response = await window.spark.llm(prompt, 'gpt-4o', true)
+      const response = await window.spark.llm(promptText, 'gpt-4o', true)
       const data = JSON.parse(response)
 
       const formattedMoves: GeopoliticalMove[] = data.moves.map((move: any, index: number) => ({

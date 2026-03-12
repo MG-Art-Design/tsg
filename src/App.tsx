@@ -877,6 +877,7 @@ function App() {
           <TabsContent value="leaderboard">
             <Leaderboard 
               entries={mockLeaderboard}
+              currentUserId={profile.id}
               currentUser={profile}
               onAddFriendsClick={() => setActiveTab('profile')}
             />
@@ -885,13 +886,13 @@ function App() {
           <TabsContent value="portfolios">
             <MultiPortfolioManager
               portfolios={userPortfolios || []}
-              activePortfolioId={activePortfolioId}
-              onSelectPortfolio={handleSelectPortfolio}
-              onDeletePortfolio={handleDeletePortfolio}
-              onRenamePortfolio={handleRenamePortfolio}
-              onUpgradeClick={handleUpgradeClick}
+              userProfile={profile}
               marketData={marketData}
               onCreatePortfolio={handlePortfolioSave}
+              onDeletePortfolio={handleDeletePortfolio}
+              onRenamePortfolio={handleRenamePortfolio}
+              onSelectPortfolio={handleSelectPortfolio}
+              onUpgradeClick={handleUpgradeClick}
             />
           </TabsContent>
 

@@ -941,28 +941,15 @@ export const SUBSCRIPTION_PRICING = {
 }
 
 export function getSubscriptionFeatures(tier: SubscriptionTier): SubscriptionFeatures {
-  if (tier === 'premium') {
-    return {
-      strategicInsights: true,
-      groupChat: true,
-      emailNotifications: true,
-      maxGroups: -1,
-      maxPortfolios: -1,
-      historicalData: true,
-      advancedAnalytics: true,
-      prioritySupport: true
-    }
-  }
-
   return {
-    strategicInsights: false,
-    groupChat: false,
-    emailNotifications: false,
-    maxGroups: 1,
-    maxPortfolios: 3,
-    historicalData: false,
-    advancedAnalytics: false,
-    prioritySupport: false
+    strategicInsights: true,
+    groupChat: true,
+    emailNotifications: true,
+    maxGroups: -1,
+    maxPortfolios: -1,
+    historicalData: true,
+    advancedAnalytics: true,
+    prioritySupport: true
   }
 }
 
