@@ -75,12 +75,12 @@ This app requires multiple interconnected features including user profiles, real
 - **Progression**: View friends list → Select relationship type for each friend → Changes sync to both users → Relationship badges appear on leaderboard
 - **Success criteria**: Relationship statuses persist, display as badges on leaderboard entries, reciprocal statuses update automatically (mentor/mentee), can be changed anytime, filters work correctly
 
-### Portfolio Management
-- **Functionality**: Allocate virtual $10k across S&P 500 stocks and crypto, rebalance positions, track value changes
-- **Purpose**: Core mechanic for competition - players make strategic choices and live with consequences
-- **Trigger**: "Manage Portfolio" button from dashboard
-- **Progression**: View current positions → Search assets → Allocate percentage → Confirm changes → See updated portfolio value
-- **Success criteria**: Allocations total 100%, changes persist, portfolio value tracks market accurately, trade history logged
+### Portfolio Management & CSV Import
+- **Functionality**: Allocate virtual $100k across S&P 500 stocks and crypto, rebalance positions, track value changes. Users can manually create portfolios or import existing allocations from CSV files, which are automatically normalized to the $100,000 total value while maintaining percentage allocations.
+- **Purpose**: Core mechanic for competition - players make strategic choices and live with consequences. CSV import enables users to quickly migrate portfolios from external sources (brokerages, spreadsheets) without manual re-entry.
+- **Trigger**: "Manage Portfolio" button from dashboard or "Import CSV" button in Portfolios tab
+- **Progression**: Manual: View current positions → Search assets → Allocate percentage → Confirm changes → See updated portfolio value. Import: Click "Import CSV" → Upload/drag-drop CSV file → Review auto-detected positions and types → Edit portfolio name → Preview normalized allocations (adjusted to $100k) → Confirm import → Portfolio created with positions
+- **Success criteria**: Allocations total 100%, changes persist, portfolio value tracks market accurately, trade history logged. CSV import correctly parses symbol, name, allocation/value columns, detects stock vs crypto asset types, normalizes any portfolio value to exactly $100,000 while maintaining allocation percentages, handles missing optional columns gracefully, provides clear error messages for invalid formats, supports drag-and-drop and file browse upload methods
 
 ### Email Notification System
 - **Functionality**: Automated email delivery of performance summaries, leaderboard updates, market insights, and portfolio changes based on user-selected frequency (daily/weekly/monthly)

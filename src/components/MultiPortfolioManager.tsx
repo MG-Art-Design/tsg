@@ -13,9 +13,10 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog'
-import { TrendUp, TrendDown, Plus, Trash, PencilSimple, Crown, Lightning, ArrowLeft } from '@phosphor-icons/react'
+import { TrendUp, TrendDown, Plus, Trash, PencilSimple, Crown, Lightning, ArrowLeft, FileArrowUp } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { PortfolioManager } from './PortfolioManager'
+import { PortfolioImporter } from './PortfolioImporter'
 
 interface MultiPortfolioManagerProps {
   portfolios: Portfolio[]
@@ -39,6 +40,7 @@ export function MultiPortfolioManager({
   onUpgradeClick
 }: MultiPortfolioManagerProps) {
   const [showCreateDialog, setShowCreateDialog] = useState(false)
+  const [showImportDialog, setShowImportDialog] = useState(false)
   const [showRenameDialog, setShowRenameDialog] = useState(false)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [portfolioName, setPortfolioName] = useState('')
@@ -88,6 +90,31 @@ export function MultiPortfolioManager({
     })
     
     setPortfolioName('')
+  }
+
+  const handleImportClick = () => {
+    if (!canCreateMore) {
+      toast.error('Portfolio limit reached', {
+        description: `Free tier allows up to ${maxPortfolios} portfolios. Upgrade to Premium for unlimited portfolios.`,
+        action: {
+          label: 'Upgrade',
+          onClick: onUpgradeClick
+        }
+      })
+      return
+    }
+    setShowImportDialog(true)
+  }
+
+  const handleImportPortfolio = (positions: Array<{ symbol: string; name: string; type: 'stock' | 'crypto'; allocation: number }>, portfolioName: string) => {
+    const existingNames = portfolios.map(p => p.name.toLowerCase())
+    if (existingNames.includes(portfolioName.toLowerCase())) {
+      const uniqueName = `${portfolioName} (Imported ${Date.now()})`
+      onCreatePortfolio(positions, uniqueName, `portfolio-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`)
+      return
+    }
+
+    onCreatePortfolio(positions, portfolioName, `portfolio-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`)
   }
 
   const handleRenameClick = (portfolioId: string) => {
@@ -186,14 +213,25 @@ export function MultiPortfolioManager({
             )}
           </p>
         </div>
-        <Button
-          onClick={handleCreateClick}
-          className="flex items-center gap-2"
-          disabled={!canCreateMore && !isPremium}
-        >
-          <Plus weight="bold" />
-          New Portfolio
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            onClick={handleImportClick}
+            variant="outline"
+            className="flex items-center gap-2"
+            disabled={!canCreateMore && !isPremium}
+          >
+            <FileArrowUp weight="bold" />
+            Import CSV
+          </Button>
+          <Button
+            onClick={handleCreateClick}
+            className="flex items-center gap-2"
+            disabled={!canCreateMore && !isPremium}
+          >
+            <Plus weight="bold" />
+            New Portfolio
+          </Button>
+        </div>
       </div>
 
       {!isPremium && !canCreateMore && (
@@ -409,6 +447,12 @@ export function MultiPortfolioManager({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <PortfolioImporter
+        open={showImportDialog}
+        onOpenChange={setShowImportDialog}
+        onImport={handleImportPortfolio}
+      />
     </div>
   )
 }
