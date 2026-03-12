@@ -1,17 +1,21 @@
+import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Lightning, ChartLine, Warning, Trophy } from '@phosphor-icons/react'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { Lightning, ChartLine, Warning, Trophy, Users } from '@phosphor-icons/react'
 import { Insight, UserProfile, InsiderTrade } from '@/lib/types'
 import { motion } from 'framer-motion'
 import { InsiderTrades } from '@/components/InsiderTrades'
 import { StrategicInsightsEnhanced } from '@/components/StrategicInsightsEnhanced'
 import { DailyInsiderRecommendations } from '@/components/DailyInsiderRecommendations'
+import { FriendInsights } from '@/components/FriendInsights'
 
 interface InsightsProps {
   insights: Insight[]
   userProfile: UserProfile
   onUpgradeClick: () => void
   insiderTrades: InsiderTrade[]
+  onInsightsUpdate?: (insights: Insight[]) => void
 }
 
 const categoryConfig = {
@@ -45,7 +49,8 @@ const categoryConfig = {
   }
 }
 
-export function Insights({ insights, userProfile, onUpgradeClick, insiderTrades }: InsightsProps) {
+export function Insights({ insights, userProfile, onUpgradeClick, insiderTrades, onInsightsUpdate }: InsightsProps) {
+  const [activeTab, setActiveTab] = useState('overall')
   const sortedInsights = [...insights].sort((a, b) => b.timestamp - a.timestamp)
 
   const formatTime = (timestamp: number) => {
@@ -75,76 +80,128 @@ export function Insights({ insights, userProfile, onUpgradeClick, insiderTrades 
         </CardHeader>
       </Card>
 
-      <DailyInsiderRecommendations 
-        profile={userProfile}
-        insiderTrades={insiderTrades}
-        onUpgradeClick={onUpgradeClick}
-      />
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="grid w-full grid-cols-4 mb-6 bg-gradient-to-r from-[oklch(0.10_0.005_60)] to-[oklch(0.08_0.006_70)] border-2 border-[oklch(0.70_0.14_75)] p-1 h-auto shadow-[0_0_20px_oklch(0.65_0.12_75_/_0.2)]">
+          <TabsTrigger 
+            value="overall" 
+            className="flex items-center gap-1.5 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold text-xs sm:text-sm px-2 py-2"
+          >
+            <Lightning size={16} weight="fill" />
+            <span className="hidden sm:inline">Overall Market</span>
+            <span className="sm:hidden">Overall</span>
+          </TabsTrigger>
+          <TabsTrigger 
+            value="insider" 
+            className="flex items-center gap-1.5 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold text-xs sm:text-sm px-2 py-2"
+          >
+            <Trophy size={16} weight="fill" />
+            <span className="hidden sm:inline">OMG It's In</span>
+            <span className="sm:hidden">Insider</span>
+          </TabsTrigger>
+          <TabsTrigger 
+            value="strategic" 
+            className="flex items-center gap-1.5 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold text-xs sm:text-sm px-2 py-2"
+          >
+            <ChartLine size={16} weight="fill" />
+            <span className="hidden sm:inline">Strategic AI</span>
+            <span className="sm:hidden">Strategic</span>
+          </TabsTrigger>
+          <TabsTrigger 
+            value="friends" 
+            className="flex items-center gap-1.5 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold text-xs sm:text-sm px-2 py-2"
+          >
+            <Users size={16} weight="fill" />
+            <span className="hidden sm:inline">Friend Insights</span>
+            <span className="sm:hidden">Friends</span>
+          </TabsTrigger>
+        </TabsList>
 
-      <InsiderTrades 
-        trades={insiderTrades}
-        userTier={userProfile.subscription.tier}
-        onUpgradeClick={onUpgradeClick}
-      />
+        <TabsContent value="overall">
+          <div className="space-y-6">
+            <DailyInsiderRecommendations 
+              profile={userProfile}
+              insiderTrades={insiderTrades}
+              onUpgradeClick={onUpgradeClick}
+            />
 
-      <StrategicInsightsEnhanced 
-        trades={insiderTrades}
-        userTier={userProfile.subscription.tier}
-        onUpgradeClick={onUpgradeClick}
-      />
+            {sortedInsights.length === 0 ? (
+              <Card className="border-2 border-[oklch(0.70_0.14_75)]">
+                <CardContent className="py-12 text-center">
+                  <Lightning size={48} className="text-muted-foreground mx-auto mb-4" />
+                  <p className="text-muted-foreground">
+                    No insights yet. Check back soon for market wisdom.
+                  </p>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="space-y-3">
+                {sortedInsights.map((insight, i) => {
+                  const config = categoryConfig[insight.category]
+                  const Icon = config.icon
 
-      {sortedInsights.length === 0 ? (
-        <Card className="border-2 border-[oklch(0.70_0.14_75)]">
-          <CardContent className="py-12 text-center">
-            <Lightning size={48} className="text-muted-foreground mx-auto mb-4" />
-            <p className="text-muted-foreground">
-              No insights yet. Check back soon for market wisdom.
-            </p>
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="space-y-3">
-          {sortedInsights.map((insight, i) => {
-            const config = categoryConfig[insight.category]
-            const Icon = config.icon
+                  return (
+                    <motion.div
+                      key={insight.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: i * 0.05 }}
+                    >
+                      <Card className={`border-2 border-[oklch(0.70_0.14_75)]/50 ${!insight.read ? 'ring-2 ring-primary/30' : ''}`}>
+                        <CardContent className="p-4">
+                          <div className="flex items-start gap-4">
+                            <div className={`flex-shrink-0 w-10 h-10 rounded-full ${config.bgColor} flex items-center justify-center`}>
+                              <Icon size={20} weight="fill" className={config.color} />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 mb-2">
+                                <Badge variant="outline" className="text-xs">
+                                  {config.label}
+                                </Badge>
+                                <span className="text-xs text-muted-foreground">
+                                  {formatTime(insight.timestamp)}
+                                </span>
+                                {!insight.read && (
+                                  <Badge className="bg-primary text-primary-foreground text-xs">New</Badge>
+                                )}
+                              </div>
+                              <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                                {insight.content}
+                              </p>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  )
+                })}
+              </div>
+            )}
+          </div>
+        </TabsContent>
 
-            return (
-              <motion.div
-                key={insight.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: i * 0.05 }}
-              >
-                <Card className={`border-2 border-[oklch(0.70_0.14_75)]/50 ${!insight.read ? 'ring-2 ring-primary/30' : ''}`}>
-                  <CardContent className="p-4">
-                    <div className="flex items-start gap-4">
-                      <div className={`flex-shrink-0 w-10 h-10 rounded-full ${config.bgColor} flex items-center justify-center`}>
-                        <Icon size={20} weight="fill" className={config.color} />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-2">
-                          <Badge variant="outline" className="text-xs">
-                            {config.label}
-                          </Badge>
-                          <span className="text-xs text-muted-foreground">
-                            {formatTime(insight.timestamp)}
-                          </span>
-                          {!insight.read && (
-                            <Badge className="bg-primary text-primary-foreground text-xs">New</Badge>
-                          )}
-                        </div>
-                        <p className="text-sm leading-relaxed whitespace-pre-wrap">
-                          {insight.content}
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            )
-          })}
-        </div>
-      )}
+        <TabsContent value="insider">
+          <InsiderTrades 
+            trades={insiderTrades}
+            userTier={userProfile.subscription.tier}
+            onUpgradeClick={onUpgradeClick}
+          />
+        </TabsContent>
+
+        <TabsContent value="strategic">
+          <StrategicInsightsEnhanced 
+            trades={insiderTrades}
+            userTier={userProfile.subscription.tier}
+            onUpgradeClick={onUpgradeClick}
+          />
+        </TabsContent>
+
+        <TabsContent value="friends">
+          <FriendInsights 
+            userProfile={userProfile}
+            onUpgradeClick={onUpgradeClick}
+          />
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }

@@ -89,19 +89,40 @@ This app requires multiple interconnected features including user profiles, real
 - **Progression**: Enable in settings → Set email & frequency → Select content types (leaderboard/market/insights) → Receive scheduled updates → Email contains formatted HTML with portfolio performance, rankings, and AI insights
 - **Success criteria**: Emails sent at correct intervals, content respects user preferences, HTML formatting displays correctly, emails include current rankings and accurate portfolio data
 
-### Insider Trading Intelligence Feed ("Stonk: OMG It's In")
-- **Functionality**: Displays publicly disclosed insider trades from Congress members, White House officials, Trump family/partners, and affiliates, updated every 12 hours with filtering by category, featuring full access to all trades with no limitations
-- **Purpose**: Provides competitive intelligence on high-profile trades to inform user investment strategies and add intrigue to the competition
-- **Trigger**: Automatically displayed on Dashboard (last 2 trades); full access available via dedicated "Insider Moves" tab at top navigation
-- **Progression**: Dashboard shows last 2 trades as preview → Click "Insider Moves" tab for full access → Filter by category (All/Congress/White House/Trump Family) → Review all trade details (trader, asset, action, value, dates) → Use intelligence for portfolio decisions
-- **Success criteria**: Data updates every 12 hours, displays accurate trade information with 35+ mock trades, filters work correctly, distinctive black-gold styling sets section apart visually, maintains monochromatic design consistency, Dashboard preview shows last 2 trades only, full "Insider Moves" tab provides complete access
+### Market Insights Tab with Internal Navigation
+- **Functionality**: Comprehensive insights hub with four distinct sections accessible via internal menu toggle: Overall Market Insights (general insights + AI recommendations), Stonk: OMG It's In (insider trades), Strategic Positioning AI - Enhanced (deep insider analysis), and Friend Insights (friend portfolio activity tracking)
+- **Purpose**: Centralizes all intelligence, analysis, and competitive information in one organized space with easy navigation between insight types
+- **Trigger**: Insights tab navigation from main menu; internal tab menu allows switching between four sections
+- **Progression**: Navigate to Insights tab → See four-tab menu (Overall Market, OMG It's In, Strategic AI, Friend Insights) → Select desired section → View section-specific content → Switch tabs to explore other insight types
+- **Success criteria**: Four tabs display correctly with distinctive styling, content loads properly per tab, tab state persists during session, mobile view shows abbreviated tab names, active tab highlighted with gold accent
 
-### Strategic Positioning AI - Enhanced ("Stonk: OMG It's In" Analysis)
+### Overall Market Insights
+- **Functionality**: Daily AI-generated market analysis with sassy, encouraging tone delivered based on user preference, including personalized recommendations and general market commentary
+- **Purpose**: Educates users on market trends while maintaining engaging personality and encouraging strategic risk-taking
+- **Trigger**: Displayed in "Overall Market" tab; automatically generated insights appear chronologically
+- **Progression**: Navigate to Overall Market tab → View Daily Insider Recommendations card → See chronological list of market insights with category badges → Read insights with timestamps
+- **Success criteria**: Insights are relevant to current market conditions, tone is consistent (sassy yet respectful), delivery matches preferences, categorized by type (market-trend, portfolio-tip, risk-alert, winner-spotlight), timestamps show relative time
+
+### Insider Trading Intelligence Feed ("Stonk: OMG It's In")
+- **Functionality**: Displays publicly disclosed insider trades from Congress members, White House officials, Trump family/partners, and affiliates, updated every 12 hours with filtering by category (All/Congress/White House/Trump Family)
+- **Purpose**: Provides competitive intelligence on high-profile trades to inform user investment strategies and add intrigue to the competition
+- **Trigger**: Accessed via "OMG It's In" tab within Insights section
+- **Progression**: Navigate to Insights → Select "OMG It's In" tab → View full insider trades feed → Filter by category (All/Congress/White House/Trump Family) → Review all trade details (trader, asset, action, value, disclosure dates) → Use intelligence for portfolio decisions
+- **Success criteria**: Data updates every 12 hours, displays accurate trade information with 35+ mock trades, four-tab filter works correctly (All/Congress/White House/Trump Family), distinctive black-gold styling sets section apart visually, maintains monochromatic design consistency
+
+### Strategic Positioning AI - Enhanced
 - **Functionality**: Two-part AI vetting system that analyzes insider trading patterns at 2x research depth, identifying key Congress members, Trump family activities, Stephen Miller affiliates, and extrapolating quiet hand analysis to generate strategic asset categorizations and trading signals
 - **Purpose**: Transforms raw insider trading data into deeply vetted actionable intelligence with strategic asset recommendations across five categories (highest growth, highest volatility, lowest volatility, consistent performers, underrated genius choices)
-- **Trigger**: Users click "Generate Vetted Insight" button in Strategic Positioning AI - Enhanced card on Dashboard
-- **Progression**: User clicks Generate → Phase 1 vetting begins (pattern recognition, player analysis, anomaly detection) → Phase 1 completes with score → Phase 2 vetting begins (quiet hand extrapolation, strategic synthesis, asset categorization) → Phase 2 completes with score → Final synthesis creates comprehensive insight → Display across 4 tabs: Overview (analysis with vet scores), Assets (5 categories with 3-5 recommendations each), Signals (5-7 trading signals with strength/time horizon), Players (key insider profiles with influence scores)
+- **Trigger**: Accessed via "Strategic AI" tab within Insights section; users click "Generate Vetted Insight" button to run analysis
+- **Progression**: Navigate to Insights → Select "Strategic AI" tab → Click "Generate Vetted Insight" → Phase 1 vetting begins (pattern recognition, player analysis, anomaly detection) → Phase 1 completes with score → Phase 2 vetting begins (quiet hand extrapolation, strategic synthesis, asset categorization) → Phase 2 completes with score → Final synthesis creates comprehensive insight → Display across 4 internal tabs: Overview (analysis with vet scores), Assets (5 categories with 3-5 recommendations each), Signals (5-7 trading signals with strength/time horizon), Players (key insider profiles with influence scores)
 - **Success criteria**: Two-part vetting completes successfully with Phase 1 and Phase 2 scores, combined vet score (0-100) displayed prominently, analysis identifies key players by category (congress/whitehouse/trump-family/stephen-miller/affiliate), asset recommendations span all 5 strategic categories with ticker symbols, trading signals include bullish/bearish/neutral designation with reasoning, quiet hand analysis reveals non-obvious positioning, tabbed interface allows exploration of different intelligence aspects, maintains black-gold design theme
+
+### Friend Insights (Portfolio Activity Tracking)
+- **Functionality**: Logged tracking of portfolio moves made by the user's friend grouping, showing when friends create or update portfolios with details about positions, allocations, and current performance metrics
+- **Purpose**: Provides competitive intelligence on friend strategies, allowing users to learn from successful friends and adjust their own tactics based on what's working in their circle
+- **Trigger**: Accessed via "Friend Insights" tab within Insights section
+- **Progression**: Navigate to Insights → Select "Friend Insights" tab → View chronological feed of friend portfolio activities → Filter by activity type (All/Created/Updated) → See friend avatar, username, activity type badge, timestamp, portfolio details (positions count, stocks/crypto breakdown) → View portfolio snapshot with current value and return percentage
+- **Success criteria**: Shows activities only from added friends (friendIds list), chronologically sorted by timestamp, filter buttons work (All/Created/Updated), each activity shows friend avatar and username, activity events logged from activity-history store, portfolio snapshots display current value and performance, empty state prompts friend adding with "Add Friends" button, displays friendly empty state when no friend activities exist
 
 ### Relationship-Based Notifications
 - **Functionality**: Real-time toast notifications for friend activity, portfolio changes, leaderboard movements, and relationship updates, all contextual to the relationship status set by the user
