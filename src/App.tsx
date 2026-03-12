@@ -877,16 +877,16 @@ function App() {
           <TabsContent value="leaderboard">
             <Leaderboard 
               entries={mockLeaderboard}
-              currentUserId={profile.id}
               currentUser={profile}
               onAddFriendsClick={() => setActiveTab('profile')}
+            />
             />
           </TabsContent>
 
           <TabsContent value="portfolios">
             <MultiPortfolioManager
               portfolios={userPortfolios || []}
-              userProfile={profile}
+              activePortfolioId={activePortfolioId}
               onSelectPortfolio={handleSelectPortfolio}
               onDeletePortfolio={handleDeletePortfolio}
               onRenamePortfolio={handleRenamePortfolio}
@@ -894,33 +894,30 @@ function App() {
               marketData={marketData}
               onCreatePortfolio={handlePortfolioSave}
             />
-          </TabsContent>
-
-          <TabsContent value="groups">
             <Groups 
               currentUser={profile} 
               onUserUpdate={handleUserUpdate} 
               marketData={marketData}
               allPortfolios={allPortfolios || {}}
             />
-          </TabsContent>
-
-          <TabsContent value="insights">
+              marketData={marketData}
+              allPortfolios={allPortfolios || {}}
+            />
             <Insights 
               insights={insights ?? []} 
               userProfile={profile}
               onUpgradeClick={handleUpgradeClick}
               insiderTrades={insiderTrades}
             />
+              onInsightsUpdate={setInsights}
+            />
           </TabsContent>
 
-          <TabsContent value="profile">
-            <div className="max-w-2xl mx-auto space-y-6">
+              <ProfileCustomization profile={profile} onUpdate={handleUserUpdate} />
+
               <ProfileCustomization profile={profile} onUpdate={handleUserUpdate} />
 
               <TradingAccountLinker profile={profile} onUpdate={handleUserUpdate} />
-
-              <BiometricSettings profile={profile} />
 
               <PasswordSettings profile={profile} />
 
