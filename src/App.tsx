@@ -6,6 +6,7 @@ import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { Auth } from '@/components/Auth'
 import { Onboarding } from '@/components/Onboarding'
 import { Dashboard } from '@/components/Dashboard'
+import { PortfolioManager } from '@/components/PortfolioManager'
 import { MultiPortfolioManager } from '@/components/MultiPortfolioManager'
 import { PortfolioComparisonView } from '@/components/PortfolioComparisonView'
 import { Leaderboard } from '@/components/Leaderboard'
@@ -452,8 +453,10 @@ function App() {
     setCurrentUserId(newProfile.id)
     setIsAuthenticated(true)
     setNeedsOnboarding(false)
+    setActiveTab('dashboard')
     toast.success(`Welcome aboard, ${newProfile.username}!`, {
-      description: 'Time to build your first portfolio and show everyone what you\'ve got.'
+      description: 'Ready to build your first portfolio? Head to the Edit tab to get started!',
+      duration: 6000
     })
   }
 
@@ -870,6 +873,14 @@ function App() {
               onUpgradeClick={handleUpgradeClick}
               marketData={marketData}
               onCreatePortfolio={handlePortfolioSave}
+            />
+          </TabsContent>
+
+          <TabsContent value="portfolio">
+            <PortfolioManager
+              currentPortfolio={portfolio ?? null}
+              marketData={marketData}
+              onSave={handlePortfolioSave}
             />
           </TabsContent>
 
