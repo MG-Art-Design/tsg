@@ -97,11 +97,11 @@ This app requires multiple interconnected features including user profiles, real
 - **Success criteria**: Four tabs display correctly with distinctive styling, content loads properly per tab, tab state persists during session, mobile view shows abbreviated tab names, active tab highlighted with gold accent
 
 ### Overall Market Insights
-- **Functionality**: Daily AI-generated market analysis with sassy, encouraging tone delivered based on user preference, including personalized recommendations and general market commentary
-- **Purpose**: Educates users on market trends while maintaining engaging personality and encouraging strategic risk-taking
-- **Trigger**: Displayed in "Overall Market" tab; automatically generated insights appear chronologically
-- **Progression**: Navigate to Overall Market tab → View Daily Insider Recommendations card → See chronological list of market insights with category badges → Read insights with timestamps
-- **Success criteria**: Insights are relevant to current market conditions, tone is consistent (sassy yet respectful), delivery matches preferences, categorized by type (market-trend, portfolio-tip, risk-alert, winner-spotlight), timestamps show relative time
+- **Functionality**: Comprehensive market intelligence combining an 8-hour Market Moves Summary with chronological user insights. The Market Moves Summary provides 10 bullet points covering key trading floor and crypto market activity with sentiment indicators (bullish/bearish/neutral), refreshed every 8 hours with real-time data from publicly disclosed Wall Street and crypto market sources.
+- **Purpose**: Educates users on market trends through recent developments and maintains engaging personality with user-specific insights, encouraging strategic risk-taking based on current market intelligence
+- **Trigger**: Displayed in "Overall Market" tab; Market Moves Summary auto-generates on first load and can be manually refreshed; user insights appear chronologically below
+- **Progression**: Navigate to Overall Market tab → View Market Moves: Last 8 Hours card with 10 bullet points → Each move shows title, description (max 2 sentences), and sentiment badge → Click refresh to update market data → Scroll to see chronological list of user insights with category badges → Read insights with timestamps
+- **Success criteria**: Market Moves displays exactly 10 bullet points from the last 8 hours of trading activity, each move includes specific company names/tickers and percentage changes where relevant, sentiment badges correctly indicate bullish/bearish/neutral status, updates every 8 hours automatically or on manual refresh, user insights remain categorized by type (market-trend, portfolio-tip, risk-alert, winner-spotlight) with relative timestamps
 
 ### Insider Trading Intelligence Feed ("Stonk: OMG It's In")
 - **Functionality**: Displays publicly disclosed insider trades from Congress members, White House officials, Trump family/partners, and affiliates, updated every 12 hours with filtering by category (All/Congress/White House/Trump Family)

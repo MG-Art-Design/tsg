@@ -7,7 +7,7 @@ import { Insight, UserProfile, InsiderTrade } from '@/lib/types'
 import { motion } from 'framer-motion'
 import { InsiderTrades } from '@/components/InsiderTrades'
 import { GeopoliticalStrategicInsights } from '@/components/GeopoliticalStrategicInsights'
-import { DailyInsiderRecommendations } from '@/components/DailyInsiderRecommendations'
+import { MarketMoveSummary } from '@/components/MarketMoveSummary'
 import { FriendInsights } from '@/components/FriendInsights'
 
 interface InsightsProps {
@@ -118,11 +118,7 @@ export function Insights({ insights, userProfile, onUpgradeClick, insiderTrades,
 
         <TabsContent value="overall">
           <div className="space-y-6">
-            <DailyInsiderRecommendations 
-              profile={userProfile}
-              insiderTrades={insiderTrades}
-              onUpgradeClick={onUpgradeClick}
-            />
+            <MarketMoveSummary />
 
             {sortedInsights.length === 0 ? (
               <Card className="border-2 border-[oklch(0.70_0.14_75)]">
