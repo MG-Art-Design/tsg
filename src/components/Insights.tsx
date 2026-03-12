@@ -189,7 +189,6 @@ export function Insights({ insights, userProfile, onUpgradeClick, insiderTrades,
 
         <TabsContent value="strategic">
           <GeopoliticalStrategicInsights 
-            userTier={userProfile.subscription.tier}
             onUpgradeClick={onUpgradeClick}
           />
         </TabsContent>
