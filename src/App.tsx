@@ -855,9 +855,19 @@ function App() {
               <span className="hidden sm:inline">Insights</span>
             </TabsTrigger>
             <TabsTrigger value="profile" className="flex items-center gap-2 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold">
-              <Sparkle size={18} weight="fill" />
+              <User size={18} weight="fill" />
               <span className="hidden sm:inline">Profile</span>
             </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="dashboard">
+            <Dashboard 
+              userProfile={profile}
+              portfolio={portfolio ?? null}
+              marketData={marketData}
+              onUpgradeClick={handleUpgradeClick}
+              insiderTrades={insiderTrades}
+            />
           </TabsContent>
 
           <TabsContent value="portfolios">
