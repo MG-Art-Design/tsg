@@ -29,6 +29,7 @@ export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick, 
   const [allUsers] = useKV<Record<string, UserProfile>>('all-users', {})
   const [allPortfolios] = useKV<Record<string, Portfolio>>('all-portfolios', {})
   const [userPortfolios] = useKV<Portfolio[]>('user-portfolios', [])
+  const [globalPortfolios] = useKV<Portfolio[]>('global-portfolios-list', [])
 
   useEffect(() => {
     if (portfolio?.currentValue && portfolio.currentValue !== previousValueRef.current) {
@@ -82,9 +83,9 @@ export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick, 
         const user = allUsers?.[friendId]
         if (!user) return null
 
-        const friendPortfolios = userPortfolios?.filter(p => p.userId === friendId) || []
-        const totalValue = friendPortfolios.reduce((sum, p) => sum + p.currentValue, 0)
-        const totalInitial = friendPortfolios.reduce((sum, p) => sum + p.initialValue, 0)
+        const friendAllPortfolios = (globalPortfolios || []).filter(p => p.userId === friendId)
+        const totalValue = friendAllPortfolios.reduce((sum, p) => sum + p.currentValue, 0)
+        const totalInitial = friendAllPortfolios.reduce((sum, p) => sum + p.initialValue, 0)
         const lifetimeReturn = totalInitial > 0 ? ((totalValue - totalInitial) / totalInitial) * 100 : 0
 
         return {
@@ -97,7 +98,7 @@ export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick, 
       })
       .filter(Boolean) as Array<{ userId: string; username: string; avatar: string; lifetimeReturn: number; rank: number }>
 
-    const myPortfolios = userPortfolios?.filter(p => p.userId === userProfile.id) || []
+    const myPortfolios = userPortfolios || []
     const myTotalValue = myPortfolios.reduce((sum, p) => sum + p.currentValue, 0)
     const myTotalInitial = myPortfolios.reduce((sum, p) => sum + p.initialValue, 0)
     const myLifetimeReturn = myTotalInitial > 0 ? ((myTotalValue - myTotalInitial) / myTotalInitial) * 100 : 0

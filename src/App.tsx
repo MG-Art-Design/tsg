@@ -53,6 +53,7 @@ function App() {
   const [activePortfolioId, setActivePortfolioId] = useKV<string | null>('active-portfolio-id', null)
   const [insights, setInsights] = useKV<Insight[]>('user-insights', [])
   const [allPortfolios, setAllPortfolios] = useKV<Record<string, Portfolio>>('all-portfolios', {})
+  const [globalPortfolios, setGlobalPortfolios] = useKV<Portfolio[]>('global-portfolios-list', [])
   const [allUsers, setAllUsers] = useKV<Record<string, UserProfile>>('all-users', {})
   const [allGroups] = useKV<Record<string, Group>>('all-groups', {})
   const [marketData, setMarketData] = useState<Asset[]>([])
@@ -332,10 +333,24 @@ function App() {
 
       setUserPortfolios(updatedPortfolios)
 
+      if (profile) {
+        setGlobalPortfolios((current) => {
+          const otherUserPortfolios = (current || []).filter(p => p.userId !== profile.id)
+          return [...otherUserPortfolios, ...updatedPortfolios]
+        })
+      }
+
       if (activePortfolioId) {
         const activePortfolio = updatedPortfolios.find(p => p.id === activePortfolioId)
         if (activePortfolio) {
           setPortfolio(activePortfolio)
+          
+          if (profile) {
+            setAllPortfolios((current) => ({
+              ...(current || {}),
+              [profile.id]: activePortfolio
+            }))
+          }
           
           if (activityTracker && profile) {
             activityTracker.updateQuarterSummary(
@@ -347,7 +362,7 @@ function App() {
         }
       }
     }
-  }, [marketData, userPortfolios?.length])
+  }, [marketData, userPortfolios?.length, profile?.id])
 
   useEffect(() => {
     if (profile && insights && insights.length === 0) {
@@ -657,6 +672,11 @@ function App() {
       ...(current || {}),
       [profile.id]: newPortfolio,
     }))
+
+    setGlobalPortfolios((current) => {
+      const filtered = (current || []).filter(p => p.id !== newPortfolio.id)
+      return [...filtered, newPortfolio]
+    })
 
     if (!isCreatingEmpty) {
       setActiveTab('dashboard')
