@@ -24,7 +24,7 @@ export function Leaderboard({ entries, currentUserId, currentUser, onAddFriendsC
   const previousRankRef = useRef<number | null>(null)
 
   const getFilteredEntries = (): LeaderboardEntry[] => {
-    const friendEntries: LeaderboardEntry[] = currentUser.friendIds
+    const friendEntries: LeaderboardEntry[] = (currentUser?.friendIds || [])
       .map(friendId => {
         const user = allUsers?.[friendId]
         const portfolio = allPortfolios?.[friendId]

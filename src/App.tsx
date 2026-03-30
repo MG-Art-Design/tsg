@@ -65,7 +65,7 @@ function App() {
   const [adminMode, setAdminMode] = useState(false)
   const [showAuthModal, setShowAuthModal] = useState(false)
 
-  const activityTracker = useActivityTracker(profile?.id || '')
+  const activityTracker = useActivityTracker(profile?.id || 'guest-user')
 
   useEffect(() => {
     const initialTrades = generateMockInsiderTrades()
@@ -356,18 +356,20 @@ function App() {
   }, [profile, insights])
 
   const generateInitialInsights = async () => {
+    if (!profile) return
+
     const welcomeInsights: Insight[] = [
       {
         id: Date.now().toString(),
-        userId: profile!.id,
-        content: `Welcome to TSG: The Stonk Game, ${profile!.username}! 🎉 Time to show your friends what you're made of. Build your portfolio, take some risks, and let's see who comes out on top this quarter. Remember: fortune favors the bold... but also the informed.`,
+        userId: profile.id,
+        content: `Welcome to TSG: The Stonk Game, ${profile.username}! 🎉 Time to show your friends what you're made of. Build your portfolio, take some risks, and let's see who comes out on top this quarter. Remember: fortune favors the bold... but also the informed.`,
         category: 'portfolio-tip',
         timestamp: Date.now(),
         read: false
       },
       {
         id: (Date.now() + 1).toString(),
-        userId: profile!.id,
+        userId: profile.id,
         content: `Market's looking spicy today 🌶️ Tech stocks are showing strength while crypto's doing its usual rollercoaster thing. Don't put all your eggs in one basket... unless you're feeling lucky. Your call, champ.`,
         category: 'market-trend',
         timestamp: Date.now() - 3600000,
@@ -566,6 +568,13 @@ function App() {
     portfolioName?: string,
     portfolioId?: string
   ) => {
+    if (!profile) {
+      toast.error('Profile not loaded', {
+        description: 'Please wait for your profile to load.'
+      })
+      return
+    }
+
     if (adminMode) {
       toast.info('Preview Mode', {
         description: 'Changes are not saved in admin mode.'
@@ -588,7 +597,13 @@ function App() {
     const currentQuarter = getCurrentQuarter()
     
     const portfolioPositions: PortfolioPosition[] = positions.map(pos => {
-      const asset = marketData.find(a => a.symbol === pos.symbol)!
+      const asset = marketData.find(a => a.symbol === pos.symbol)
+      if (!asset) {
+        toast.error('Asset not found', {
+          description: `Could not find market data for ${pos.symbol}`
+        })
+        return null
+      }
       const shares = (pos.allocation / 100) * INITIAL_PORTFOLIO_VALUE / asset.currentPrice
       const value = shares * asset.currentPrice
 
@@ -604,14 +619,18 @@ function App() {
         returnPercent: 0,
         returnValue: 0
       }
-    })
+    }).filter(Boolean) as PortfolioPosition[]
+
+    if (portfolioPositions.length !== positions.length) {
+      return
+    }
 
     const existingPortfolio = portfolioId ? userPortfolios?.find(p => p.id === portfolioId) : null
     const isUpdate = !!existingPortfolio
 
     const newPortfolio: Portfolio = {
       id: portfolioId || `portfolio-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      userId: profile!.id,
+      userId: profile.id,
       name: portfolioName || existingPortfolio?.name || `${currentQuarter} Portfolio`,
       quarter: currentQuarter,
       positions: portfolioPositions,
@@ -636,7 +655,7 @@ function App() {
 
     setAllPortfolios(current => ({
       ...(current || {}),
-      [profile!.id]: newPortfolio
+      [profile.id]: newPortfolio
     }))
 
     if (!isCreatingEmpty) {
@@ -669,7 +688,7 @@ function App() {
 
       const newInsight: Insight = {
         id: Date.now().toString(),
-        userId: profile!.id,
+        userId: profile.id,
         content: `Portfolio "${newPortfolio.name}" ${isUpdate ? 'updated' : 'created'}! You're holding ${positions.length} positions across ${positions.filter(p => p.type === 'stock').length} stocks and ${positions.filter(p => p.type === 'crypto').length} crypto. Bold moves. Let's see if they pay off! 💰`,
         category: 'portfolio-tip',
         timestamp: Date.now(),
@@ -750,11 +769,11 @@ function App() {
     }
   }, [portfolio?.lastUpdated, profile?.id])
 
-  const mockLeaderboard: LeaderboardEntry[] = portfolio ? [
+  const mockLeaderboard: LeaderboardEntry[] = portfolio && profile ? [
     {
-      userId: profile!.id,
-      username: profile!.username,
-      avatar: profile!.avatar,
+      userId: profile.id,
+      username: profile.username,
+      avatar: profile.avatar,
       returnPercent: portfolio.totalReturnPercent,
       returnValue: portfolio.totalReturn,
       rank: 1,
@@ -787,7 +806,7 @@ function App() {
     )
   }
 
-  const friends = profile.friendIds
+  const friends = (profile?.friendIds || [])
     .map(id => allUsers?.[id])
     .filter(Boolean) as UserProfile[]
 

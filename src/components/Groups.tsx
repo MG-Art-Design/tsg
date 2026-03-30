@@ -42,13 +42,13 @@ export function Groups({ currentUser, onUserUpdate, marketData = [], allPortfoli
     []
   )
 
-  const userGroups = currentUser.groupIds
+  const userGroups = (currentUser?.groupIds || [])
     .map(id => groups?.[id])
     .filter(Boolean) as Group[]
 
   const pendingInvites = (invites || []).filter(
     inv => inv.status === 'pending' && 
-    currentUser.groupIds.includes(inv.groupId) === false
+    (currentUser?.groupIds || []).includes(inv.groupId) === false
   )
 
   const getGroupLeaderboard = (group: Group) => {
