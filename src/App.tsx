@@ -29,6 +29,7 @@ import { TradingAccountLinker } from '@/components/TradingAccountLinker'
 import { InsiderTrades } from '@/components/InsiderTrades'
 import { Logo } from '@/components/Logo'
 import { ScrollToTop } from '@/components/ScrollToTop'
+import { AICommentary } from '@/components/AICommentary'
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { UserProfile, Portfolio, Asset, PortfolioPosition, LeaderboardEntry, Insight, Group, InsiderTrade } from '@/lib/types'
@@ -800,6 +801,41 @@ function App() {
     }
   ] : []
 
+  const getQuarterRank = () => {
+    const friendEntries = (profile?.friendIds || [])
+      .map(friendId => {
+        const friendPortfolio = allPortfolios?.[friendId]
+        return friendPortfolio ? friendPortfolio.totalReturnPercent : -Infinity
+      })
+    
+    if (portfolio) {
+      friendEntries.push(portfolio.totalReturnPercent)
+    }
+    
+    friendEntries.sort((a, b) => b - a)
+    const rank = portfolio ? friendEntries.indexOf(portfolio.totalReturnPercent) + 1 : 0
+    return rank
+  }
+
+  const getLifetimeRank = () => {
+    const myPortfolios = userPortfolios || []
+    const myTotalValue = myPortfolios.reduce((sum, p) => sum + p.currentValue, 0)
+    const myTotalInitial = myPortfolios.reduce((sum, p) => sum + p.initialValue, 0)
+    const myLifetimeReturn = myTotalInitial > 0 ? ((myTotalValue - myTotalInitial) / myTotalInitial) * 100 : 0
+
+    const allReturns = (profile?.friendIds || [])
+      .map(friendId => {
+        const friendAllPortfolios = (globalPortfolios || []).filter(p => p.userId === friendId)
+        const totalValue = friendAllPortfolios.reduce((sum, p) => sum + p.currentValue, 0)
+        const totalInitial = friendAllPortfolios.reduce((sum, p) => sum + p.initialValue, 0)
+        return totalInitial > 0 ? ((totalValue - totalInitial) / totalInitial) * 100 : 0
+      })
+
+    allReturns.push(myLifetimeReturn)
+    allReturns.sort((a, b) => b - a)
+    return allReturns.indexOf(myLifetimeReturn) + 1
+  }
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -1022,6 +1058,17 @@ function App() {
           <Auth onAuthenticated={handleAuthenticated} existingUsers={allUsers || {}} />
         </DialogContent>
       </Dialog>
+
+      {profile && (
+        <AICommentary
+          userProfile={profile}
+          portfolio={portfolio ?? null}
+          quarterRank={getQuarterRank()}
+          lifetimeRank={getLifetimeRank()}
+          friendCount={profile?.friendIds?.length || 0}
+          groupCount={profile?.groupIds?.length || 0}
+        />
+      )}
 
       <Toaster richColors position="top-right" />
     </div>

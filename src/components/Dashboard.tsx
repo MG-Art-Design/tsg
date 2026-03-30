@@ -30,12 +30,35 @@ export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick, 
   const [allPortfolios] = useKV<Record<string, Portfolio>>('all-portfolios', {})
   const [userPortfolios] = useKV<Portfolio[]>('user-portfolios', [])
   const [globalPortfolios] = useKV<Portfolio[]>('global-portfolios-list', [])
+  
+  const [frozenStats, setFrozenStats] = useState<{
+    currentValue: number
+    totalReturn: number
+    totalReturnPercent: number
+    quarterRank: number
+    lifetimeRank: number
+    timestamp: number
+  } | null>(null)
 
   useEffect(() => {
     if (portfolio?.currentValue && portfolio.currentValue !== previousValueRef.current) {
       previousValueRef.current = portfolio.currentValue
     }
   }, [portfolio?.currentValue])
+
+  useEffect(() => {
+    if (portfolio && !frozenStats) {
+      const { quarterRank, lifetimeRank } = getLeaderboardData()
+      setFrozenStats({
+        currentValue: portfolio.currentValue,
+        totalReturn: portfolio.totalReturn,
+        totalReturnPercent: portfolio.totalReturnPercent,
+        quarterRank,
+        lifetimeRank,
+        timestamp: Date.now()
+      })
+    }
+  }, [portfolio?.id])
 
   const userTier = userProfile.subscription?.tier || 'free'
 
@@ -124,7 +147,13 @@ export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick, 
     return { quarterRank, lifetimeRank, leaderboardEntries: friendEntries }
   }
 
-  const { quarterRank, lifetimeRank, leaderboardEntries } = getLeaderboardData()
+  const { quarterRank: currentQuarterRank, lifetimeRank: currentLifetimeRank, leaderboardEntries } = getLeaderboardData()
+  
+  const displayQuarterRank = frozenStats?.quarterRank ?? currentQuarterRank
+  const displayLifetimeRank = frozenStats?.lifetimeRank ?? currentLifetimeRank
+  const displayCurrentValue = frozenStats?.currentValue ?? portfolio?.currentValue ?? 0
+  const displayTotalReturn = frozenStats?.totalReturn ?? portfolio?.totalReturn ?? 0
+  const displayTotalReturnPercent = frozenStats?.totalReturnPercent ?? portfolio?.totalReturnPercent ?? 0
 
   const getRankIcon = (rank: number) => {
     if (rank === 1) return <CrownSimple size={20} weight="fill" className="text-yellow-400" />
@@ -221,10 +250,10 @@ export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick, 
   return (
     <div className="space-y-6">
       <AnimatedPortfolioCounter
-        currentValue={portfolio.currentValue}
+        currentValue={displayCurrentValue}
         previousValue={previousValueRef.current}
-        totalReturn={portfolio.totalReturn}
-        totalReturnPercent={portfolio.totalReturnPercent}
+        totalReturn={displayTotalReturn}
+        totalReturnPercent={displayTotalReturnPercent}
       />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -241,11 +270,11 @@ export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick, 
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className={`text-2xl sm:text-3xl font-bold tracking-tight ${(portfolio?.totalReturnPercent ?? 0) >= 0 ? 'text-success' : 'text-destructive'}`}>
-                {formatPercent(portfolio?.totalReturnPercent ?? 0)}
+              <div className={`text-2xl sm:text-3xl font-bold tracking-tight ${displayTotalReturnPercent >= 0 ? 'text-success' : 'text-destructive'}`}>
+                {formatPercent(displayTotalReturnPercent)}
               </div>
               <div className="text-sm text-muted-foreground mt-2">
-                {formatCurrency(Math.abs(portfolio?.totalReturn ?? 0))}
+                {formatCurrency(Math.abs(displayTotalReturn))}
               </div>
             </CardContent>
           </Card>
@@ -266,12 +295,12 @@ export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick, 
             <CardContent>
               <div className="flex items-center gap-2">
                 <div className="text-2xl sm:text-3xl font-bold tracking-tight">
-                  {quarterRank > 0 ? `#${quarterRank}` : '--'}
+                  {displayQuarterRank > 0 ? `#${displayQuarterRank}` : '--'}
                 </div>
-                {quarterRank > 0 && getRankIcon(quarterRank)}
+                {displayQuarterRank > 0 && getRankIcon(displayQuarterRank)}
               </div>
               <div className="text-sm text-muted-foreground mt-2">
-                {quarterRank > 0 ? `of ${leaderboardEntries.length} friends` : 'Add friends to compete'}
+                {displayQuarterRank > 0 ? `of ${leaderboardEntries.length} friends` : 'Add friends to compete'}
               </div>
             </CardContent>
           </Card>
@@ -292,12 +321,12 @@ export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick, 
             <CardContent>
               <div className="flex items-center gap-2">
                 <div className="text-2xl sm:text-3xl font-bold tracking-tight">
-                  {lifetimeRank > 0 ? `#${lifetimeRank}` : '--'}
+                  {displayLifetimeRank > 0 ? `#${displayLifetimeRank}` : '--'}
                 </div>
-                {lifetimeRank > 0 && getRankIcon(lifetimeRank)}
+                {displayLifetimeRank > 0 && getRankIcon(displayLifetimeRank)}
               </div>
               <div className="text-sm text-muted-foreground mt-2">
-                {lifetimeRank > 0 ? 'All-time performance' : 'Track lifetime progress'}
+                {displayLifetimeRank > 0 ? 'All-time performance' : 'Track lifetime progress'}
               </div>
             </CardContent>
           </Card>
