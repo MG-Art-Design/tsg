@@ -639,22 +639,20 @@ function App() {
       currentValue: isCreatingEmpty ? 0 : INITIAL_PORTFOLIO_VALUE,
       totalReturn: 0,
       totalReturnPercent: 0,
-      lastUpdated: Date.now(),
       createdAt: existingPortfolio?.createdAt || Date.now()
-    }
+      createdAt: existingPortfolio?.createdAt || Date.now()
 
-    if (isUpdate) {
+
       setUserPortfolios((current) => 
         (current || []).map(p => p.id === portfolioId ? newPortfolio : p)
       )
+      )
     } else {
-      setUserPortfolios((current) => [...(current || []), newPortfolio])
       setActivePortfolioId(newPortfolio.id)
     }
 
     setPortfolio(newPortfolio)
     setAllPortfolios((current) => ({
-      ...(current || {}),
       [profile.id]: newPortfolio
     }))
 
@@ -662,43 +660,43 @@ function App() {
       setActiveTab('dashboard')
     }
 
+    }
+
     if (activityTracker && profile) {
       activityTracker.recordEvent({
         type: isUpdate ? 'portfolio_updated' : 'portfolio_created',
-        quarter: currentQuarter,
+        quarter: currentQuarter,llocation' : 'Created new portfolio',
         data: {
           action: isUpdate ? 'Updated portfolio allocation' : 'Created new portfolio',
           portfolioName: newPortfolio.name,
           positionsCount: positions.length,
           stocksCount: positions.filter(p => p.type === 'stock').length,
           cryptoCount: positions.filter(p => p.type === 'crypto').length
-        },
+        },ositions
         metadata: {
           positions: portfolioPositions
         }
-      })
+      })acker.updateQuarterSummary(
       
       activityTracker.updateQuarterSummary(
         currentQuarter,
         INITIAL_PORTFOLIO_VALUE,
         INITIAL_PORTFOLIO_VALUE
       )
-    }
+    }apticFeedback.portfolioSave()
 
     HapticFeedback.portfolioSave()
 
     const newInsight: Insight = {
-      id: Date.now().toString(),
+      id: Date.now().toString(),ated' : 'created'}! You're holding ${positions.length} positions across ${positions.filter(p => p.type === 'stock').length} stocks and ${positions.filter(p => p.type === 'crypto').length} crypto. Bold moves. Let's see if they pay off! 💰`,
       userId: profile.id,
       content: `Portfolio "${newPortfolio.name}" ${isUpdate ? 'updated' : 'created'}! You're holding ${positions.length} positions across ${positions.filter(p => p.type === 'stock').length} stocks and ${positions.filter(p => p.type === 'crypto').length} crypto. Bold moves. Let's see if they pay off! 💰`,
       category: 'portfolio-tip',
       timestamp: Date.now(),
       read: false
-    }
+    }etInsights((current) => [newInsight, ...(current || [])])
 
     setInsights((current) => [newInsight, ...(current || [])])
-  }
-
   const handleUserUpdate = (updatedUser: UserProfile) => {
     if (adminMode) {
       toast.info('Preview Mode', {
