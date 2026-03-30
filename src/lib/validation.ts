@@ -26,9 +26,21 @@ export function validatePortfolioAllocation(allocations: Record<string, number>)
   }
 }
 
-export function validateEmail(email: string): boolean {
+export function validateEmail(email: string): { valid: boolean; error?: string } {
+  if (!email || email.trim() === '') {
+    return { valid: false, error: 'Email is required' }
+  }
+
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  return emailRegex.test(email.trim())
+  if (!emailRegex.test(email.trim())) {
+    return { valid: false, error: 'Please enter a valid email address' }
+  }
+
+  if (email.length > 254) {
+    return { valid: false, error: 'Email address is too long' }
+  }
+
+  return { valid: true }
 }
 
 export function validatePassword(password: string): {
@@ -105,10 +117,16 @@ export function validateBettingAmount(amount: number): {
 }
 
 export function sanitizeInput(input: string, maxLength: number = 1000): string {
-  return input
-    .trim()
-    .slice(0, maxLength)
-    .replace(/[<>]/g, '')
+  if (!input) return ''
+  
+  let sanitized = input.trim()
+  sanitized = sanitized.substring(0, maxLength)
+  sanitized = sanitized.replace(/<script[^>]*>.*?<\/script>/gi, '')
+  sanitized = sanitized.replace(/<iframe[^>]*>.*?<\/iframe>/gi, '')
+  sanitized = sanitized.replace(/javascript:/gi, '')
+  sanitized = sanitized.replace(/on\w+\s*=/gi, '')
+  
+  return sanitized
 }
 
 export function formatInviteCode(code: string): string {
@@ -212,6 +230,80 @@ export function generateRandomId(length: number = 16): string {
     result += chars.charAt(Math.floor(Math.random() * chars.length))
   }
   return result
+}
+
+export function validateUsername(username: string): { valid: boolean; error?: string } {
+  if (!username || username.trim() === '') {
+    return { valid: false, error: 'Username is required' }
+  }
+
+  if (username.length < 2) {
+    return { valid: false, error: 'Username must be at least 2 characters long' }
+  }
+
+  if (username.length > 50) {
+    return { valid: false, error: 'Username is too long (max 50 characters)' }
+  }
+
+  const usernameRegex = /^[a-zA-Z0-9_\s-]+$/
+  if (!usernameRegex.test(username)) {
+    return { valid: false, error: 'Username can only contain letters, numbers, spaces, underscores, and hyphens' }
+  }
+
+  return { valid: true }
+}
+
+export function validateFriendCode(code: string): { valid: boolean; error?: string } {
+  if (!code || code.trim() === '') {
+    return { valid: false, error: 'Friend code is required' }
+  }
+
+  const cleanCode = code.trim().toUpperCase()
+
+  if (!cleanCode.startsWith('TSG-')) {
+    return { valid: false, error: 'Friend code must start with TSG-' }
+  }
+
+  if (cleanCode.length < 8) {
+    return { valid: false, error: 'Friend code is too short' }
+  }
+
+  const codeRegex = /^TSG-[A-Z0-9-]+$/
+  if (!codeRegex.test(cleanCode)) {
+    return { valid: false, error: 'Invalid friend code format' }
+  }
+
+  return { valid: true }
+}
+
+export function validateAllocation(value: string): { valid: boolean; error?: string; numValue?: number } {
+  if (value === '' || value === null || value === undefined) {
+    return { valid: true, numValue: 0 }
+  }
+
+  const numValue = parseFloat(value)
+
+  if (isNaN(numValue)) {
+    return { valid: false, error: 'Please enter a valid number' }
+  }
+
+  if (numValue < 0) {
+    return { valid: false, error: 'Allocation cannot be negative' }
+  }
+
+  if (numValue > 100) {
+    return { valid: false, error: 'Allocation cannot exceed 100%' }
+  }
+
+  if (!Number.isFinite(numValue)) {
+    return { valid: false, error: 'Invalid allocation value' }
+  }
+
+  if (value.split('.')[1]?.length > 2) {
+    return { valid: false, error: 'Maximum 2 decimal places allowed' }
+  }
+
+  return { valid: true, numValue }
 }
 
 export function isDateToday(timestamp: number): boolean {

@@ -647,14 +647,15 @@ function App() {
       setUserPortfolios((current) => 
         (current || []).map(p => p.id === portfolioId ? newPortfolio : p)
       )
-      setUserPortfolios((current) => [...(current || []), newPortfolio])
+    } else {
       setUserPortfolios((current) => [...(current || []), newPortfolio])
     }
 
+    setActivePortfolioId(newPortfolio.id)
     setPortfolio(newPortfolio)
     setAllPortfolios((current) => ({
       ...(current || {}),
-      ...(current || {}),
+      [profile.id]: newPortfolio,
     }))
 
     if (!isCreatingEmpty) {
