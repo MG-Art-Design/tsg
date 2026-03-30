@@ -888,6 +888,7 @@ function App() {
               userProfile={profile}
               insiderTrades={insiderTrades}
               onUpgradeClick={handleUpgradeClick}
+              onNavigateToLeaderboard={() => setActiveTab('leaderboard')}
             />
           </TabsContent>
 
