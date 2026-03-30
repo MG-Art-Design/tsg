@@ -573,13 +573,13 @@ function App() {
         description: 'Please wait for your profile to load.'
       })
       return
+    }
+    
     if (adminMode) {
       toast.info('Preview Mode', {
         description: 'Changes are not saved in admin mode.'
       })
       return
-    }
-
     }
 
     const isCreatingEmpty = positions.length === 0
@@ -595,6 +595,8 @@ function App() {
     }
 
     const currentQuarter = getCurrentQuarter()
+    
+    const portfolioPositions: PortfolioPosition[] = positions.map(pos => {
       const asset = marketData.find(a => a.symbol === pos.symbol)
       if (!asset) {
         toast.error('Asset not found', {
@@ -602,42 +604,41 @@ function App() {
         })
         return null
       }
-        return null
-      }
+      
       const shares = (pos.allocation / 100) * INITIAL_PORTFOLIO_VALUE / asset.currentPrice
       const value = shares * asset.currentPrice
 
       return {
+        symbol: pos.symbol,
+        name: pos.name,
         type: pos.type,
         allocation: pos.allocation,
         entryPrice: asset.currentPrice,
         currentPrice: asset.currentPrice,
-        shares,.currentPrice,
-        value,ntPrice,
-        returnPercent: 0,
+        shares,
         value,
         returnPercent: 0,
-    }).filter(Boolean) as PortfolioPosition[]
+        returnValue: 0
       }
+    }).filter(Boolean) as PortfolioPosition[]
+    
     if (portfolioPositions.length !== positions.length) {
       return
-    }
-
     }
 
     const existingPortfolio = portfolioId ? userPortfolios?.find(p => p.id === portfolioId) : null
     const isUpdate = !!existingPortfolio
 
-      userId: profile.id,
+    const newPortfolio: Portfolio = {
       id: portfolioId || `portfolio-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       userId: profile.id,
       name: portfolioName || existingPortfolio?.name || `${currentQuarter} Portfolio`,
       quarter: currentQuarter,
       positions: portfolioPositions,
+      initialValue: INITIAL_PORTFOLIO_VALUE,
       totalReturn: 0,
+      totalReturnPercent: 0,
       currentValue: isCreatingEmpty ? 0 : INITIAL_PORTFOLIO_VALUE,
-      lastUpdated: Date.now(),
-      createdAt: existingPortfolio?.createdAt || Date.now()
       lastUpdated: Date.now(),
       createdAt: existingPortfolio?.createdAt || Date.now()
     }
@@ -645,7 +646,7 @@ function App() {
     if (isUpdate) {
       setUserPortfolios((current) => 
         (current || []).map(p => p.id === portfolioId ? newPortfolio : p)
-      setUserPortfolios((current) => [...(current || []), newPortfolio])
+      )
     } else {
       setUserPortfolios((current) => [...(current || []), newPortfolio])
       setActivePortfolioId(newPortfolio.id)
@@ -653,7 +654,7 @@ function App() {
 
     setPortfolio(newPortfolio)
 
-      [profile.id]: newPortfolio
+    setAllPortfolios((current) => ({
       ...(current || {}),
       [profile.id]: newPortfolio
     }))
@@ -670,7 +671,7 @@ function App() {
             portfolioName: newPortfolio.name,
             positionsCount: positions.length,
             stocksCount: positions.filter(p => p.type === 'stock').length,
-          metadata: { === 'crypto').length
+            cryptoCount: positions.filter(p => p.type === 'crypto').length
           },
           metadata: {
             positions: portfolioPositions
@@ -686,9 +687,9 @@ function App() {
 
       HapticFeedback.portfolioSave()
 
+      const newInsight: Insight = {
         userId: profile.id,
         id: Date.now().toString(),
-        userId: profile.id,
         content: `Portfolio "${newPortfolio.name}" ${isUpdate ? 'updated' : 'created'}! You're holding ${positions.length} positions across ${positions.filter(p => p.type === 'stock').length} stocks and ${positions.filter(p => p.type === 'crypto').length} crypto. Bold moves. Let's see if they pay off! 💰`,
         category: 'portfolio-tip',
         timestamp: Date.now(),
@@ -703,7 +704,7 @@ function App() {
     if (adminMode) {
       toast.info('Preview Mode', {
         description: 'Changes are not saved in admin mode.'
-    }
+      })
       return
     }
     setProfile(updatedUser)
