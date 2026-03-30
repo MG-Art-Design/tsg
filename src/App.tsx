@@ -582,6 +582,8 @@ function App() {
       return
     }
 
+    const isCreatingEmpty = positions.length === 0
+
     if (!isCreatingEmpty) {
       const totalAllocation = positions.reduce((sum, pos) => sum + pos.allocation, 0)
       if (Math.abs(totalAllocation - 100) > 0.01) {
@@ -595,8 +597,8 @@ function App() {
     const currentQuarter = getCurrentQuarter()
     
     const portfolioPositions: PortfolioPosition[] = positions.map(pos => {
-    
-    const portfolioPositions: PortfolioPosition[] = positions.map(pos => {
+      const asset = marketData.find(a => a.symbol === pos.symbol)
+      if (!asset) {
         toast.error('Asset not found', {
           description: `Could not find market data for ${pos.symbol}`
         })
@@ -604,49 +606,53 @@ function App() {
       }
       
       const shares = (pos.allocation / 100) * INITIAL_PORTFOLIO_VALUE / asset.currentPrice
-      s * asset.currentPrice
+      const value = shares * asset.currentPrice
+
       return {
         symbol: pos.symbol,
         name: pos.name,
         type: pos.type,
-        symbol: pos.symbol,
-        name: pos.name,
+        allocation: pos.allocation,
+        entryPrice: asset.currentPrice,
         currentPrice: asset.currentPrice,
         shares,
         value,
         returnPercent: 0,
-        shares,
-        value,
-    }).filter(Boolean) as PortfolioPosition[]
         returnValue: 0
-      }h !== positions.length) {
+      }
+    }).filter(Boolean) as PortfolioPosition[]
+
+    if (portfolioPositions.length !== positions.length) {
       return
-    
+    }
 
     const existingPortfolio = portfolioId ? userPortfolios?.find(p => p.id === portfolioId) : null
     const isUpdate = !!existingPortfolio
 
+    const newPortfolio: Portfolio = {
+      id: portfolioId || `portfolio-${Date.now()}`,
       userId: profile.id,
       name: portfolioName || existingPortfolio?.name || `${currentQuarter} Portfolio`,
       quarter: currentQuarter,
-    const newPortfolio: Portfolio = {
+      positions: portfolioPositions,
       initialValue: INITIAL_PORTFOLIO_VALUE,
+      currentValue: isCreatingEmpty ? 0 : INITIAL_PORTFOLIO_VALUE,
       totalReturn: 0,
       totalReturnPercent: 0,
-      currentValue: isCreatingEmpty ? 0 : INITIAL_PORTFOLIO_VALUE,
       lastUpdated: Date.now(),
-      initialValue: INITIAL_PORTFOLIO_VALUE,
+      createdAt: existingPortfolio?.createdAt || Date.now()
     }
-      totalReturnPercent: 0,
+
     if (isUpdate) {
       setUserPortfolios((current) => 
         (current || []).map(p => p.id === portfolioId ? newPortfolio : p)
+      )
+    } else {
       setUserPortfolios((current) => [...(current || []), newPortfolio])
       setActivePortfolioId(newPortfolio.id)
     }
 
     setPortfolio(newPortfolio)
-      )
     setAllPortfolios((current) => ({
       ...(current || {}),
       [profile.id]: newPortfolio
@@ -654,49 +660,50 @@ function App() {
 
     if (!isCreatingEmpty) {
       setActiveTab('dashboard')
-    setAllPortfolios((current) => ({
-      if (activityTracker && profile) {
-        activityTracker.recordEvent({
-          type: isUpdate ? 'portfolio_updated' : 'portfolio_created',
-          quarter: currentQuarter,
-          data: {
-            action: isUpdate ? 'Updated portfolio allocation' : 'Created new portfolio',
-            portfolioName: newPortfolio.name,
-            positionsCount: positions.length,
-            stocksCount: positions.filter(p => p.type === 'stock').length,
-            cryptoCount: positions.filter(p => p.type === 'crypto').length
-          },
-          metadata: {
-            positions: portfolioPositions
-          }
-        })
-        
-            cryptoCount: positions.filter(p => p.type === 'crypto').length
-          currentQuarter,
-          INITIAL_PORTFOLIO_VALUE,
-          INITIAL_PORTFOLIO_VALUE
-        )
-      }
+    }
 
-      HapticFeedback.portfolioSave()
+    if (activityTracker && profile) {
+      activityTracker.recordEvent({
+        type: isUpdate ? 'portfolio_updated' : 'portfolio_created',
+        quarter: currentQuarter,
+        data: {
+          action: isUpdate ? 'Updated portfolio allocation' : 'Created new portfolio',
+          portfolioName: newPortfolio.name,
+          positionsCount: positions.length,
+          stocksCount: positions.filter(p => p.type === 'stock').length,
+          cryptoCount: positions.filter(p => p.type === 'crypto').length
+        },
+        metadata: {
+          positions: portfolioPositions
+        }
+      })
+      
+      activityTracker.updateQuarterSummary(
+        currentQuarter,
+        INITIAL_PORTFOLIO_VALUE,
+        INITIAL_PORTFOLIO_VALUE
+      )
+    }
 
-      const newInsight: Insight = {
-        userId: profile.id,
-        id: Date.now().toString(),
-        content: `Portfolio "${newPortfolio.name}" ${isUpdate ? 'updated' : 'created'}! You're holding ${positions.length} positions across ${positions.filter(p => p.type === 'stock').length} stocks and ${positions.filter(p => p.type === 'crypto').length} crypto. Bold moves. Let's see if they pay off! 💰`,
-        category: 'portfolio-tip',
-        timestamp: Date.now(),
-        read: false
-      const newInsight: Insight = {
+    HapticFeedback.portfolioSave()
 
-      setInsights((current) => [newInsight, ...(current || [])])
+    const newInsight: Insight = {
+      id: Date.now().toString(),
+      userId: profile.id,
+      content: `Portfolio "${newPortfolio.name}" ${isUpdate ? 'updated' : 'created'}! You're holding ${positions.length} positions across ${positions.filter(p => p.type === 'stock').length} stocks and ${positions.filter(p => p.type === 'crypto').length} crypto. Bold moves. Let's see if they pay off! 💰`,
+      category: 'portfolio-tip',
+      timestamp: Date.now(),
+      read: false
+    }
+
+    setInsights((current) => [newInsight, ...(current || [])])
   }
 
   const handleUserUpdate = (updatedUser: UserProfile) => {
     if (adminMode) {
       toast.info('Preview Mode', {
         description: 'Changes are not saved in admin mode.'
-    }
+      })
       return
     }
     setProfile(updatedUser)
