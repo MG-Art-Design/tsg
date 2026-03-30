@@ -440,21 +440,19 @@
       transform: translateX(-50%) scaleX(0);
       width: 85%;
       height: 2px;
-      background: linear-gradient(90deg, oklch(0.72 0.06 210));
       transform-origin: center;
-      border-radius: 2px;
+      transform-origin: center;
       transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
     }
 
     .profile-link:not(.no-hover-effect):hover::after {
       transform: translateX(-50%) scaleX(1);
-    }
 
-    .profile-link:not(.no-hover-effect):hover {
+r {
       text-shadow: 0 0 16px oklch(0.70 0.14 75 / 0.4);
-    }
   }
-}
+    }
 
 :root {
   --background: oklch(0.15 0.01 240);
