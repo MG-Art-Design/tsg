@@ -308,9 +308,7 @@
     button:not(.no-hover-effect):not(:disabled),
     [role="button"]:not(.no-hover-effect),
     .clickable:not(.no-hover-effect) {
-      position: relative;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      will-change: color, opacity;
+      transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     a:not(.no-hover-effect):hover,
@@ -318,37 +316,10 @@
     [role="button"]:not(.no-hover-effect):hover,
     .clickable:not(.no-hover-effect):hover {
       color: oklch(0.70 0.14 75);
-      opacity: 0.9;
-    }
-
-    a:not(.no-hover-effect):active,
-    button:not(.no-hover-effect):not(:disabled):active,
-    [role="button"]:not(.no-hover-effect):active,
-    .clickable:not(.no-hover-effect):active {
-      opacity: 0.7;
-      transition-duration: 0.05s;
     }
 
     .nav-link:not(.no-hover-effect) {
-      position: relative;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      isolation: isolate;
-    }
-
-    .nav-link:not(.no-hover-effect)::before {
-      content: '';
-      position: absolute;
-      inset: -2px;
-      border-radius: inherit;
-      background: oklch(0 0 0);
-      opacity: 0;
-      transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      z-index: -1;
-      pointer-events: none;
-    }
-
-    .nav-link:not(.no-hover-effect):hover::before {
-      opacity: 1;
+      transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .nav-link:not(.no-hover-effect):hover {
@@ -356,37 +327,15 @@
     }
 
     .card-link:not(.no-hover-effect) {
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .card-link:not(.no-hover-effect):hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 24px oklch(0.70 0.14 75 / 0.15),
-                  0 8px 48px oklch(0.70 0.14 75 / 0.08),
-                  inset 0 0 0 1px oklch(0.70 0.14 75 / 0.2);
+      color: oklch(0.70 0.14 75);
     }
 
     .text-link:not(.no-hover-effect) {
-      position: relative;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      isolation: isolate;
-    }
-
-    .text-link:not(.no-hover-effect)::after {
-      content: '';
-      position: absolute;
-      bottom: -1px;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: oklch(0.70 0.14 75);
-      transform: scaleX(0);
-      transform-origin: left center;
-      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .text-link:not(.no-hover-effect):hover::after {
-      transform: scaleX(1);
+      transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .text-link:not(.no-hover-effect):hover {
@@ -394,59 +343,27 @@
     }
 
     .icon-button:not(.no-hover-effect) {
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      isolation: isolate;
+      transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .icon-button:not(.no-hover-effect):hover {
       color: oklch(0.70 0.14 75);
-      opacity: 0.9;
-    }
-
-    .icon-button:not(.no-hover-effect):active {
-      opacity: 0.7;
     }
 
     .tab-trigger:not(.no-hover-effect) {
-      position: relative;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      isolation: isolate;
-      background: oklch(0 0 0 / 0.5);
+      transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .tab-trigger:not(.no-hover-effect):not([data-state="active"]):hover {
       color: oklch(0.70 0.14 75);
-      background: oklch(0 0 0 / 0.7);
     }
 
     .tab-trigger:not(.no-hover-effect)[data-state="active"] {
-      background: oklch(0 0 0 / 0.9);
       color: oklch(0.70 0.14 75);
-      border-color: oklch(0.70 0.14 75 / 0.3);
     }
 
     .profile-link:not(.no-hover-effect) {
-      position: relative;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      isolation: isolate;
-      padding-bottom: 2px;
-    }
-
-    .profile-link:not(.no-hover-effect)::after {
-      content: '';
-      position: absolute;
-      left: 50%;
-      bottom: 0;
-      transform: translateX(-50%) scaleX(0);
-      width: 85%;
-      height: 1px;
-      transform-origin: center;
-      background: oklch(0.70 0.14 75);
-      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .profile-link:not(.no-hover-effect):hover::after {
-      transform: translateX(-50%) scaleX(1);
+      transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .profile-link:not(.no-hover-effect):hover {

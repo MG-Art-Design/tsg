@@ -883,27 +883,27 @@ function App() {
       <main className="container mx-auto px-3 sm:px-4 py-4 sm:py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid w-full grid-cols-6 mb-4 sm:mb-6 bg-black border border-white/10 p-0.5 sm:p-1 h-auto backdrop-blur-sm">
-            <TabsTrigger value="dashboard" className="tab-trigger flex flex-col sm:flex-row items-center gap-1 sm:gap-2 bg-black/50 data-[state=active]:bg-black/90 data-[state=active]:text-[oklch(0.70_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75)]/30 font-semibold text-xs sm:text-sm py-2 sm:py-2.5 px-1 sm:px-3 text-white/80">
+            <TabsTrigger value="dashboard" className="tab-trigger flex flex-col sm:flex-row items-center gap-1 sm:gap-2 data-[state=active]:text-[oklch(0.70_0.14_75)] font-semibold text-xs sm:text-sm py-2 sm:py-2.5 px-1 sm:px-3 text-white/60">
               <ChartLine size={18} className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
               <span className="hidden xs:inline text-[10px] sm:text-xs md:text-sm">Dashboard</span>
             </TabsTrigger>
-            <TabsTrigger value="leaderboard" className="tab-trigger flex flex-col sm:flex-row items-center gap-1 sm:gap-2 bg-black/50 data-[state=active]:bg-black/90 data-[state=active]:text-[oklch(0.70_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75)]/30 font-semibold text-xs sm:text-sm py-2 sm:py-2.5 px-1 sm:px-3 text-white/80">
+            <TabsTrigger value="leaderboard" className="tab-trigger flex flex-col sm:flex-row items-center gap-1 sm:gap-2 data-[state=active]:text-[oklch(0.70_0.14_75)] font-semibold text-xs sm:text-sm py-2 sm:py-2.5 px-1 sm:px-3 text-white/60">
               <Trophy size={18} weight="fill" className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
               <span className="hidden xs:inline text-[10px] sm:text-xs md:text-sm">Leaderboard</span>
             </TabsTrigger>
-            <TabsTrigger value="portfolios" className="tab-trigger flex flex-col sm:flex-row items-center gap-1 sm:gap-2 bg-black/50 data-[state=active]:bg-black/90 data-[state=active]:text-[oklch(0.70_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75)]/30 font-semibold text-xs sm:text-sm py-2 sm:py-2.5 px-1 sm:px-3 text-white/80">
+            <TabsTrigger value="portfolios" className="tab-trigger flex flex-col sm:flex-row items-center gap-1 sm:gap-2 data-[state=active]:text-[oklch(0.70_0.14_75)] font-semibold text-xs sm:text-sm py-2 sm:py-2.5 px-1 sm:px-3 text-white/60">
               <FolderOpen size={18} weight="fill" className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
               <span className="hidden xs:inline text-[10px] sm:text-xs md:text-sm">Portfolios</span>
             </TabsTrigger>
-            <TabsTrigger value="groups" className="tab-trigger flex flex-col sm:flex-row items-center gap-1 sm:gap-2 bg-black/50 data-[state=active]:bg-black/90 data-[state=active]:text-[oklch(0.70_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75)]/30 font-semibold text-xs sm:text-sm py-2 sm:py-2.5 px-1 sm:px-3 text-white/80">
+            <TabsTrigger value="groups" className="tab-trigger flex flex-col sm:flex-row items-center gap-1 sm:gap-2 data-[state=active]:text-[oklch(0.70_0.14_75)] font-semibold text-xs sm:text-sm py-2 sm:py-2.5 px-1 sm:px-3 text-white/60">
               <Users size={18} weight="fill" className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
               <span className="hidden xs:inline text-[10px] sm:text-xs md:text-sm">Groups</span>
             </TabsTrigger>
-            <TabsTrigger value="insights" className="tab-trigger flex flex-col sm:flex-row items-center gap-1 sm:gap-2 bg-black/50 data-[state=active]:bg-black/90 data-[state=active]:text-[oklch(0.70_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75)]/30 font-semibold text-xs sm:text-sm py-2 sm:py-2.5 px-1 sm:px-3 text-white/80">
+            <TabsTrigger value="insights" className="tab-trigger flex flex-col sm:flex-row items-center gap-1 sm:gap-2 data-[state=active]:text-[oklch(0.70_0.14_75)] font-semibold text-xs sm:text-sm py-2 sm:py-2.5 px-1 sm:px-3 text-white/60">
               <Sparkle size={18} weight="fill" className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
               <span className="hidden xs:inline text-[10px] sm:text-xs md:text-sm">Insights</span>
             </TabsTrigger>
-            <TabsTrigger value="profile" className="tab-trigger flex flex-col sm:flex-row items-center gap-1 sm:gap-2 bg-black/50 data-[state=active]:bg-black/90 data-[state=active]:text-[oklch(0.70_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75)]/30 font-semibold text-xs sm:text-sm py-2 sm:py-2.5 px-1 sm:px-3 text-white/80">
+            <TabsTrigger value="profile" className="tab-trigger flex flex-col sm:flex-row items-center gap-1 sm:gap-2 data-[state=active]:text-[oklch(0.70_0.14_75)] font-semibold text-xs sm:text-sm py-2 sm:py-2.5 px-1 sm:px-3 text-white/60">
               <User size={18} weight="fill" className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
               <span className="hidden xs:inline text-[10px] sm:text-xs md:text-sm">Profile</span>
             </TabsTrigger>
