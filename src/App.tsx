@@ -647,15 +647,14 @@ function App() {
       setUserPortfolios((current) => 
         (current || []).map(p => p.id === portfolioId ? newPortfolio : p)
       )
-    } else {
       setUserPortfolios((current) => [...(current || []), newPortfolio])
-      setActivePortfolioId(newPortfolio.id)
+      setUserPortfolios((current) => [...(current || []), newPortfolio])
     }
 
     setPortfolio(newPortfolio)
     setAllPortfolios((current) => ({
       ...(current || {}),
-      [profile.id]: newPortfolio
+      ...(current || {}),
     }))
 
     if (!isCreatingEmpty) {
@@ -663,44 +662,42 @@ function App() {
     }
 
     if (activityTracker && profile) {
-      activityTracker.recordEvent({
-        type: isUpdate ? 'portfolio_updated' : 'portfolio_created',
         quarter: currentQuarter,
         data: {
           action: isUpdate ? 'Updated portfolio allocation' : 'Created new portfolio',
-          portfolioName: newPortfolio.name,
+        quarter: currentQuarter,
           positionsCount: positions.length,
           stocksCount: positions.filter(p => p.type === 'stock').length,
           cryptoCount: positions.filter(p => p.type === 'crypto').length
         },
         metadata: {
           positions: portfolioPositions
-        }
+        },
       })
       
       activityTracker.updateQuarterSummary(
-        currentQuarter,
+      })
         INITIAL_PORTFOLIO_VALUE,
         INITIAL_PORTFOLIO_VALUE
       )
     }
 
     HapticFeedback.portfolioSave()
-
+    }
     const newInsight: Insight = {
       id: Date.now().toString(),
       userId: profile.id,
       content: `Portfolio "${newPortfolio.name}" ${isUpdate ? 'updated' : 'created'}! You're holding ${positions.length} positions across ${positions.filter(p => p.type === 'stock').length} stocks and ${positions.filter(p => p.type === 'crypto').length} crypto. Bold moves. Let's see if they pay off! 💰`,
-      category: 'portfolio-tip',
+      id: Date.now().toString(),
       timestamp: Date.now(),
       read: false
     }
 
     setInsights((current) => [newInsight, ...(current || [])])
-  }
+    }
   const handleUserUpdate = (updatedUser: UserProfile) => {
     if (adminMode) {
-      toast.info('Preview Mode', {
+  }
         description: 'Changes are not saved in admin mode.'
       })
       return
