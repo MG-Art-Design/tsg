@@ -96,9 +96,9 @@ export function ProfileCustomization({ profile, onUpdate }: ProfileCustomization
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="flex flex-col items-center gap-6">
+        <div className="flex flex-col items-center gap-4 sm:gap-6">
           <motion.div 
-            className="relative w-48 h-48 aspect-square rounded-lg bg-gradient-to-br from-[oklch(0.19_0.015_240)] to-[oklch(0.10_0.005_60)] border-2 border-[oklch(0.70_0.14_75)] flex items-center justify-center cursor-pointer shadow-[0_0_30px_oklch(0.65_0.12_75_/_0.3)] overflow-hidden group"
+            className="relative w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 aspect-square rounded-lg bg-gradient-to-br from-[oklch(0.19_0.015_240)] to-[oklch(0.10_0.005_60)] border-2 border-[oklch(0.70_0.14_75)] flex items-center justify-center cursor-pointer shadow-[0_0_30px_oklch(0.65_0.12_75_/_0.3)] overflow-hidden group"
             onClick={() => setAvatarDialogOpen(true)}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -120,21 +120,23 @@ export function ProfileCustomization({ profile, onUpdate }: ProfileCustomization
               className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 flex items-center justify-center"
             >
               <div className="text-white text-center">
-                <User size={32} weight="bold" />
-                <p className="text-sm mt-2">Change Avatar</p>
+                <User size={24} weight="bold" className="sm:w-8 sm:h-8 mx-auto" />
+                <p className="text-xs sm:text-sm mt-1 sm:mt-2">Change Avatar</p>
               </div>
             </motion.div>
 
-            <span className="relative z-10 text-8xl">{profile.avatar}</span>
+            <span className="relative z-10 text-5xl sm:text-7xl md:text-8xl">{profile.avatar}</span>
           </motion.div>
 
           <Button
             onClick={handleReverseAvatar}
             variant="outline"
-            className="border-[oklch(0.70_0.14_75)] hover:bg-[oklch(0.65_0.12_75_/_0.15)] text-[oklch(0.70_0.14_75)]"
+            size="sm"
+            className="border-[oklch(0.70_0.14_75)] hover:bg-[oklch(0.65_0.12_75_/_0.15)] text-[oklch(0.70_0.14_75)] text-xs sm:text-sm"
           >
-            <Shuffle size={18} weight="bold" className="mr-2" />
-            Reverse Avatar Logic
+            <Shuffle size={16} weight="bold" className="mr-1.5 sm:mr-2 sm:w-[18px] sm:h-[18px]" />
+            <span className="hidden xs:inline">Reverse Avatar Logic</span>
+            <span className="xs:hidden">Reverse Avatar</span>
           </Button>
 
           <AnimatePresence>
@@ -144,9 +146,9 @@ export function ProfileCustomization({ profile, onUpdate }: ProfileCustomization
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -20, scale: 0.9 }}
                 transition={{ duration: 0.3 }}
-                className="bg-gradient-to-r from-[oklch(0.19_0.015_240)] to-[oklch(0.10_0.005_60)] border-2 border-[oklch(0.70_0.14_75)] rounded-lg p-4 shadow-[0_0_30px_oklch(0.65_0.12_75_/_0.3)]"
+                className="bg-gradient-to-r from-[oklch(0.19_0.015_240)] to-[oklch(0.10_0.005_60)] border-2 border-[oklch(0.70_0.14_75)] rounded-lg p-3 sm:p-4 shadow-[0_0_30px_oklch(0.65_0.12_75_/_0.3)] mx-4"
               >
-                <p className="text-[oklch(0.70_0.14_75)] text-center font-medium">
+                <p className="text-[oklch(0.70_0.14_75)] text-center font-medium text-xs sm:text-sm">
                   {sassyMessage}
                 </p>
               </motion.div>
@@ -154,14 +156,14 @@ export function ProfileCustomization({ profile, onUpdate }: ProfileCustomization
           </AnimatePresence>
 
           <motion.div 
-            className="w-full max-w-md space-y-4"
+            className="w-full max-w-md space-y-3 sm:space-y-4 px-4 sm:px-0"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
             <div className="text-center">
               <motion.h3 
-                className="text-2xl font-bold"
+                className="text-xl sm:text-2xl font-bold"
                 animate={{
                   textShadow: [
                     '0 0 10px oklch(0.70 0.14 75 / 0)',
@@ -179,11 +181,11 @@ export function ProfileCustomization({ profile, onUpdate }: ProfileCustomization
               </motion.h3>
             </div>
 
-            <div className="w-full aspect-square rounded-lg bg-gradient-to-br from-[oklch(0.19_0.015_240)] to-[oklch(0.10_0.005_60)] border-2 border-[oklch(0.70_0.14_75)] p-6 flex items-center justify-center shadow-[0_0_20px_oklch(0.65_0.12_75_/_0.2)]">
+            <div className="w-full aspect-square rounded-lg bg-gradient-to-br from-[oklch(0.19_0.015_240)] to-[oklch(0.10_0.005_60)] border-2 border-[oklch(0.70_0.14_75)] p-4 sm:p-6 flex items-center justify-center shadow-[0_0_20px_oklch(0.65_0.12_75_/_0.2)]">
               {profile.bio ? (
-                <p className="text-center text-muted-foreground break-words">{profile.bio}</p>
+                <p className="text-center text-muted-foreground break-words text-xs sm:text-sm">{profile.bio}</p>
               ) : (
-                <p className="text-center text-muted-foreground/50 italic">No bio yet</p>
+                <p className="text-center text-muted-foreground/50 italic text-xs sm:text-sm">No bio yet</p>
               )}
             </div>
 

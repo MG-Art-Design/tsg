@@ -130,21 +130,21 @@ export function Leaderboard({ entries, currentUserId, currentUser, onAddFriendsC
   return (
     <div className="space-y-4">
       <Card className="border-2 border-[oklch(0.70_0.14_75)]">
-        <CardHeader>
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <CardTitle className="text-xl sm:text-2xl flex items-center gap-2">
-                <Trophy size={24} weight="fill" className="text-accent sm:w-7 sm:h-7" />
-                Leaderboard
+        <CardHeader className="pb-3 sm:pb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+            <div className="flex-1 min-w-0">
+              <CardTitle className="text-lg sm:text-xl md:text-2xl flex items-center gap-2">
+                <Trophy size={20} weight="fill" className="text-accent sm:w-6 sm:h-6 md:w-7 md:h-7 flex-shrink-0" />
+                <span className="truncate">Leaderboard</span>
               </CardTitle>
               <p className="text-xs sm:text-sm text-muted-foreground mt-1">
                 Compete with your friends. Only your added friends appear here.
               </p>
             </div>
-            <div className="flex items-center gap-2">
-              <Funnel size={18} className="text-muted-foreground" />
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <Funnel size={16} className="text-muted-foreground sm:w-[18px] sm:h-[18px]" />
               <Select value={relationshipFilter} onValueChange={(value) => setRelationshipFilter(value as RelationshipStatus | 'all')}>
-                <SelectTrigger className="w-[140px]">
+                <SelectTrigger className="w-[120px] sm:w-[140px] text-xs sm:text-sm">
                   <SelectValue placeholder="Filter by" />
                 </SelectTrigger>
                 <SelectContent>
@@ -205,38 +205,40 @@ export function Leaderboard({ entries, currentUserId, currentUser, onAddFriendsC
                 transition={{ duration: 0.3, delay: i * 0.05 }}
               >
                 <Card className={`${getRankBorderClass(entry.rank, isPremium)} ${entry.userId === currentUserId ? 'ring-2 ring-primary' : ''}`}>
-                  <CardContent className="p-4">
-                    <div className="flex items-center gap-4">
+                  <CardContent className="p-3 sm:p-4">
+                    <div className="flex items-center gap-2 sm:gap-4">
                       <div className="flex-shrink-0">
                         {getRankIcon(entry.rank)}
                       </div>
 
-                      <div className="flex items-center gap-3 flex-1">
-                        <div className="text-4xl">{entry.avatar}</div>
+                      <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+                        <div className="text-2xl sm:text-3xl md:text-4xl flex-shrink-0">{entry.avatar}</div>
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <span className="font-semibold truncate">{entry.username}</span>
+                          <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                            <span className="font-semibold truncate text-sm sm:text-base">{entry.username}</span>
                             {entry.userId === currentUserId && (
-                              <Badge variant="outline" className="text-xs">You</Badge>
+                              <Badge variant="outline" className="text-[10px] sm:text-xs px-1 sm:px-2">You</Badge>
                             )}
                             {isPremium && (
-                              <Badge variant="outline" className="text-xs text-[oklch(0.70_0.14_75)] border-[oklch(0.70_0.14_75)] gold-shimmer-fast">
+                              <Badge variant="outline" className="text-[10px] sm:text-xs px-1 sm:px-2 text-[oklch(0.70_0.14_75)] border-[oklch(0.70_0.14_75)] gold-shimmer-fast">
                                 Premium
                               </Badge>
                             )}
-                            {getRelationshipBadge(entry.userId)}
+                            <div className="hidden xs:block">
+                              {getRelationshipBadge(entry.userId)}
+                            </div>
                           </div>
-                          <div className="text-sm text-muted-foreground">
+                          <div className="text-xs sm:text-sm text-muted-foreground truncate">
                             {formatCurrency(entry.portfolioValue)} portfolio
                           </div>
                         </div>
                       </div>
 
                       <div className="text-right flex-shrink-0">
-                        <div className={`text-2xl font-bold ${entry.returnPercent >= 0 ? 'text-success' : 'text-destructive'}`}>
+                        <div className={`text-base sm:text-xl md:text-2xl font-bold ${entry.returnPercent >= 0 ? 'text-success' : 'text-destructive'}`}>
                           {formatPercent(entry.returnPercent)}
                         </div>
-                        <div className="text-sm text-muted-foreground">
+                        <div className="text-[10px] sm:text-xs md:text-sm text-muted-foreground">
                           {formatCurrency(Math.abs(entry.returnValue))}
                         </div>
                       </div>

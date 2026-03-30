@@ -196,65 +196,69 @@ export function MultiPortfolioManager({
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold">My Portfolios</h2>
-          <p className="text-sm text-muted-foreground mt-1">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+        <div className="flex-1 min-w-0">
+          <h2 className="text-xl sm:text-2xl font-bold truncate">My Portfolios</h2>
+          <p className="text-xs sm:text-sm text-muted-foreground mt-1">
             {isPremium ? (
               <span className="flex items-center gap-1">
-                <Crown className="w-4 h-4 text-[oklch(0.70_0.14_75)] inline-block relative" weight="fill" style={{ filter: 'drop-shadow(0 0 4px oklch(0.70 0.14 75 / 0.5))' }} />
-                Premium: Unlimited portfolios
+                <Crown className="w-3 h-3 sm:w-4 sm:h-4 text-[oklch(0.70_0.14_75)] inline-block relative" weight="fill" style={{ filter: 'drop-shadow(0 0 4px oklch(0.70 0.14 75 / 0.5))' }} />
+                <span className="text-xs sm:text-sm">Premium: Unlimited portfolios</span>
               </span>
             ) : (
-              <span>
+              <span className="text-xs sm:text-sm">
                 {currentPortfolioCount} of {maxPortfolios} portfolios created
               </span>
             )}
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-shrink-0">
           <Button
             onClick={handleImportClick}
             variant="outline"
-            className="flex items-center gap-2"
+            size="sm"
+            className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm"
             disabled={!canCreateMore && !isPremium}
           >
-            <FileArrowUp weight="bold" />
-            Import CSV
+            <FileArrowUp weight="bold" className="w-4 h-4" />
+            <span className="hidden xs:inline">Import CSV</span>
+            <span className="xs:hidden">Import</span>
           </Button>
           <Button
             onClick={handleCreateClick}
-            className="flex items-center gap-2"
+            size="sm"
+            className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm"
             disabled={!canCreateMore && !isPremium}
           >
-            <Plus weight="bold" />
-            New Portfolio
+            <Plus weight="bold" className="w-4 h-4" />
+            <span className="hidden xs:inline">New Portfolio</span>
+            <span className="xs:hidden">New</span>
           </Button>
         </div>
       </div>
 
       {!isPremium && !canCreateMore && (
         <Card className="border-2 border-[oklch(0.70_0.14_75)] bg-gradient-to-br from-[oklch(0.08_0.006_70)] to-[oklch(0.05_0.008_70)] premium-border-shimmer premium-glow">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-[oklch(0.70_0.14_75)]">
-              <Crown weight="fill" className="gold-shimmer-fast" />
-              Upgrade to Premium for Unlimited Portfolios
+          <CardHeader className="pb-3 sm:pb-6">
+            <CardTitle className="flex items-center gap-2 text-[oklch(0.70_0.14_75)] text-base sm:text-lg">
+              <Crown weight="fill" className="gold-shimmer-fast w-5 h-5 sm:w-6 sm:h-6" />
+              <span className="truncate">Upgrade to Premium for Unlimited Portfolios</span>
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-xs sm:text-sm">
               Create as many portfolios as you need. Test different strategies, track multiple quarters, and compare performance across all your portfolios.
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button onClick={onUpgradeClick} className="w-full gold-shimmer">
-              <Lightning weight="fill" className="mr-2" />
+            <Button onClick={onUpgradeClick} className="w-full gold-shimmer text-xs sm:text-sm" size="sm">
+              <Lightning weight="fill" className="mr-2 w-4 h-4" />
               Upgrade Now
             </Button>
           </CardContent>
         </Card>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
         {gamePortfolios.map((portfolio) => {
           const isPositive = portfolio.totalReturnPercent >= 0
 
@@ -264,61 +268,61 @@ export function MultiPortfolioManager({
               className="cursor-pointer transition-all hover:shadow-lg card-link"
               onClick={() => setEditingPortfolioId(portfolio.id)}
             >
-              <CardHeader className="pb-3">
-                <div className="flex items-start justify-between">
-                  <div className="space-y-1 flex-1">
-                    <CardTitle className="text-lg">{portfolio.name}</CardTitle>
-                    <CardDescription className="text-xs">
+              <CardHeader className="pb-2 sm:pb-3">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="space-y-0.5 sm:space-y-1 flex-1 min-w-0">
+                    <CardTitle className="text-base sm:text-lg truncate">{portfolio.name}</CardTitle>
+                    <CardDescription className="text-[10px] sm:text-xs">
                       {portfolio.quarter}
                     </CardDescription>
                   </div>
-                  <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+                  <div className="flex items-center gap-0.5 sm:gap-1 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-8 w-8 p-0 icon-button"
+                      className="h-7 w-7 sm:h-8 sm:w-8 p-0 icon-button"
                       onClick={(e) => {
                         e.stopPropagation()
                         handleRenameClick(portfolio.id)
                       }}
                     >
-                      <PencilSimple className="w-4 h-4" />
+                      <PencilSimple className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     </Button>
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-8 w-8 p-0 text-destructive hover:text-destructive icon-button"
+                      className="h-7 w-7 sm:h-8 sm:w-8 p-0 text-destructive hover:text-destructive icon-button"
                       onClick={(e) => {
                         e.stopPropagation()
                         handleDeleteClick(portfolio.id)
                       }}
                     >
-                      <Trash className="w-4 h-4" />
+                      <Trash className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     </Button>
                   </div>
                 </div>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
+              <CardContent className="pt-0">
+                <div className="space-y-2 sm:space-y-3">
                   <div>
-                    <div className="text-2xl font-bold text-[oklch(0.70_0.14_75)]">
+                    <div className="text-xl sm:text-2xl font-bold text-[oklch(0.70_0.14_75)]">
                       {formatCurrency(portfolio.currentValue)}
                     </div>
-                    <div className="text-xs text-muted-foreground">
+                    <div className="text-[10px] sm:text-xs text-muted-foreground">
                       Initial: {formatCurrency(portfolio.initialValue)}
                     </div>
                   </div>
 
-                  <div className={`flex items-center gap-2 text-sm font-semibold ${
+                  <div className={`flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-semibold ${
                     isPositive ? 'text-success' : 'text-destructive'
                   }`}>
                     {isPositive ? (
-                      <TrendUp weight="bold" className="w-4 h-4" />
+                      <TrendUp weight="bold" className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
                     ) : (
-                      <TrendDown weight="bold" className="w-4 h-4" />
+                      <TrendDown weight="bold" className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
                     )}
                     <span>{formatPercent(portfolio.totalReturnPercent)}</span>
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-[10px] sm:text-xs text-muted-foreground">
                       ({formatCurrency(Math.abs(portfolio.totalReturn))})
                     </span>
                   </div>

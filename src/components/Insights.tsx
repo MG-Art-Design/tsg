@@ -81,38 +81,38 @@ export function Insights({ insights, userProfile, onUpgradeClick, insiderTrades,
       </Card>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-4 mb-6 bg-gradient-to-r from-[oklch(0.10_0.005_60)] to-[oklch(0.08_0.006_70)] border-2 border-[oklch(0.70_0.14_75)] p-1 h-auto shadow-[0_0_20px_oklch(0.65_0.12_75_/_0.2)]">
+        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 mb-4 sm:mb-6 bg-gradient-to-r from-[oklch(0.10_0.005_60)] to-[oklch(0.08_0.006_70)] border-2 border-[oklch(0.70_0.14_75)] p-0.5 sm:p-1 h-auto shadow-[0_0_20px_oklch(0.65_0.12_75_/_0.2)] gap-1">
           <TabsTrigger 
             value="overall" 
-            className="flex items-center gap-1.5 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold text-xs sm:text-sm px-2 py-2"
+            className="flex flex-col xs:flex-row items-center gap-1 xs:gap-1.5 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold text-[10px] xs:text-xs sm:text-sm px-1 xs:px-2 py-1.5 xs:py-2"
           >
-            <Lightning size={16} weight="fill" />
-            <span className="hidden sm:inline">Overall Market</span>
-            <span className="sm:hidden">Overall</span>
+            <Lightning size={14} weight="fill" className="xs:w-4 xs:h-4" />
+            <span className="hidden xs:inline">Overall Market</span>
+            <span className="xs:hidden text-[9px] leading-tight text-center">Overall</span>
           </TabsTrigger>
           <TabsTrigger 
             value="insider" 
-            className="flex items-center gap-1.5 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold text-xs sm:text-sm px-2 py-2"
+            className="flex flex-col xs:flex-row items-center gap-1 xs:gap-1.5 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold text-[10px] xs:text-xs sm:text-sm px-1 xs:px-2 py-1.5 xs:py-2"
           >
-            <Trophy size={16} weight="fill" />
-            <span className="hidden sm:inline">OMG It's In</span>
-            <span className="sm:hidden">Insider</span>
+            <Trophy size={14} weight="fill" className="xs:w-4 xs:h-4" />
+            <span className="hidden xs:inline">OMG It's In</span>
+            <span className="xs:hidden text-[9px] leading-tight text-center">Insider</span>
           </TabsTrigger>
           <TabsTrigger 
             value="strategic" 
-            className="flex items-center gap-1.5 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold text-xs sm:text-sm px-2 py-2"
+            className="flex flex-col xs:flex-row items-center gap-1 xs:gap-1.5 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold text-[10px] xs:text-xs sm:text-sm px-1 xs:px-2 py-1.5 xs:py-2"
           >
-            <ChartLine size={16} weight="fill" />
-            <span className="hidden sm:inline">Strategic AI</span>
-            <span className="sm:hidden">Strategic</span>
+            <ChartLine size={14} weight="fill" className="xs:w-4 xs:h-4" />
+            <span className="hidden xs:inline">Strategic AI</span>
+            <span className="xs:hidden text-[9px] leading-tight text-center">Strategic</span>
           </TabsTrigger>
           <TabsTrigger 
             value="friends" 
-            className="flex items-center gap-1.5 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold text-xs sm:text-sm px-2 py-2"
+            className="flex flex-col xs:flex-row items-center gap-1 xs:gap-1.5 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold text-[10px] xs:text-xs sm:text-sm px-1 xs:px-2 py-1.5 xs:py-2"
           >
-            <Users size={16} weight="fill" />
-            <span className="hidden sm:inline">Friend Insights</span>
-            <span className="sm:hidden">Friends</span>
+            <Users size={14} weight="fill" className="xs:w-4 xs:h-4" />
+            <span className="hidden xs:inline">Friend Insights</span>
+            <span className="xs:hidden text-[9px] leading-tight text-center">Friends</span>
           </TabsTrigger>
         </TabsList>
 
