@@ -825,9 +825,16 @@ function App() {
             <Logo size="sm" animated={false} />
             <div className="flex items-center gap-4">
               <div className="text-sm text-[oklch(0.70_0.14_75)] font-semibold">
-                {getCurrentQuarter()} • {profile.username}
+                {getCurrentQuarter()}
               </div>
-              <div className="text-4xl">{profile.avatar}</div>
+              <Button
+                onClick={() => setActiveTab('profile')}
+                variant="ghost"
+                size="sm"
+                className="text-[oklch(0.70_0.14_75)] hover:text-[oklch(0.75_0.14_75)] font-semibold text-base"
+              >
+                {profile.username.split(' ')[0]}
+              </Button>
               {profile.id !== 'guest-user' && profile.id !== 'admin-preview-user' ? (
                 <Button
                   onClick={handleLogout}
