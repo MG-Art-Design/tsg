@@ -313,7 +313,7 @@ export function Dashboard({ portfolio, marketData, userProfile, onUpgradeClick, 
                 Quick Leaderboard
               </CardTitle>
               {onNavigateToLeaderboard && (
-                <Button variant="ghost" size="sm" onClick={onNavigateToLeaderboard} className="text-xs">
+                <Button variant="ghost" size="sm" onClick={onNavigateToLeaderboard} className="text-xs text-white/60 nav-link hover:!bg-transparent">
                   View Full
                 </Button>
               )}

@@ -304,70 +304,68 @@
   }
 
   @media (hover: hover) and (pointer: fine) {
-    a:not(.no-hover-effect),
-    button:not(.no-hover-effect):not(:disabled),
-    [role="button"]:not(.no-hover-effect),
-    .clickable:not(.no-hover-effect) {
+    .nav-link {
       transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    a:not(.no-hover-effect):hover,
-    button:not(.no-hover-effect):not(:disabled):hover,
-    [role="button"]:not(.no-hover-effect):hover,
-    .clickable:not(.no-hover-effect):hover {
-      color: oklch(0.70 0.14 75);
+    .nav-link:hover {
+      color: oklch(0.70 0.14 75) !important;
     }
 
-    .nav-link:not(.no-hover-effect) {
+    .card-link {
       transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .nav-link:not(.no-hover-effect):hover {
-      color: oklch(0.70 0.14 75);
+    .card-link:hover {
+      color: oklch(0.70 0.14 75) !important;
     }
 
-    .card-link:not(.no-hover-effect) {
+    .text-link {
       transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .card-link:not(.no-hover-effect):hover {
-      color: oklch(0.70 0.14 75);
+    .text-link:hover {
+      color: oklch(0.70 0.14 75) !important;
     }
 
-    .text-link:not(.no-hover-effect) {
+    .icon-button {
       transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .text-link:not(.no-hover-effect):hover {
-      color: oklch(0.70 0.14 75);
+    .icon-button:hover {
+      color: oklch(0.70 0.14 75) !important;
     }
 
-    .icon-button:not(.no-hover-effect) {
+    .tab-trigger {
       transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .icon-button:not(.no-hover-effect):hover {
-      color: oklch(0.70 0.14 75);
+    .tab-trigger:not([data-state="active"]):hover {
+      color: oklch(0.70 0.14 75) !important;
     }
 
-    .tab-trigger:not(.no-hover-effect) {
+    .tab-trigger[data-state="active"] {
+      color: oklch(0.70 0.14 75) !important;
+    }
+
+    .profile-link {
       transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .tab-trigger:not(.no-hover-effect):not([data-state="active"]):hover {
-      color: oklch(0.70 0.14 75);
+    .profile-link:hover {
+      color: oklch(0.70 0.14 75) !important;
     }
 
-    .tab-trigger:not(.no-hover-effect)[data-state="active"] {
-      color: oklch(0.70 0.14 75);
-    }
-
-    .profile-link:not(.no-hover-effect) {
+    .insights-tab-trigger {
       transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .profile-link:not(.no-hover-effect):hover {
-      color: oklch(0.70 0.14 75);
+    .insights-tab-trigger:hover:not([data-state="active"]) {
+      color: oklch(0.70 0.14 75) !important;
+    }
+
+    .insights-tab-trigger[data-state="active"] {
+      color: oklch(0.75 0.14 75) !important;
     }
   }
 }

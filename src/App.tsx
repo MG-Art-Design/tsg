@@ -852,7 +852,7 @@ function App() {
                 onClick={() => setActiveTab('profile')}
                 variant="ghost"
                 size="sm"
-                className="text-white font-semibold text-sm sm:text-base profile-link hover:bg-transparent px-2 sm:px-4"
+                className="text-white/60 font-semibold text-sm sm:text-base profile-link hover:!bg-transparent px-2 sm:px-4"
               >
                 {profile.username.split(' ')[0]}
               </Button>
@@ -861,7 +861,7 @@ function App() {
                   onClick={handleLogout}
                   variant="ghost"
                   size="sm"
-                  className="text-white/60 hover:text-white icon-button p-2"
+                  className="text-white/60 icon-button hover:!bg-transparent p-2"
                 >
                   <SignOut size={18} weight="bold" className="sm:w-[18px] sm:h-[18px] w-4 h-4" />
                 </Button>
@@ -870,7 +870,7 @@ function App() {
                   onClick={() => setShowAuthModal(true)}
                   variant="ghost"
                   size="sm"
-                  className="text-white/60 hover:text-white icon-button p-2"
+                  className="text-white/60 icon-button hover:!bg-transparent p-2"
                 >
                   <SignIn size={18} weight="bold" className="sm:w-[18px] sm:h-[18px] w-4 h-4" />
                 </Button>

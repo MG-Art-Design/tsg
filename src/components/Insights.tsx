@@ -84,7 +84,7 @@ export function Insights({ insights, userProfile, onUpgradeClick, insiderTrades,
         <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 mb-4 sm:mb-6 bg-gradient-to-r from-[oklch(0.10_0.005_60)] to-[oklch(0.08_0.006_70)] border-2 border-[oklch(0.70_0.14_75)] p-0.5 sm:p-1 h-auto shadow-[0_0_20px_oklch(0.65_0.12_75_/_0.2)] gap-1">
           <TabsTrigger 
             value="overall" 
-            className="flex flex-col xs:flex-row items-center gap-1 xs:gap-1.5 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold text-[10px] xs:text-xs sm:text-sm px-1 xs:px-2 py-1.5 xs:py-2"
+            className="insights-tab-trigger flex flex-col xs:flex-row items-center gap-1 xs:gap-1.5 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold text-[10px] xs:text-xs sm:text-sm px-1 xs:px-2 py-1.5 xs:py-2 text-white/60"
           >
             <Lightning size={14} weight="fill" className="xs:w-4 xs:h-4" />
             <span className="hidden xs:inline">Overall Market</span>
@@ -92,7 +92,7 @@ export function Insights({ insights, userProfile, onUpgradeClick, insiderTrades,
           </TabsTrigger>
           <TabsTrigger 
             value="insider" 
-            className="flex flex-col xs:flex-row items-center gap-1 xs:gap-1.5 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold text-[10px] xs:text-xs sm:text-sm px-1 xs:px-2 py-1.5 xs:py-2"
+            className="insights-tab-trigger flex flex-col xs:flex-row items-center gap-1 xs:gap-1.5 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold text-[10px] xs:text-xs sm:text-sm px-1 xs:px-2 py-1.5 xs:py-2 text-white/60"
           >
             <Trophy size={14} weight="fill" className="xs:w-4 xs:h-4" />
             <span className="hidden xs:inline">OMG It's In</span>
@@ -100,7 +100,7 @@ export function Insights({ insights, userProfile, onUpgradeClick, insiderTrades,
           </TabsTrigger>
           <TabsTrigger 
             value="strategic" 
-            className="flex flex-col xs:flex-row items-center gap-1 xs:gap-1.5 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold text-[10px] xs:text-xs sm:text-sm px-1 xs:px-2 py-1.5 xs:py-2"
+            className="insights-tab-trigger flex flex-col xs:flex-row items-center gap-1 xs:gap-1.5 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold text-[10px] xs:text-xs sm:text-sm px-1 xs:px-2 py-1.5 xs:py-2 text-white/60"
           >
             <ChartLine size={14} weight="fill" className="xs:w-4 xs:h-4" />
             <span className="hidden xs:inline">Strategic AI</span>
@@ -108,7 +108,7 @@ export function Insights({ insights, userProfile, onUpgradeClick, insiderTrades,
           </TabsTrigger>
           <TabsTrigger 
             value="friends" 
-            className="flex flex-col xs:flex-row items-center gap-1 xs:gap-1.5 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold text-[10px] xs:text-xs sm:text-sm px-1 xs:px-2 py-1.5 xs:py-2"
+            className="insights-tab-trigger flex flex-col xs:flex-row items-center gap-1 xs:gap-1.5 data-[state=active]:bg-[oklch(0.65_0.12_75_/_0.25)] data-[state=active]:text-[oklch(0.75_0.14_75)] data-[state=active]:border data-[state=active]:border-[oklch(0.70_0.14_75_/_0.5)] font-semibold text-[10px] xs:text-xs sm:text-sm px-1 xs:px-2 py-1.5 xs:py-2 text-white/60"
           >
             <Users size={14} weight="fill" className="xs:w-4 xs:h-4" />
             <span className="hidden xs:inline">Friend Insights</span>
