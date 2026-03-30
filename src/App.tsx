@@ -582,8 +582,6 @@ function App() {
       return
     }
 
-    const isCreatingEmpty = positions.length === 0
-    
     if (!isCreatingEmpty) {
       const totalAllocation = positions.reduce((sum, pos) => sum + pos.allocation, 0)
       if (Math.abs(totalAllocation - 100) > 0.01) {
@@ -597,8 +595,8 @@ function App() {
     const currentQuarter = getCurrentQuarter()
     
     const portfolioPositions: PortfolioPosition[] = positions.map(pos => {
-      const asset = marketData.find(a => a.symbol === pos.symbol)
-      if (!asset) {
+    
+    const portfolioPositions: PortfolioPosition[] = positions.map(pos => {
         toast.error('Asset not found', {
           description: `Could not find market data for ${pos.symbol}`
         })
@@ -606,54 +604,49 @@ function App() {
       }
       
       const shares = (pos.allocation / 100) * INITIAL_PORTFOLIO_VALUE / asset.currentPrice
-      const value = shares * asset.currentPrice
-
+      s * asset.currentPrice
       return {
         symbol: pos.symbol,
         name: pos.name,
         type: pos.type,
-        allocation: pos.allocation,
-        entryPrice: asset.currentPrice,
+        symbol: pos.symbol,
+        name: pos.name,
         currentPrice: asset.currentPrice,
         shares,
         value,
         returnPercent: 0,
-        returnValue: 0
-      }
+        shares,
+        value,
     }).filter(Boolean) as PortfolioPosition[]
-    
-    if (portfolioPositions.length !== positions.length) {
+        returnValue: 0
+      }h !== positions.length) {
       return
-    }
+    
 
     const existingPortfolio = portfolioId ? userPortfolios?.find(p => p.id === portfolioId) : null
     const isUpdate = !!existingPortfolio
 
-    const newPortfolio: Portfolio = {
-      id: portfolioId || `portfolio-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       userId: profile.id,
       name: portfolioName || existingPortfolio?.name || `${currentQuarter} Portfolio`,
       quarter: currentQuarter,
-      positions: portfolioPositions,
+    const newPortfolio: Portfolio = {
       initialValue: INITIAL_PORTFOLIO_VALUE,
       totalReturn: 0,
       totalReturnPercent: 0,
       currentValue: isCreatingEmpty ? 0 : INITIAL_PORTFOLIO_VALUE,
       lastUpdated: Date.now(),
-      createdAt: existingPortfolio?.createdAt || Date.now()
+      initialValue: INITIAL_PORTFOLIO_VALUE,
     }
-
+      totalReturnPercent: 0,
     if (isUpdate) {
       setUserPortfolios((current) => 
         (current || []).map(p => p.id === portfolioId ? newPortfolio : p)
-      )
-    } else {
       setUserPortfolios((current) => [...(current || []), newPortfolio])
       setActivePortfolioId(newPortfolio.id)
     }
 
     setPortfolio(newPortfolio)
-
+      )
     setAllPortfolios((current) => ({
       ...(current || {}),
       [profile.id]: newPortfolio
@@ -661,7 +654,7 @@ function App() {
 
     if (!isCreatingEmpty) {
       setActiveTab('dashboard')
-      
+    setAllPortfolios((current) => ({
       if (activityTracker && profile) {
         activityTracker.recordEvent({
           type: isUpdate ? 'portfolio_updated' : 'portfolio_created',
@@ -678,7 +671,7 @@ function App() {
           }
         })
         
-        activityTracker.updateQuarterSummary(
+            cryptoCount: positions.filter(p => p.type === 'crypto').length
           currentQuarter,
           INITIAL_PORTFOLIO_VALUE,
           INITIAL_PORTFOLIO_VALUE
@@ -694,17 +687,16 @@ function App() {
         category: 'portfolio-tip',
         timestamp: Date.now(),
         read: false
-      }
+      const newInsight: Insight = {
 
       setInsights((current) => [newInsight, ...(current || [])])
-    }
   }
 
   const handleUserUpdate = (updatedUser: UserProfile) => {
     if (adminMode) {
       toast.info('Preview Mode', {
         description: 'Changes are not saved in admin mode.'
-      })
+    }
       return
     }
     setProfile(updatedUser)
